@@ -11,7 +11,7 @@ import Config
 config :phx_tools, PhxToolsWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: PhxToolsWeb.ErrorHTML, json: PhxToolsWeb.ErrorJSON],
+    formats: [html: PhxToolsWeb.ErrorHTML],
     layout: false
   ],
   pubsub_server: PhxTools.PubSub,

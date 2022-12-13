@@ -9,7 +9,22 @@ defmodule PhxTools.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      preferred_cli_env: [
+        ci: :test,
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.html": :test,
+        credo: :test,
+        dialyzer: :test,
+        sobelow: :test
+      ],
+      test_coverage: [tool: ExCoveralls],
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore.exs",
+        plt_add_apps: [:ex_unit, :mix],
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ]
     ]
   end
 
@@ -45,7 +60,13 @@ defmodule PhxTools.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      # ------------------------------------------------------------------------
+      {:credo, "~> 1.6", only: [:test], runtime: false},
+      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.15", only: [:dev, :test]},
+      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -58,7 +79,18 @@ defmodule PhxTools.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      ci: [
+        "deps.unlock --check-unused",
+        "hex.audit",
+        "sobelow --config .sobelow-conf",
+        "format --check-formatted",
+        "cmd npx prettier -c .",
+        "credo --strict",
+        "dialyzer --format short 2>&1",
+        "deps.audit",
+        "test --cover --warnings-as-errors"
+      ]
     ]
   end
 end
