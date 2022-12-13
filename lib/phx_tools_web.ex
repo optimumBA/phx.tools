@@ -17,6 +17,7 @@ defmodule PhxToolsWeb do
   those modules here.
   """
 
+  @spec static_paths() :: [String.t()]
   def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
   def router do
@@ -40,7 +41,7 @@ defmodule PhxToolsWeb do
     quote do
       use Phoenix.Controller,
         namespace: PhxToolsWeb,
-        formats: [:html, :json],
+        formats: [:html],
         layouts: [html: PhxToolsWeb.Layouts]
 
       import Plug.Conn

@@ -1,12 +1,18 @@
 defmodule PhxToolsWeb.Telemetry do
-  use Supervisor
-  import Telemetry.Metrics
+  @moduledoc false
 
+  use Supervisor
+
+  import Telemetry.Metrics
+  alias Telemetry.Metrics.Summary
+
+  @spec start_link(any()) ::
+          {:ok, pid()} | {:error, {:already_started, pid()} | {:shutdown, term()} | term()}
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end
 
-  @impl true
+  @impl Supervisor
   def init(_arg) do
     children = [
       # Telemetry poller will execute the given period measurements
@@ -19,6 +25,7 @@ defmodule PhxToolsWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics() :: [Summary.t()]
   def metrics do
     [
       # Phoenix Metrics

@@ -1,0 +1,17 @@
+/_build/
+/.elixir_ls/
+/.git/
+/config/
+/cover/
+/deps/
+/doc/
+/lib/
+/priv/
+/rel/
+/test/
+.credo.exs
+.dialyzer_ignore.exs
+.dockerignore
+.formatter.exs
+.gitignore
+.erl_crash.dump

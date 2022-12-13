@@ -1,5 +1,5 @@
 defmodule PhxToolsWeb.PageControllerTest do
-  use PhxToolsWeb.ConnCase
+  use PhxToolsWeb.ConnCase, async: true
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
