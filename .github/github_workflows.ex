@@ -72,6 +72,7 @@ defmodule GitHubWorkflows do
             ],
             if: "github.ref == 'refs/heads/cicd' && github.event_name != 'pull_request'",
             "runs-on": "ubuntu-latest",
+            env: [FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"],
             steps: [
               checkout_step(),
               [
