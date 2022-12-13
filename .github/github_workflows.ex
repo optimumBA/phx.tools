@@ -14,7 +14,7 @@ defmodule GitHubWorkflows do
   defp ci_workflow do
     [
       [
-        name: "Elixir CI",
+        name: "CI",
         on: [
           push: [
             branches: ["cicd"]
