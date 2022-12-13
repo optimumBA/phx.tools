@@ -2,7 +2,7 @@ name: CI & CD
 on:
   push:
     branches:
-      - main
+      - cicd
 jobs:
   compile:
     name: Install deps and compile
@@ -292,7 +292,7 @@ jobs:
       - sobelow
       - test
       - unused_deps
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/cicd' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,8 +1,8 @@
 name: Elixir CI
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - cicd
 jobs:
   compile:
     name: Install deps and compile
