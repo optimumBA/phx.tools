@@ -246,6 +246,7 @@ defmodule GitHubWorkflows do
         checkout_step(),
         [
           name: "Restore npm cache",
+          uses: "actions/cache@v3",
           id: "npm-cache",
           with: [
             path: "~/.npm",
