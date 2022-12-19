@@ -10,10 +10,24 @@ defmodule PhxToolsWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  scope "/", PhxToolsWeb do
-    pipe_through :browser
+  pipeline :os_getter do
+    plug PhxToolsWeb.OsDetector
+  end
 
-    get "/", PageController, :home
+  scope "/", PhxToolsWeb do
+    pipe_through [:browser, :os_getter]
+
+    live_session :default,
+      session: {PhxToolsWeb.LiveSessionHelper, :get_os_version, []} do
+      live "/", PhxToolsLive.PhxToolsLandingLive
+    end
+  end
+
+  scope "/", PhxToolsWeb do
+    pipe_through [:browser]
+
+    live "/macOS", PhxToolsLive.MacLive
+    live "/linux", PhxToolsLive.LinuxLive
   end
 
   # Enable LiveDashboard in development
