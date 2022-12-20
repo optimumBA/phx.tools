@@ -1,4 +1,4 @@
-defmodule PhxToolsWeb.PhxToolsLive.PhxToolsLandingLive do
+defmodule PhxToolsWeb.LandingPageLive.Index do
   use PhxToolsWeb, :live_view
 
   @impl Phoenix.LiveView
