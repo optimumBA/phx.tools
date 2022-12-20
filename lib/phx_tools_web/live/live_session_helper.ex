@@ -21,17 +21,10 @@ defmodule PhxToolsWeb.LiveSessionHelper do
     end
   end
 
-  @spec get_os_name(nil | binary) :: binary()
-  def get_os_name(nil = operating_system) do
+  defp get_os_name(nil), do: nil
+  defp get_os_name(operating_system) do
     operating_system
-  end
-
-  def get_os_name(operating_system) do
-    os_name =
-      operating_system
-      |> String.split(" ")
-      |> List.first()
-
-    os_name
+    |> String.split(" ")
+    |> List.first()
   end
 end
