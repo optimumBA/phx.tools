@@ -1,4 +1,4 @@
-defmodule PhxToolsWeb.OsDetector do
+defmodule PhxToolsWeb.SystemDetector do
   @moduledoc """
   Parses User-Agent and saves it to the session.
   """
