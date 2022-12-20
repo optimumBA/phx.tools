@@ -1,6 +1,6 @@
 defmodule PhxToolsWeb.OsDetector do
   @moduledoc """
-  This plug detect user-agent from conn, takes data and save it into session.
+  Parses User-Agent and saves it to the session.
   """
   @behaviour Plug
 
