@@ -21,6 +21,30 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
+  appsignal_app_env =
+    System.get_env("APPSIGNAL_APP_ENV") ||
+      raise """
+      environment variable APPSIGNAL_APP_ENV is missing.
+      """
+
+  appsignal_push_api_key =
+    System.get_env("APPSIGNAL_PUSH_API_KEY") ||
+      raise """
+      environment variable APPSIGNAL_PUSH_API_KEY is missing.
+      """
+
+  revision_file = Path.join([:code.priv_dir(:phx_tools), "REVISION"])
+
+  appsignal_revision =
+    revision_file
+    |> File.read!()
+    |> String.trim()
+
+  config :appsignal, :config,
+    env: appsignal_app_env,
+    push_api_key: appsignal_push_api_key,
+    revision: appsignal_revision
+
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want

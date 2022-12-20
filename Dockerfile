@@ -60,6 +60,10 @@ RUN mix compile
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
+# Set the app revision from git commit sha
+COPY .git .git
+RUN cat .git/HEAD | awk '{print ".git/"$2}' | xargs cat | cut -c 1-7 >> priv/REVISION
+
 COPY rel rel
 RUN mix release
 

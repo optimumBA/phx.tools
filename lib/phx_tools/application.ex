@@ -5,8 +5,12 @@ defmodule PhxTools.Application do
 
   use Application
 
+  alias Appsignal.Phoenix.LiveView
+
   @impl Application
   def start(_type, _args) do
+    LiveView.attach()
+
     children = [
       # Start the Telemetry supervisor
       PhxToolsWeb.Telemetry,

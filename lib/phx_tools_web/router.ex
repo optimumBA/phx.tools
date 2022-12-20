@@ -16,6 +16,10 @@ defmodule PhxToolsWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/", PhxToolsWeb do
+    resources "/health", HealthController, only: [:index]
+  end
+
   # Enable LiveDashboard in development
   if Application.compile_env(:phx_tools, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
