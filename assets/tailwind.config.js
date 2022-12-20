@@ -13,7 +13,7 @@ module.exports = {
       md: '768px',
       // => @media (min-width: 768px) { ... }
       lg: '1240px',
-      // => @media (min-width: 1440px) { ... }
+      // => @media (min-width: 1240px) { ... }
     },
     extend: {
       fontFamily: {
