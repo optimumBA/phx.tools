@@ -1,4 +1,4 @@
-defmodule PhxToolsWeb.PhxToolsLive.LinuxLive do
+defmodule PhxToolsWeb.PhxToolsLive.Mac do
   use PhxToolsWeb, :live_view
 
   @impl Phoenix.LiveView

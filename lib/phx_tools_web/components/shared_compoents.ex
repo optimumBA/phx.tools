@@ -4,8 +4,8 @@ defmodule PhxToolsWeb.Components.SharedCompoents do
   """
   import Phoenix.Component
 
-  @spec optimum_component(map()) :: Phoenix.LiveView.Rendered.t()
-  def optimum_component(assigns) do
+  @spec optimum_logo(map()) :: Phoenix.LiveView.Rendered.t()
+  def optimum_logo(assigns) do
     ~H"""
     <svg width="156" height="101" viewBox="0 0 156 101" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

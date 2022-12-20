@@ -11,23 +11,23 @@ defmodule PhxToolsWeb.Router do
   end
 
   pipeline :os_getter do
-    plug PhxToolsWeb.OsDetector
+    plug PhxToolsWeb.SystemDetector
   end
 
   scope "/", PhxToolsWeb do
     pipe_through [:browser, :os_getter]
 
     live_session :default,
-      session: {PhxToolsWeb.LiveSessionHelper, :get_os_version, []} do
-      live "/", PhxToolsLive.PhxToolsLandingLive
+      session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
+      live "/", PhxToolsLive.Index, :index
     end
   end
 
   scope "/", PhxToolsWeb do
     pipe_through [:browser]
 
-    live "/macOS", PhxToolsLive.MacLive
-    live "/linux", PhxToolsLive.LinuxLive
+    live "/macOS", PhxToolsLive.Mac
+    live "/linux", PhxToolsLive.Linux
   end
 
   # Enable LiveDashboard in development

@@ -10,12 +10,16 @@ defmodule PhxToolsWeb.SystemDetector do
   def init(_opts), do: nil
 
   @spec call(Plug.Conn.t(), nil) :: Plug.Conn.t()
-  def call(%Conn{} = conn, _opts), do: Conn.put_session(conn, :operating_system, parse_user_agent(conn))
+  def call(%Conn{} = conn, _opts),
+    do: Conn.put_session(conn, :operating_system, parse_user_agent(conn))
 
   defp parse_user_agent(conn) do
-    conn
-    |> Conn.get_req_header("user-agent")
-    |> List.first()
-    |> UAParser.parse()
+    user_agent =
+      conn
+      |> Conn.get_req_header("user-agent")
+      |> List.first()
+      |> UAParser.parse()
+
+    user_agent.os.family
   end
 end

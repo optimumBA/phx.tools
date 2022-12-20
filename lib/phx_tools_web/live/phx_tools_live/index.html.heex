@@ -1,6 +1,6 @@
 <div class="overflow-y-scroll solved-height">
-  <div class="fixed w-full h-full flex items-center justify-center">
-    <div class="block lg:mt-[-20%] md:mt-[-50%] sm:mt-[-70%]">
+  <div class="min-w-full min-h-full flex items-center justify-center">
+    <div class="block mt-[5%]">
       <h1 class="text-white text-center lg:text-[24px] md:text-[20px] sm:text-[18px] mb-[10%]">
         Choose your operating system
       </h1>
@@ -8,8 +8,8 @@
         <.link navigate={~p"/macOS"}>
           <div
             id="macOS"
-            class={"#{if @operating_system=="Mac" , do: "bg-[#322199]" } block border-[2px] border-[#5337FF] px-3
-              py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
+            class={"#{if @operating_system=="Mac" , do: "bg-[#322199]" } block border-[2px]
+            border-[#5337FF] px-3 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
           >
             <img src="/images/macos.png" />
             <h1 class="text-white text-center">macOS</h1>
@@ -18,15 +18,19 @@
         <.link navigate={~p"/linux"}>
           <div
             id="linux"
-            class={"#{if @operating_system=="Linux" , do: "bg-[#322199]" } block border-[2px] border-[#5337FF] px-1
-              py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
+            class={"#{if @operating_system=="Linux" , do: "bg-[#322199]" } block border-[2px]
+            border-[#5337FF] px-1 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
           >
             <img src="/images/linux.png" />
             <h1 class="text-white text-center">Linux</h1>
           </div>
         </.link>
       </div>
-      <h1 class="text-center text-white text-[20px] mt-[20%]">Confirm your choice by clicking</h1>
+      <%= if @operating_system do %>
+        <h1 class="text-center text-white text-[20px] mt-[20%]">
+          Confirm your choice by clicking
+        </h1>
+      <% end %>
     </div>
   </div>
 </div>

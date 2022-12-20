@@ -9,7 +9,7 @@ defmodule PhxToolsWeb.LiveSessionHelper do
   def get_system_name(conn) do
     operating_system = Conn.get_session(conn, :operating_system)
 
-    case get_os_name(operating_system.os.family) do
+    case get_os_name(operating_system) do
       "Linux" ->
         %{"operating_system" => "Linux"}
 
@@ -22,6 +22,7 @@ defmodule PhxToolsWeb.LiveSessionHelper do
   end
 
   defp get_os_name(nil), do: nil
+
   defp get_os_name(operating_system) do
     operating_system
     |> String.split(" ")
