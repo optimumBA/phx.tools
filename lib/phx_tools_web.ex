@@ -71,6 +71,7 @@ defmodule PhxToolsWeb do
   def html do
     quote do
       use Phoenix.Component
+      alias PhxToolsWeb.Components.SharedComponents
 
       # Import convenience functions from controllers
       import Phoenix.Controller,

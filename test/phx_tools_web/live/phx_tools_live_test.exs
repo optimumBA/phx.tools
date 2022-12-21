@@ -1,4 +1,4 @@
-defmodule PhxToolsWeb.PhxToolsLandingLiveTest do
+defmodule PhxToolsWeb.PhxToolsLiveTest do
   use PhxToolsWeb.ConnCase, async: true
 
   import Phoenix.ConnTest

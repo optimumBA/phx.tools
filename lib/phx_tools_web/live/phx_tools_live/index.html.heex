@@ -1,5 +1,5 @@
 <%= if @page do %>
-  <InstructionComponents.render page={@page} operating_system={@operating_system} />
+  <InstructionComponents.render page={@page} operating_system={@operating_system} url={@url} />
 <% else %>
   <div class="solved-height">
     <div class="min-w-full min-h-full flex items-center justify-center">
@@ -27,7 +27,7 @@
                 border-[2px]
                 border-[#5337FF] px-1 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
             >
-              <img src="/images/linux.png" />
+              <img src={~p"/images/linux.png"} />
               <h1 class="text-white text-center">Linux</h1>
             </div>
           </.link>

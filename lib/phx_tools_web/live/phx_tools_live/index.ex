@@ -1,13 +1,18 @@
 defmodule PhxToolsWeb.PhxToolsLive.Index do
   use PhxToolsWeb, :live_view
 
+  alias PhxToolsWeb.Endpoint
+
   alias PhxToolsWeb.InstructionComponents
 
   @impl Phoenix.LiveView
   def mount(_params, session, socket) do
+    url = Endpoint.url()
+
     socket =
       socket
       |> assign(page: nil)
+      |> assign(url: url)
       |> assign_os_param(session)
 
     {:ok, socket}
