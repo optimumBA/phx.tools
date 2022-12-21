@@ -18,7 +18,7 @@
         <.link navigate={~p"/linux"}>
           <div
             id="linux"
-            class={"#{if @operating_system=="Linux" , do: "bg-[#322199]" } block border-[2px]
+            class={if(@operating_system == "Linux", do: "bg-[#322199] ", else: "") <> "block border-[2px]
             border-[#5337FF] px-1 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
           >
             <img src="/images/linux.png" />
