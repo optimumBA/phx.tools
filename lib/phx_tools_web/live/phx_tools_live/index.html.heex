@@ -8,7 +8,7 @@
         <.link navigate={~p"/macOS"}>
           <div
             id="macOS"
-            class={"#{if @operating_system=="Mac" , do: "bg-[#322199]" } block border-[2px]
+            class={if(@operating_system == "Mac" , do: "bg-[#322199] ", else: "") <> "block border-[2px]
             border-[#5337FF] px-3 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
           >
             <img src="/images/macos.png" />
