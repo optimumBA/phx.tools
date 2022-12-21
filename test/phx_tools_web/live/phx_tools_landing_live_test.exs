@@ -1,6 +1,7 @@
 defmodule PhxToolsWeb.PhxToolsLandingLiveTest do
   use PhxToolsWeb.ConnCase, async: true
 
+  import Phoenix.ConnTest
   import Phoenix.LiveViewTest
 
   describe "landing page" do
@@ -12,10 +13,21 @@ defmodule PhxToolsWeb.PhxToolsLandingLiveTest do
       assert has_element?(landing_live, "#macOS")
       assert has_element?(landing_live, "#linux")
     end
+
+    test "if there is no operating system confirm message is not displayed", %{conn: conn} do
+      {:ok, landing_live, _html} = live(conn, "/")
+
+      refute has_element?(landing_live, "#confirmation")
+    end
   end
 
   describe "linux instructions page" do
     test "user visits linux instructions page", %{conn: conn} do
+      conn =
+        conn
+        |> put_req_header("user-agent", "Linux")
+        |> get("/")
+
       {:ok, linux_live, html} = live(conn, "/linux")
 
       assert html =~ "Linux installation process"
@@ -27,6 +39,11 @@ defmodule PhxToolsWeb.PhxToolsLandingLiveTest do
 
   describe "macos instructions page" do
     test "user visits macos instructions page", %{conn: conn} do
+      conn =
+        conn
+        |> put_req_header("user-agent", "Mac OS X 10_5_7")
+        |> get("/")
+
       {:ok, linux_live, html} = live(conn, "/macOS")
 
       assert html =~ "macOS installation process"
