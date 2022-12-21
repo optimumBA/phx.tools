@@ -2,7 +2,7 @@ defmodule PhxToolsWeb.Components.SharedCompoents do
   @moduledoc """
   Renders optimum logo
   """
-  import Phoenix.Component
+  use PhxToolsWeb, :component
 
   @spec optimum_logo(map()) :: Phoenix.LiveView.Rendered.t()
   def optimum_logo(assigns) do
