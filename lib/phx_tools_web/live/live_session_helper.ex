@@ -1,7 +1,6 @@
 defmodule PhxToolsWeb.LiveSessionHelper do
   @moduledoc """
-  This module takes user-agent data from session, then filters user operating
-  system out of it.
+  Takes the operating system from the session and passes it to the LiveView session.
   """
   alias Plug.Conn
 
