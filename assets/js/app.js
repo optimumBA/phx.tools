@@ -24,7 +24,7 @@ import topbar from '../vendor/topbar'
 import CopyHook from './hooks/copy_hook.js'
 
 const Hooks = {
-  ...{ CopyHook },
+  CopyHook,
 }
 
 let csrfToken = document
