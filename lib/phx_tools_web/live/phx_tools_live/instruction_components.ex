@@ -20,7 +20,7 @@ defmodule PhxToolsWeb.InstructionComponents do
               </h1>
               <div class="flex items-center justify-evenly border-[1px] border-[#755FFF] py-1 mx-[4%] lg:mt-6 md:mt-5 sm:mt-4 rounded-lg">
                 <h1 id="tool-installation" class="text-white  text-[16px] font-thin">
-                  /bin/bash -c "$(curl -fsSL <%= @url %>/linux.sh)"
+                  /bin/bash -c "$(curl -fsSL <%= @url %>/Linux.sh)"
                 </h1>
                 <button
                   id="copy"
