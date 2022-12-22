@@ -1,6 +1,6 @@
 defmodule PhxToolsWeb.InstructionComponents do
   @moduledoc """
-  This module conditionaly renders page
+  Shows the steps to execute different scripts depending on the operating system. 
   """
   use PhxToolsWeb, :live_component
 
