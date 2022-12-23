@@ -30,6 +30,8 @@ defmodule GitHubWorkflows do
           prettier: prettier_job(),
           sobelow: sobelow_job(),
           test: test_job(),
+          test_linux_script_job: test_linux_script_job(),
+          test_macos_script_job: test_macos_script_job(),
           unused_deps: unused_deps_job()
         ]
       ]
@@ -55,6 +57,8 @@ defmodule GitHubWorkflows do
           prettier: prettier_job(),
           sobelow: sobelow_job(),
           test: test_job(),
+          test_linux_script_job: test_linux_script_job(),
+          test_macos_script_job: test_macos_script_job(),
           unused_deps: unused_deps_job(),
           deploy: [
             name: "Deploy to Fly.io",
@@ -68,6 +72,8 @@ defmodule GitHubWorkflows do
               "prettier",
               "sobelow",
               "test",
+              "test_linux_script_job",
+              "test_macos_script_job",
               "unused_deps"
             ],
             if: "github.ref == 'refs/heads/main' && github.event_name != 'pull_request'",
@@ -292,6 +298,61 @@ defmodule GitHubWorkflows do
         ]
       ]
     )
+  end
+
+  defp test_linux_script_job do
+    test_shell_script_job("Linux", "ubuntu-latest", "sudo apt-get install -y expect")
+  end
+
+  defp test_macos_script_job do
+    test_shell_script_job("macOS", "macos-latest", "brew install expect")
+  end
+
+  defp test_shell_script_job(os, runs_on, expect_install_command) do
+    [
+      name: "Test #{os} script",
+      "runs-on": runs_on,
+      env: [TZ: "America/New_York"],
+      steps: [
+        checkout_step(),
+        [
+          name: "Restore script result cache",
+          uses: "actions/cache@v3",
+          id: "result_cache",
+          with: [
+            key:
+              "${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
+            path: "priv/static/#{os}.sh"
+          ]
+        ],
+        [
+          name: "Install expect tool",
+          if: "steps.result_cache.outputs.cache-hit != 'true'",
+          run: expect_install_command
+        ],
+        [
+          name: "Test the script",
+          if: "steps.result_cache.outputs.cache-hit != 'true'",
+          run: "expect test/scripts/script.exp #{os}.sh"
+        ],
+        [
+          name: "Generate an app and start the server",
+          if: "steps.result_cache.outputs.cache-hit != 'true'",
+          run: "make -f test/scripts/Makefile"
+        ],
+        [
+          name: "Check HTTP status code",
+          uses: "nick-fields/retry@v2",
+          with: [
+            command:
+              "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh",
+            max_attempts: 7,
+            retry_wait_seconds: 5,
+            timeout_seconds: 1
+          ]
+        ]
+      ]
+    ]
   end
 
   defp unused_deps_job do
