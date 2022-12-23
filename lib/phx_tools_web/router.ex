@@ -19,14 +19,10 @@ defmodule PhxToolsWeb.Router do
 
     live_session :default,
       session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
-      live "/", PhxToolsLive.Index
+      live "/", PhxToolsLive.Index, :index
+      live "/linux", PhxToolsLive.Index, :linux
+      live "/macOS", PhxToolsLive.Index, :macOS
     end
-  end
-
-  scope "/", PhxToolsWeb do
-    pipe_through [:browser]
-    live "/linux", PhxToolsLive.Index, :linux
-    live "/macOS", PhxToolsLive.Index, :macOS
   end
 
   # Enable LiveDashboard in development

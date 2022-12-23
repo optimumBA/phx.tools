@@ -1,0 +1,52 @@
+defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
+  @moduledoc """
+  Shows the landing page
+  """
+  use PhxToolsWeb, :html
+
+  @spec landing_page(map()) :: Phoenix.LiveView.Rendered.t()
+  def landing_page(assigns) do
+    ~H"""
+    <div class="solved-height">
+      <div class="min-w-full min-h-full flex items-center justify-center">
+        <div class="block mt-[5%]">
+          <h1 class="text-white text-center lg:text-[24px] md:text-[20px] sm:text-[18px] mb-[10%]">
+            Choose your operating system
+          </h1>
+          <div class="flex justify-between lg:px-4 md:px-8 sm:px-10">
+            <.link patch={~p"/macOS"}>
+              <div
+                id="macOS"
+                class={if(@operating_system=="Mac" , do: "bg-[#322199] " , else: "" ) <> "block
+                border-[2px]
+                border-[#5337FF] px-3 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
+              >
+                <img src={~p"/images/macos.png"} />
+                <h1 class="text-white text-center">macOS</h1>
+              </div>
+            </.link>
+
+            <.link patch={~p"/linux"}>
+              <div
+                id="linux"
+                class={if(@operating_system=="Linux" , do: "bg-[#322199] " , else: "" ) <> "block
+                border-[2px]
+                border-[#5337FF] px-1 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
+              >
+                <img src={~p"/images/linux.png"} />
+                <h1 class="text-white text-center">Linux</h1>
+              </div>
+            </.link>
+          </div>
+
+          <%= if @operating_system do %>
+            <h1 id="confirmation" class="text-center text-white text-[20px] mt-[20%]">
+              Confirm your choice by clicking
+            </h1>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    """
+  end
+end

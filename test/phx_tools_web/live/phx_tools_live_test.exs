@@ -1,10 +1,17 @@
 defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
   use PhxToolsWeb.ConnCase, async: true
 
-  import Phoenix.ConnTest
   import Phoenix.LiveViewTest
 
   describe "landing page" do
+    test "background of macOS card changes when Mac OS user visits the page", %{conn: conn} do
+      conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
+
+      {:ok, landing_live, _html} = live(conn, "/")
+
+      assert render(landing_live) =~ "bg-[#322199]"
+    end
+
     test "user visits the page", %{conn: conn} do
       {:ok, landing_live, html} = live(conn, "/")
 
@@ -23,11 +30,6 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
   describe "linux instructions page" do
     test "user visits linux instructions page", %{conn: conn} do
-      conn =
-        conn
-        |> put_req_header("user-agent", "Linux")
-        |> get("/")
-
       {:ok, linux_live, html} = live(conn, "/linux")
 
       assert html =~ "Linux installation process"
@@ -39,11 +41,6 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
   describe "macos instructions page" do
     test "user visits macos instructions page", %{conn: conn} do
-      conn =
-        conn
-        |> put_req_header("user-agent", "Mac OS X 10_5_7")
-        |> get("/")
-
       {:ok, linux_live, html} = live(conn, "/macOS")
 
       assert html =~ "macOS installation process"

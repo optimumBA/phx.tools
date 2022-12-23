@@ -23,8 +23,11 @@ defmodule PhxToolsWeb.LiveSessionHelper do
   defp get_os_name(nil), do: nil
 
   defp get_os_name(operating_system) do
-    operating_system
-    |> String.split(" ")
-    |> List.first()
+    os_name =
+      operating_system
+      |> String.split(" ")
+      |> Enum.fetch!(0)
+
+    os_name
   end
 end

@@ -1,11 +1,11 @@
 defmodule PhxToolsWeb.InstructionComponents do
   @moduledoc """
-  Shows the steps to execute different scripts depending on the operating system. 
+  Shows the steps to execute different scripts depending on the operating system.
   """
-  use PhxToolsWeb, :live_component
+  use PhxToolsWeb, :html
 
-  @spec render(map()) :: Phoenix.LiveView.Rendered.t()
-  def render(%{page: :linux} = assigns) do
+  @spec linux(map()) :: Phoenix.LiveView.Rendered.t()
+  def linux(assigns) do
     ~H"""
     <div class="solved-height font-normal">
       <div class="w-full h-full flex items-center justify-center">
@@ -52,7 +52,8 @@ defmodule PhxToolsWeb.InstructionComponents do
     """
   end
 
-  def render(%{page: :macOS} = assigns) do
+  @spec mac_os(map()) :: Phoenix.LiveView.Rendered.t()
+  def mac_os(assigns) do
     ~H"""
     <div class="solved-height font-normal">
       <div class="w-full h-full flex items-center justify-center">
