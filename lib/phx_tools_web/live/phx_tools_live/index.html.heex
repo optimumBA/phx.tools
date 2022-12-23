@@ -1,8 +1,8 @@
 <%= case @live_action do %>
+  <% :index -> %>
+    <LandingComponent.landing_page operating_system={@operating_system} />
   <% :linux -> %>
     <InstructionComponents.linux operating_system={@operating_system} url={@url} />
   <% :macOS -> %>
     <InstructionComponents.mac_os operating_system={@operating_system} url={@url} />
-  <% :index -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} />
 <% end %>
