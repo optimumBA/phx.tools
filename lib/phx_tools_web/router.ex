@@ -10,10 +10,19 @@ defmodule PhxToolsWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  scope "/", PhxToolsWeb do
-    pipe_through :browser
+  pipeline :system_detector do
+    plug PhxToolsWeb.SystemDetector
+  end
 
-    get "/", PageController, :home
+  scope "/", PhxToolsWeb do
+    pipe_through [:browser, :system_detector]
+
+    live_session :default,
+      session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
+      live "/", PhxToolsLive.Index, :index
+      live "/linux", PhxToolsLive.Index, :linux
+      live "/macOS", PhxToolsLive.Index, :macOS
+    end
   end
 
   scope "/", PhxToolsWeb do

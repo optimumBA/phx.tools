@@ -123,7 +123,6 @@
            files: %{
              excluded: [
                "lib/phx_tools_web.ex"
-               #  "lib/optimum_landing_web/views/error_view.ex"
              ]
            }},
           {Credo.Check.Readability.StrictModuleLayout, []},
@@ -157,7 +156,8 @@
              files: %{
                excluded: [
                  "lib/phx_tools_web.ex",
-                 "lib/phx_tools_web/endpoint.ex"
+                 "lib/phx_tools_web/endpoint.ex",
+                 "lib/phx_tools_web/router.ex"
                ]
              }
            ]},
