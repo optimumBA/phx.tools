@@ -14,7 +14,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
             Choose your operating system
           </h1>
           <div class="flex justify-between lg:px-4 md:px-8 sm:px-10">
-            <.link patch={~p"/macOS"}>
+            <.link navigate={~p"/macOS"}>
               <div
                 id="macOS"
                 class={if(@operating_system=="Mac" , do: "bg-[#322199] " , else: "" ) <> "block
@@ -26,7 +26,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
               </div>
             </.link>
 
-            <.link patch={~p"/linux"}>
+            <.link navigate={~p"/linux"}>
               <div
                 id="linux"
                 class={if(@operating_system=="Linux" , do: "bg-[#322199] " , else: "" ) <> "block

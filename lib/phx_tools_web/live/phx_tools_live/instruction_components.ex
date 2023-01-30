@@ -41,7 +41,7 @@ defmodule PhxToolsWeb.InstructionComponents do
               </h1>
             </div>
           </div>
-          <.link patch={~p"/"}>
+          <.link navigate={~p"/"}>
             <button class="border-[#755FFF] border-[1px] lg:mt-8 md:mt-5 sm:mt-5 p-1 text-[#755FFF] text-[16px] rounded-md lg:ml-3">
               Back
             </button>
@@ -92,7 +92,7 @@ defmodule PhxToolsWeb.InstructionComponents do
               </h1>
             </div>
           </div>
-          <.link patch={~p"/"}>
+          <.link navigate={~p"/"}>
             <button class="border-[#755FFF] border-[1px] lg:mt-8 md:mt-5 sm:mt-5 p-1 text-[#755FFF] text-[16px] rounded-md lg:ml-3">
               Back
             </button>
