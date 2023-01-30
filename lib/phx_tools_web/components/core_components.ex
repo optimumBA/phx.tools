@@ -22,6 +22,35 @@ defmodule PhxToolsWeb.CoreComponents do
   @type selector :: String.t()
 
   @doc """
+  Renders a card for being able to select OS
+  """
+  attr :id, :string, required: true
+  attr :href, :string, required: true
+  attr :os_icon, :string, required: true
+  attr :current_operating_system, :string, required: true
+  attr :os_name, :string, required: true
+
+  def os_link_card(assigns) do
+    ~H"""
+    <.link navigate={@href}>
+      <div
+        id={@id}
+        class={[
+          "block border-[2px] border-[#5337FF] py-2 rounded-md cursor-pointer hover:bg-[#322199]",
+          @os_name == "macOS" && "px-3",
+          @os_name == "Linux" && "px-1",
+          (@current_operating_system == "Mac" && @os_name == "macOS") && "bg-[#322199]",
+          (@current_operating_system == "Linux" && @os_name == "Linux") && "bg-[#322199]"
+        ]}
+      >
+        <img src={@os_icon} />
+        <h1 class="text-white text-center"><%= @os_name %></h1>
+      </div>
+    </.link>
+    """
+  end
+
+  @doc """
   Renders flash notices.
 
   ## Examples

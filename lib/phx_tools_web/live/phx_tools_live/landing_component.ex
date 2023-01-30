@@ -14,29 +14,8 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
             Choose your operating system
           </h1>
           <div class="flex justify-between lg:px-4 md:px-8 sm:px-10">
-            <.link navigate={~p"/macOS"}>
-              <div
-                id="macOS"
-                class={if(@operating_system=="Mac" , do: "bg-[#322199] " , else: "" ) <> "block
-                border-[2px]
-                border-[#5337FF] px-3 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
-              >
-                <img src={~p"/images/macos.png"} />
-                <h1 class="text-white text-center">macOS</h1>
-              </div>
-            </.link>
-
-            <.link navigate={~p"/linux"}>
-              <div
-                id="linux"
-                class={if(@operating_system=="Linux" , do: "bg-[#322199] " , else: "" ) <> "block
-                border-[2px]
-                border-[#5337FF] px-1 py-2 rounded-md cursor-pointer hover:bg-[#322199]"}
-              >
-                <img src={~p"/images/linux.png"} />
-                <h1 class="text-white text-center">Linux</h1>
-              </div>
-            </.link>
+            <.os_link_card id="macOS" href={~p"/macOS"} os_icon={~p"/images/macos.png"} os_name="macOS" current_operating_system={@operating_system} />
+            <.os_link_card id="linux" href={~p"/linux"} os_icon={~p"/images/linux.png"} os_name="Linux" current_operating_system={@operating_system} />
           </div>
 
           <%= if @operating_system do %>
