@@ -30,6 +30,7 @@ defmodule PhxToolsWeb.CoreComponents do
   attr :current_operating_system, :string, required: true
   attr :os_name, :string, required: true
 
+  @spec os_link_card(assigns()) :: rendered()
   def os_link_card(assigns) do
     ~H"""
     <.link navigate={@href}>

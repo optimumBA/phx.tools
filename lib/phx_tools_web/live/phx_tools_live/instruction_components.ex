@@ -5,10 +5,14 @@ defmodule PhxToolsWeb.InstructionComponents do
   use PhxToolsWeb, :html
   use Phoenix.Component
 
+  @type assigns :: map()
+  @type rendered :: Phoenix.LiveView.Rendered.t()
+
   slot :header, required: true
   slot :command_to_install, required: true
   slot :instruction_item, required: true
 
+  @spec os_instructions(assigns()) :: rendered()
   def os_instructions(assigns) do
     ~H"""
     <div class="solved-height font-normal">
