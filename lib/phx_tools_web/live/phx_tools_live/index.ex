@@ -11,7 +11,6 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp assign_url_and_os(socket, %{"operating_system" => operating_system} = _session) do
     socket
     |> assign(:operating_system, operating_system)
-    |> assign(:url, Endpoint.url)
+    |> assign(:url, Endpoint.url())
   end
-
 end

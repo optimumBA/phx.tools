@@ -39,8 +39,8 @@ defmodule PhxToolsWeb.CoreComponents do
           "block border-[2px] border-[#5337FF] py-2 rounded-md cursor-pointer hover:bg-[#322199]",
           @os_name == "macOS" && "px-3",
           @os_name == "Linux" && "px-1",
-          (@current_operating_system == "Mac" && @os_name == "macOS") && "bg-[#322199]",
-          (@current_operating_system == "Linux" && @os_name == "Linux") && "bg-[#322199]"
+          @current_operating_system == "Mac" && @os_name == "macOS" && "bg-[#322199]",
+          @current_operating_system == "Linux" && @os_name == "Linux" && "bg-[#322199]"
         ]}
       >
         <img src={@os_icon} />
