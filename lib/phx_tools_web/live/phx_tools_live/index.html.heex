@@ -2,7 +2,51 @@
   <% :index -> %>
     <LandingComponent.landing_page operating_system={@operating_system} />
   <% :linux -> %>
-    <InstructionComponents.linux operating_system={@operating_system} url={@url} />
+    <InstructionComponents.os_instructions>
+      <:header>
+        Linux installation instructions
+      </:header>
+
+      <:command_to_install>
+        <%= "/bin/bash -c \"$(curl -fsSL #{@url}/Linux.sh)\"" %>
+      </:command_to_install>
+
+      <:instruction_item>
+        2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
+      </:instruction_item>
+
+      <:instruction_item>
+        3. Paste the shell command by hitting <b>Ctrl + Alt + V</b> together
+      </:instruction_item>
+
+      <:instruction_item>
+        4. Run the command by hitting <b>ENTER</b>
+      </:instruction_item>
+    </InstructionComponents.os_instructions>
   <% :macOS -> %>
-    <InstructionComponents.mac_os operating_system={@operating_system} url={@url} />
+    <InstructionComponents.os_instructions>
+      <:header>
+        macOS installation instructions
+      </:header>
+
+      <:command_to_install>
+        <%= "/bin/bash -c \"$(curl -fsSL #{@url}/macOS.sh)\"" %>
+      </:command_to_install>
+
+      <:instruction_item>
+        2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
+      </:instruction_item>
+
+      <:instruction_item>
+        3. Type "Terminal" and hit <b>RETURN</b>
+      </:instruction_item>
+
+      <:instruction_item>
+        4. Paste the shell command by hitting<b> ⌘ + V </b> together.
+      </:instruction_item>
+
+      <:instruction_item>
+        5. Run the command by hitting <b>RETURN</b>
+      </:instruction_item>
+    </InstructionComponents.os_instructions>
 <% end %>
