@@ -45,7 +45,7 @@ defmodule PhxToolsWeb.InstructionComponents do
               <% end %>
             </div>
           </div>
-          <.link navigate={~p"/"}>
+          <.link patch={~p"/"}>
             <button class="border-[#755FFF] border-[1px] lg:mt-8 md:mt-5 sm:mt-5 p-1 text-[#755FFF] text-[16px] rounded-md lg:ml-3">
               Back
             </button>

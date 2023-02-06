@@ -33,7 +33,7 @@ defmodule PhxToolsWeb.CoreComponents do
   @spec os_link_card(assigns()) :: rendered()
   def os_link_card(assigns) do
     ~H"""
-    <.link navigate={@href}>
+    <.link patch={@href}>
       <div
         id={@id}
         class={[
