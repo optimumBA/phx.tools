@@ -7,21 +7,21 @@
         Linux installation process
       </:header>
 
-      <:command_to_install>
+      <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{@url}/Linux.sh)\"" %>
-      </:command_to_install>
+      </:installation_command>
 
-      <:instruction_item>
+      <:instruction>
         2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
-      </:instruction_item>
+      </:instruction>
 
-      <:instruction_item>
+      <:instruction>
         3. Paste the shell command by hitting <b>Ctrl + Alt + V</b> together
-      </:instruction_item>
+      </:instruction>
 
-      <:instruction_item>
+      <:instruction>
         4. Run the command by hitting <b>ENTER</b>
-      </:instruction_item>
+      </:instruction>
     </InstructionComponents.os_instructions>
   <% :macOS -> %>
     <InstructionComponents.os_instructions>
@@ -29,24 +29,24 @@
         macOS installation process
       </:header>
 
-      <:command_to_install>
+      <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{@url}/macOS.sh)\"" %>
-      </:command_to_install>
+      </:installation_command>
 
-      <:instruction_item>
+      <:instruction>
         2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
-      </:instruction_item>
+      </:instruction>
 
-      <:instruction_item>
+      <:instruction>
         3. Type "Terminal" and hit <b>RETURN</b>
-      </:instruction_item>
+      </:instruction>
 
-      <:instruction_item>
+      <:instruction>
         4. Paste the shell command by hitting<b> ⌘ + V </b> together.
-      </:instruction_item>
+      </:instruction>
 
-      <:instruction_item>
+      <:instruction>
         5. Run the command by hitting <b>RETURN</b>
-      </:instruction_item>
+      </:instruction>
     </InstructionComponents.os_instructions>
 <% end %>

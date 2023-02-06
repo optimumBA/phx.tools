@@ -8,8 +8,8 @@ defmodule PhxToolsWeb.InstructionComponents do
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
   slot :header, required: true
-  slot :command_to_install, required: true
-  slot :instruction_item, required: true
+  slot :installation_command, required: true
+  slot :instruction, required: true
 
   @spec os_instructions(assigns()) :: rendered()
   def os_instructions(assigns) do
@@ -27,7 +27,7 @@ defmodule PhxToolsWeb.InstructionComponents do
               </h1>
               <div class="flex items-center justify-evenly border-[1px] border-[#755FFF] py-1 mx-[4%] lg:mt-6 md:mt-5 sm:mt-4 rounded-lg">
                 <h1 id="tool-installation" class="text-white  text-[16px] font-thin">
-                  <%= render_slot(@command_to_install) %>
+                  <%= render_slot(@installation_command) %>
                 </h1>
                 <button
                   id="copy"
@@ -38,7 +38,7 @@ defmodule PhxToolsWeb.InstructionComponents do
                 </button>
               </div>
 
-              <%= for item <- @instruction_item do %>
+              <%= for item <- @instruction do %>
                 <h1 class="text-white lg:mt-4 md:mt-5 sm:mt-4">
                   <%= render_slot(item) %>
                 </h1>
