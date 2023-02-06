@@ -25,9 +25,9 @@ defmodule PhxToolsWeb.CoreComponents do
   Renders a card for being able to select OS
   """
   attr :id, :string, required: true
+  attr :class, :list
   attr :href, :string, required: true
   attr :os_icon, :string, required: true
-  attr :current_operating_system, :string, required: true
   attr :os_name, :string, required: true
 
   @spec os_link_card(assigns()) :: rendered()
@@ -38,10 +38,7 @@ defmodule PhxToolsWeb.CoreComponents do
         id={@id}
         class={[
           "block border-[2px] border-[#5337FF] py-2 rounded-md cursor-pointer hover:bg-[#322199]",
-          @os_name == "macOS" && "px-3",
-          @os_name == "Linux" && "px-1",
-          @current_operating_system == "Mac" && @os_name == "macOS" && "bg-[#322199]",
-          @current_operating_system == "Linux" && @os_name == "Linux" && "bg-[#322199]"
+          @class
         ]}
       >
         <img src={@os_icon} />

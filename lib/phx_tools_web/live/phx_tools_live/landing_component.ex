@@ -19,14 +19,20 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
               href={~p"/macOS"}
               os_icon={~p"/images/macos.png"}
               os_name="macOS"
-              current_operating_system={@operating_system}
+              class={[
+                "px-3",
+                @operating_system == "Mac" && "bg-[#322199]"
+              ]}
             />
             <.os_link_card
               id="linux"
               href={~p"/linux"}
               os_icon={~p"/images/linux.png"}
               os_name="Linux"
-              current_operating_system={@operating_system}
+              class={[
+                "px-1",
+                @operating_system == "Linux" && "bg-[#322199]"
+              ]}
             />
           </div>
 
