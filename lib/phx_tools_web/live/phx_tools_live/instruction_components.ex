@@ -3,7 +3,6 @@ defmodule PhxToolsWeb.InstructionComponents do
   Shows the steps to execute different scripts depending on the operating system.
   """
   use PhxToolsWeb, :html
-  use Phoenix.Component
 
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
