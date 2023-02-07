@@ -1,7 +1,7 @@
 export default {
   mounted() {
     this.el.addEventListener('click', () => {
-      var copyText = document.getElementById('tool-installation').innerHTML
+      var copyText = document.getElementById('tool-installation').innerText
       navigator.clipboard.writeText(copyText)
       copyBtn = document.getElementById('copy')
       copyBtn.innerHTML = 'Copied'
