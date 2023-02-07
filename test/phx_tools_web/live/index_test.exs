@@ -9,7 +9,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       {:ok, landing_live, _html} = live(conn, "/")
 
-      assert render(landing_live) =~ "bg-[#322199]"
+      assert render(landing_live) =~ "bg-indigo-850"
     end
 
     test "user visits the page", %{conn: conn} do

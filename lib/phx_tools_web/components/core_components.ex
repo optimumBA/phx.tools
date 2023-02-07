@@ -37,7 +37,7 @@ defmodule PhxToolsWeb.CoreComponents do
       <div
         id={@id}
         class={[
-          "block border-[2px] border-[#5337FF] py-2 rounded-md cursor-pointer hover:bg-[#322199]",
+          "block border-[2px] border-[#5337FF] py-2 rounded-md cursor-pointer hover:bg-indigo-850",
           @class
         ]}
       >

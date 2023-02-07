@@ -21,7 +21,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
               os_name="macOS"
               class={[
                 "px-3",
-                @operating_system == "Mac" && "bg-[#322199]"
+                @operating_system == "Mac" && "bg-indigo-850"
               ]}
             />
             <.os_link_card
@@ -31,7 +31,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
               os_name="Linux"
               class={[
                 "px-1",
-                @operating_system == "Linux" && "bg-[#322199]"
+                @operating_system == "Linux" && "bg-indigo-850"
               ]}
             />
           </div>
