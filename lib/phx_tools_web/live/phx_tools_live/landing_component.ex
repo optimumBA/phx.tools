@@ -10,7 +10,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
     <div class="solved-height">
       <div class="min-w-full min-h-full flex items-center justify-center">
         <div class="block mt-[5%]">
-          <h1 class="text-white text-center lg:text-[24px] md:text-[20px] sm:text-[18px] mb-[10%]">
+          <h1 class="text-white text-center lg:text-2xl md:text-xl sm:text-lg mb-[10%]">
             Choose your operating system
           </h1>
           <div class="flex justify-between lg:px-4 md:px-8 sm:px-10">
@@ -37,7 +37,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
           </div>
 
           <%= if @operating_system do %>
-            <h1 id="confirmation" class="text-center text-white text-[20px] mt-[20%]">
+            <h1 id="confirmation" class="text-center text-white text-xl mt-[20%]">
               Confirm your choice by clicking
             </h1>
           <% end %>
