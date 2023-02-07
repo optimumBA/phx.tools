@@ -17,7 +17,7 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        'md': '15px'
+        md: '15px',
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
@@ -26,8 +26,8 @@ module.exports = {
         brand: '#FD4F00',
         indigo: {
           450: '#755FFF',
-          850: '#322199'
-        }
+          850: '#322199',
+        },
       },
     },
   },
