@@ -21,6 +21,9 @@ module.exports = {
       },
       colors: {
         brand: '#FD4F00',
+        indigo: {
+          450: '#755FFF'
+        }
       },
     },
   },

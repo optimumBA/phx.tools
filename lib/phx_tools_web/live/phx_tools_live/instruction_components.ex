@@ -25,14 +25,14 @@ defmodule PhxToolsWeb.InstructionComponents do
               <h1 class="text-white lg:mt-5 md:mt-5 sm:mt-4">
                 1. Press the button to copy this command to your clipboard:
               </h1>
-              <div class="flex items-center justify-evenly border-[1px] border-[#755FFF] py-1 mx-[4%] lg:mt-6 md:mt-5 sm:mt-4 rounded-lg">
+              <div class="flex items-center justify-evenly border-[1px] border-indigo-450 py-1 mx-[4%] lg:mt-6 md:mt-5 sm:mt-4 rounded-lg">
                 <h1 id="tool-installation" class="text-white  text-[16px] font-thin">
                   <%= render_slot(@installation_command) %>
                 </h1>
                 <button
                   id="copy"
                   phx-hook="CopyHook"
-                  class="text-white bg-[#755FFF] py-1 px-2 rounded-lg text-[16px]  lg:text-[16px] md:text-[15px] sm:text-[14px]"
+                  class="text-white bg-indigo-450 py-1 px-2 rounded-lg text-[16px]  lg:text-[16px] md:text-[15px] sm:text-[14px]"
                 >
                   Copy
                 </button>
@@ -46,7 +46,7 @@ defmodule PhxToolsWeb.InstructionComponents do
             </div>
           </div>
           <.link patch={~p"/"}>
-            <button class="border-[#755FFF] border-[1px] lg:mt-8 md:mt-5 sm:mt-5 p-1 text-[#755FFF] text-[16px] rounded-md lg:ml-3">
+            <button class="border-indigo-450 border-[1px] lg:mt-8 md:mt-5 sm:mt-5 p-1 text-indigo-450 text-[16px] rounded-md lg:ml-3">
               Back
             </button>
           </.link>
