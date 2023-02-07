@@ -7,7 +7,9 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     test "background of macOS card changes when Mac OS user visits the page", %{conn: conn} do
       conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
 
-      {:ok, landing_live, _html} = live(conn, "/")
+      {:ok, landing_live, html} = live(conn, "/")
+
+      assert html =~ "Confirm your choice by clicking"
 
       assert render(landing_live) =~ "bg-indigo-850"
     end
