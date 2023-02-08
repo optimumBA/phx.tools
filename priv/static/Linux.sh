@@ -152,6 +152,7 @@ function get() {
         if [[ $1 == "homebrew" || $1 == "erlang" ]]; then
             echo "This might take a while."
         fi
+        echo ""
         install $1
     fi
 }
