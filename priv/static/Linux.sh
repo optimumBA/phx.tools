@@ -11,9 +11,6 @@ cyan='\033[0;36m'
 
 function is_package_exists() {
     case $1 in
-        "curl")
-            dpkg -l | grep -q curl
-            ;;
         "zsh")
             dpkg -l | grep -q zsh
             ;;
@@ -64,9 +61,6 @@ function is_package_exists() {
 
 function install() {
     case $1 in
-        "curl")
-            sudo apt-get install -y build-essential procps curl file git
-            ;;
         "zsh")
             sudo apt-get install -y zsh
             ;;
@@ -160,11 +154,6 @@ function get() {
 
 function add_env() {
     echo ""
-    echo ""
-    echo -e "${cyan}${bold}First we install curl"
-    echo -e "${white}"
-    sleep 1
-    get "curl"
     echo ""
 
     echo -e "${cyan}${bold}Now we are going to install zsh (it's a shell variant, required for oh-my-zsh)"
@@ -331,19 +320,18 @@ already installed:"
 
 echo -e "${cyan}${bold}"
 
-echo "1) Curl"
-echo "2) Zsh"
-echo "3) Chrome"
-echo "4) Homebrew"
-echo "5) Chromedriver"
-echo "6) asdf"
-echo "7) Erlang"
-echo "8) Elixir"
-echo "9) Phoenix"
-echo "10) Node.js"
-echo "11) PostgreSQL"
-echo "12) Vim"
-echo "13) Docker"
+echo "1) Zsh"
+echo "2) Chrome"
+echo "3) Homebrew"
+echo "4) Chromedriver"
+echo "5) asdf"
+echo "6) Erlang"
+echo "7) Elixir"
+echo "8) Phoenix"
+echo "9) Node.js"
+echo "10) PostgreSQL"
+echo "11) Vim"
+echo "12) Docker"
 
 echo ""
 echo -e "${white} ${bold}"
