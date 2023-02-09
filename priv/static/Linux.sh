@@ -83,7 +83,7 @@ function install() {
             brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
             ;;
         "erlang")
-            sudo apt-get -y install -y build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
+            sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
             asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
             asdf install erlang 25.2.2 && asdf global erlang 25.2.2
             ;;
@@ -91,6 +91,7 @@ function install() {
             asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
             asdf install elixir 1.14.3-otp-25
             asdf global elixir 1.14.3-otp-25
+            asdf reshim elixir 1.14.3-otp-25
             ;;
         "phoenix")
             mix archive.install hex phx_new 1.7.0-rc.2
@@ -99,9 +100,10 @@ function install() {
             asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
             asdf install nodejs 16.17.0
             asdf global nodejs 16.17.0
+            asdf reshim nodejs 16.17.0
             ;;
         "postgresql")
-            sudo apt-get install -y linux-headers-$(uname -r) build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev
+            sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
             asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
             asdf install postgres 15.1
             asdf global postgres 15.1
@@ -110,7 +112,7 @@ function install() {
             sudo apt-get install -y vim
             ;;
         "chrome")
-            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
             sudo apt install -y ./google-chrome-stable_current_amd64.deb
             ;;
         "chromedriver")
