@@ -139,11 +139,11 @@ function install() {
 
 function get() {
     if is_package_exists $1; then
-        echo "${bold} $1 is already installed. Skipping..."
+        echo "$1 is already installed. Skipping..."
     else
-        echo "${bold} Installing $1..."
+        echo "Installing $1..."
         if [[ $1 == "homebrew" || $1 == "erlang" ]]; then
-            echo "${bold} This might take a while."
+            echo "This might take a while."
         fi
         echo ""
         install $1
