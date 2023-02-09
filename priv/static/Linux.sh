@@ -105,8 +105,6 @@ function install() {
             asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
             asdf install postgres 15.1
             asdf global postgres 15.1
-
-            echo -e "${cyan}${bold}Starting the postgres server... ${reset}"
             ;;
         "vim")
             sudo apt-get install -y vim
@@ -141,11 +139,11 @@ function install() {
 
 function get() {
     if is_package_exists $1; then
-        echo "$1 is already installed. Skipping..."
+        echo "${bold} $1 is already installed. Skipping..."
     else
-        echo "Installing $1"
+        echo "${bold} Installing $1..."
         if [[ $1 == "homebrew" || $1 == "erlang" ]]; then
-            echo "This might take a while."
+            echo "${bold} This might take a while."
         fi
         echo ""
         install $1
@@ -154,120 +152,74 @@ function get() {
 
 function add_env() {
     echo ""
-    echo ""
-
-    echo -e "${cyan}${bold}Now we are going to install zsh (it's a shell variant, required for oh-my-zsh)"
-    sleep 2
     echo -e "${white}"
+    sleep 2
     get "zsh"
-    echo ""
 
-    echo -e "${cyan}${bold}After that we need to add oh-my-zsh terminal helpers"
     echo -e "${white}"
     sleep 2 
     get "oh-my-zsh"
-    echo ""
 
-    echo -e "${cyan}${bold}Now we need wget (command-line tool that makes it possible to download files)"
     echo -e "${white}"
     sleep 2
     get "wget"
-    echo ""
 
-    echo -e "${cyan}${bold}Now we are gonna add Homebrew"
     echo -e "${white}"
     sleep 2
     get "homebrew"
-    echo ""
 
-    echo -e "${cyan}${bold}Also we need to install asdf 
-    (preferred way of installing development tools because it enables us to set versions per project)"
     echo -e "${white}"
     sleep 3
     get "asdf"
-    echo ""
 
-    echo -e "${cyan}${bold}Finally we came to part where we install technologies that 
-    we are gonna use in our elixir/phoenix development jurney"
-    echo ""
-    sleep 3
-    echo -e "${cyan}${bold}1) Erlang"
     echo -e "${white}"
     sleep 1.5
     get "erlang"
-    echo ""
 
-    echo -e "${cyan}${bold}2) Elixir"
     echo -e "${white}"
     sleep 1.5
     get "elixir"
-    echo ""
 
-    echo -e "${cyan}${bold}3) Phoenix 1.7.0-rc.2"
     echo -e "${white}"
     sleep 1.5
     get "phoenix"
-    echo ""
     
-    echo -e "${cyan}${bold}4) PostgreSQL"
     echo -e "${white}"
     sleep 1.5
     get "postgresql"
-    echo ""
-    echo -e "${cyan}${bold}start the DB using pg_ctl start and stop with pg_ctl stop"
-    sleep 1.5
-    echo ""
     
-    echo -e "${cyan}${bold}5) Vim"
     echo -e "${white}"  
     get "vim"
-    echo ""
 
     if [[ "$1" =~ ^([nN][oO]|[nN])$ ]]; then
-        echo -e "${cyan}${bold}Skipping installation of optional dependencies
-        (Chrome, Node.js, Chromedriver, Docker)"
-
-        echo ""
+        echo -e "${white}"  
         echo "Skipping Chrome"
-        echo ""
+        echo -e "${white}"  
         echo "Skipping Node.js"
-        echo ""
+        echo -e "${white}"  
         echo "Skipping chromedriver"
-        echo ""
+        echo -e "${white}"  
         echo "Skipping Docker"
-        echo ""
+        echo -e "${white}"  
     else
-        echo -e "${cyan}${bold}Hang on tight. We will do the optional installation
-        (Chrome, Chromedriver, Docker)"
-        echo ""
-
-        echo -e "${cyan}${bold}1) Chrome
-        (Next step is to add Chrome, Firefox is pre-installed on Ubuntu, but we need Chrome to run automated tests)"
-        echo -e "${white}"
+        echo -e "${white}"  
         sleep 3
         get "chrome" 
-        echo ""
+        echo -e "${white}"  
 
-        echo -e "${cyan}${bold}2) Node.js"
-        echo -e "${white}"
         sleep 1.5
         get "nodejs"
-        echo ""
+        echo -e "${white}"  
 
-        echo -e "${cyan}${bold}3) chromedriver
-        (Now we are gonna add chromedriver that we also need for tests)"
-        echo -e "${white}"
         sleep 2
         get "chromedriver"
-        echo ""
+        echo -e "${white}"  
 
-        echo -e "${cyan}${bold}4) Docker"
-        echo -e "${white}"
         get "docker"
-        echo ""
+        echo -e "${white}"  
     fi
 
-    echo ""
+    echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
     echo -e "${cyan}${bold}Please restart the terminal and type in the following command:"
     echo -e "${cyan}${bold}mix phx.new"
