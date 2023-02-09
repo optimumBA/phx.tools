@@ -235,8 +235,8 @@ function add_env() {
     echo ""
 
     if [[ "$1" =~ ^([nN][oO]|[nN])$ ]]; then
-        echo -e "${cyan}${bold}Skipping the optional installation
-        (Chrome, Chromedriver, Docker)"
+        echo -e "${cyan}${bold}Skipping installation of optional dependencies
+        (Chrome, Node.js, Chromedriver, Docker)"
 
         echo ""
         echo "Skipping Chrome"
