@@ -96,6 +96,7 @@ function install() {
             ;;
         "phoenix")
             source ~/.bashrc
+            source ~/.zshrc
             mix local.hex --force
             mix archive.install hex phx_new 1.7.0-rc.2
             ;;
@@ -120,6 +121,7 @@ function install() {
             ;;
         "chromedriver")
             source ~/.bashrc
+            source ~/.zshrc
             npm install -g chromedriver
             ;;
         "docker")
