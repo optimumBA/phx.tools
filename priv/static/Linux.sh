@@ -98,7 +98,7 @@ function install() {
             source ~/.bashrc
             source ~/.zshrc
             mix local.hex --force
-            mix archive.install hex phx_new 1.7.0-rc.2
+            echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
             ;;
         "nodejs")
             asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
