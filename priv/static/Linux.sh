@@ -89,11 +89,12 @@ function install() {
             ;;
         "elixir")
             asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-            asdf install elixir 1.14.3-otp-25
-            asdf global elixir 1.14.3-otp-25
-            asdf reshim elixir 1.14.3-otp-25
+            asdf install elixir 1.14.2-otp-25
+            asdf global elixir 1.14.2-otp-25
+            asdf reshim elixir 1.14.2-otp-25
             ;;
         "phoenix")
+            source ~/.bashrc
             mix archive.install hex phx_new 1.7.0-rc.2
             ;;
         "nodejs")
@@ -116,6 +117,7 @@ function install() {
             sudo apt install -y ./google-chrome-stable_current_amd64.deb
             ;;
         "chromedriver")
+            source ~/.bashrc
             npm install -g chromedriver
             ;;
         "docker")
