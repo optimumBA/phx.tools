@@ -21,7 +21,7 @@ function is_package_exists() {
             dpkg -l | grep -q wget
             ;;
         "homebrew")
-            which brew > /dev/null
+            which brew >/dev/null 2>&1
             ;;
         "asdf")
             brew list | grep -q asdf
@@ -33,7 +33,7 @@ function is_package_exists() {
             which elixir >/dev/null 2>&1
             ;;
         "phoenix")
-            mix phx.new --version
+            mix phx.new --version >/dev/null 2>&1
             ;;
         "nodejs")
             which node >/dev/null 2>&1
@@ -95,8 +95,8 @@ function install() {
             asdf reshim elixir 1.14.2-otp-25
             ;;
         "phoenix")
-            source ~/.bashrc
-            source ~/.zshrc
+            source ~/.bashrc >/dev/null 2>&1
+            source ~/.zshrc >/dev/null 2>&1
             mix local.hex --force
             echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
             ;;
@@ -107,6 +107,7 @@ function install() {
             asdf reshim nodejs 16.17.0
             ;;
         "postgresql")
+            sudo apt-get update
             sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
             asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
             asdf install postgres 15.1
@@ -120,8 +121,8 @@ function install() {
             sudo apt install -y ./google-chrome-stable_current_amd64.deb
             ;;
         "chromedriver")
-            source ~/.bashrc
-            source ~/.zshrc
+            source ~/.bashrc >/dev/null 2>&1
+            source ~/.zshrc >/dev/null 2>&1
             npm install -g chromedriver
             ;;
         "docker")
