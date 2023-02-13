@@ -301,7 +301,11 @@ defmodule GitHubWorkflows do
   end
 
   defp test_linux_script_job do
-    test_shell_script_job("Linux", "ubuntu-latest", "sudo apt-get install -y expect")
+    test_shell_script_job(
+      "Linux",
+      "ubuntu-latest",
+      "sudo apt-get update && sudo apt-get install -y expect"
+    )
   end
 
   defp test_macos_script_job do
@@ -333,7 +337,7 @@ defmodule GitHubWorkflows do
         [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "expect test/scripts/script.exp #{os}.sh"
+          run: "cd test/scripts && expect script.exp #{os}.sh"
         ],
         [
           name: "Generate an app and start the server",
