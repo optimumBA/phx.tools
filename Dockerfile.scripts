@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y asciinema curl expect git sudo
 RUN adduser ubuntu
 # RUN echo "ubuntu:ubuntu" | chpasswd
 RUN adduser ubuntu sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers
 
 WORKDIR /app
 
