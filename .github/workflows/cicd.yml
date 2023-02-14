@@ -269,10 +269,10 @@ jobs:
           path: priv/static/Linux.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get install -y expect
+        run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: expect test/scripts/script.exp Linux.sh
+        run: cd test/scripts && expect script.exp Linux.sh
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile
@@ -302,7 +302,7 @@ jobs:
         run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: expect test/scripts/script.exp macOS.sh
+        run: cd test/scripts && expect script.exp macOS.sh
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile
