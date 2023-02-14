@@ -1,4 +1,5 @@
 serve:
+	source ~/.zshrc
 	mix archive.install --force hex phx_new 1.7.0-rc.0
 	pg_ctl start -D
 	mix phx.new --no-install phx_tools_test
