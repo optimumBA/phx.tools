@@ -270,14 +270,13 @@ sleep 3
 
 echo ""
 
-echo -e "${bblue}${bold}Welcome to our Phx.tools script for linux based OS"
+echo -e "${bblue}${bold}Welcome to the phx.tools shell script for Linux-based OS."
 
 sleep 3
 
 echo ""
 
-echo -e "${bblue}${bold}The following tools and dependencies will be installed if you don't have them
-already installed:"
+echo -e "${bblue}${bold}The following will be installed if not available already:"
 
 echo -e "${cyan}${bold}"
 
@@ -317,7 +316,7 @@ while ! is_yn "$answer";do
     echo ""
     case "$answer" in
         [yY] | [yY][eE][sS])
-            echo -e "${bblue}${bold}Do you want to perform the optional installation?"
+            echo -e "${bblue}${bold}We can also install some optional tools:"
 
             echo -e "${cyan}${bold}"
 
@@ -326,14 +325,12 @@ while ! is_yn "$answer";do
             echo "3) Chromedriver" 
             echo "4) Docker"
 
-            echo ""
-
             echo -e "${white} ${bold}"
 
             optional=""
 
             while ! is_yn "$optional"; do
-                read -p "(y/n) " optional
+                read -p "Do you want us to install those as well? (y/n) " optional
 
                 case "$optional" in
                     [yY] | [yY][eE][sS])
