@@ -200,17 +200,7 @@ function add_env() {
     echo -e "${white}"  
     get "vim"
 
-    if [[ "$1" =~ ^([nN][oO]|[nN])$ ]]; then
-        echo -e "${white}"  
-        echo "Skipping Chrome"
-        echo -e "${white}"  
-        echo "Skipping Node.js"
-        echo -e "${white}"  
-        echo "Skipping chromedriver"
-        echo -e "${white}"  
-        echo "Skipping Docker"
-        echo -e "${white}"  
-    else
+    if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"  
         sleep 3
         get "chrome" 
@@ -225,7 +215,7 @@ function add_env() {
         echo -e "${white}"  
 
         get "docker"
-        echo -e "${white}"  
+        echo -e "${white}"   
     fi
 
     echo -e "${white}"
