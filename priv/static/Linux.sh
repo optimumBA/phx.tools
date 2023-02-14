@@ -343,9 +343,15 @@ while ! is_yn "$answer";do
 
             echo ""
 
-            read -sp 'What is your password?' sudo_password
+            echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
 
-            sudo -S chsh -s '/bin/zsh' "${USER}" <<< "${sudo_password}"
+            echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
+
+            echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
+
+            sleep 3
+
+            sudo -S chsh -s '/bin/zsh' "${USER}" 
             
             add_env "$optional"
             ;;
