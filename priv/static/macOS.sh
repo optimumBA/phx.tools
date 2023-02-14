@@ -1,5 +1,17 @@
 #! /bin/bash
 
+# Make sure important variables exist if not already defined
+#
+# $USER is defined by login(1) which is not always executed (e.g. containers)
+# POSIX: https://pubs.opengroup.org/onlinepubs/009695299/utilities/id.html
+USER=${USER:-$(id -u -n)}
+# $HOME is defined at the time of login, but it could be unset. If it is unset,
+# a tilde by itself (~) will not be expanded to the current user's home directory.
+# POSIX: https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap08.html#tag_08_03
+HOME="${HOME:-$(getent passwd $USER 2>/dev/null | cut -d: -f6)}"
+# macOS does not have getent, but this works even if $HOME is unset
+HOME="${HOME:-$(eval echo ~$USER)}"
+
 bold=$(tput bold)
 normal=$(tput sgr0)
 red='\033[0;31m'
@@ -200,17 +212,7 @@ function add_env() {
     echo -e "${white}"  
     get "vim"
 
-    if [[ "$1" =~ ^([nN][oO]|[nN])$ ]]; then
-        echo -e "${white}"  
-        echo "Skipping Chrome"
-        echo -e "${white}"  
-        echo "Skipping Node.js"
-        echo -e "${white}"  
-        echo "Skipping chromedriver"
-        echo -e "${white}"  
-        echo "Skipping Docker"
-        echo -e "${white}"  
-    else
+    if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"  
         sleep 3
         get "chrome" 
@@ -225,7 +227,7 @@ function add_env() {
         echo -e "${white}"  
 
         get "docker"
-        echo -e "${white}"  
+        echo -e "${white}"   
     fi
 
     echo -e "${white}"
@@ -270,14 +272,13 @@ sleep 3
 
 echo ""
 
-echo -e "${bblue}${bold}Welcome to our Phx.tools script for linux based OS"
+echo -e "${bblue}${bold}Welcome to the phx.tools shell script for Linux-based OS."
 
 sleep 3
 
 echo ""
 
-echo -e "${bblue}${bold}The following tools and dependencies will be installed if you don't have them
-already installed:"
+echo -e "${bblue}${bold}The following will be installed if not available already:"
 
 echo -e "${cyan}${bold}"
 
@@ -317,7 +318,7 @@ while ! is_yn "$answer";do
     echo ""
     case "$answer" in
         [yY] | [yY][eE][sS])
-            echo -e "${bblue}${bold}Do you want to perform the optional installation?"
+            echo -e "${bblue}${bold}We can also install some optional tools:"
 
             echo -e "${cyan}${bold}"
 
@@ -326,34 +327,31 @@ while ! is_yn "$answer";do
             echo "3) Chromedriver" 
             echo "4) Docker"
 
-            echo ""
-
+            echo -e "${white}"
             echo -e "${white} ${bold}"
 
             optional=""
 
             while ! is_yn "$optional"; do
-                read -p "(y/n) " optional
+                read -p "Do you want us to install those as well? (y/n) " optional
 
-                case "$optional" in
-                    [yY] | [yY][eE][sS])
-                        echo "The optional packages will be installed"
-                        ;;
-                    [nN] | [nN][oO])
-                        echo "The optional packages will not be installed"
-                        ;;
-                    *)
-                        echo "Please enter y or n"
-                        echo ""
-                        ;;
-                esac
+                if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
+                    echo "Please enter y or n"
+                    echo ""
+                fi
             done
 
             echo ""
 
-            read -sp 'What is your password?' sudo_password
+            echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
 
-            sudo -S chsh -s '/bin/zsh' "${USER}" <<< "${sudo_password}"
+            echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
+
+            echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
+
+            sleep 3
+
+            sudo -S chsh -s '/bin/zsh' "${USER}" 
             
             add_env "$optional"
             ;;
@@ -367,5 +365,3 @@ while ! is_yn "$answer";do
             ;;
     esac
 done
-
-# in collaboration with Nittin
