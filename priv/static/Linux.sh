@@ -315,6 +315,7 @@ while ! is_yn "$answer";do
             echo "3) Chromedriver" 
             echo "4) Docker"
 
+            echo -e "${white}"
             echo -e "${white} ${bold}"
 
             optional=""
@@ -322,18 +323,10 @@ while ! is_yn "$answer";do
             while ! is_yn "$optional"; do
                 read -p "Do you want us to install those as well? (y/n) " optional
 
-                case "$optional" in
-                    [yY] | [yY][eE][sS])
-                        echo "The optional packages will be installed"
-                        ;;
-                    [nN] | [nN][oO])
-                        echo "The optional packages will not be installed"
-                        ;;
-                    *)
-                        echo "Please enter y or n"
-                        echo ""
-                        ;;
-                esac
+                if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
+                    echo "Please enter y or n"
+                    echo ""
+                fi
             done
 
             echo ""
