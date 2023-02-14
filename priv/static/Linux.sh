@@ -23,7 +23,7 @@ cyan='\033[0;36m'
 
 function is_package_exists() {
     case $1 in
-        "zsh")
+        "Zsh")
             dpkg -l | grep -q zsh
             ;;
         "oh-my-zsh")
@@ -32,37 +32,37 @@ function is_package_exists() {
         "wget")
             dpkg -l | grep -q wget
             ;;
-        "homebrew")
+        "Homebrew")
             which brew >/dev/null 2>&1
             ;;
-        "asdf")
+        "Asdf")
             brew list | grep -q asdf
             ;;
-        "erlang")
+        "Erlang")
             command -v erl >/dev/null 2>&1
             ;;
-        "elixir")
+        "Elixir")
             which elixir >/dev/null 2>&1
             ;;
-        "phoenix")
+        "Phoenix")
             mix phx.new --version >/dev/null 2>&1
             ;;
-        "nodejs")
+        "Node.js")
             which node >/dev/null 2>&1
             ;;
-        "postgresql")
+        "PostgreSQL")
             which psql >/dev/null 2>&1
             ;;
-        "vim")
+        "Vim")
             dpkg -l | grep -q vim
             ;;
-        "chrome")
+        "Chrome")
             dpkg -l | grep -q google-chrome-stable
             ;;
-        "chromedriver")
+        "Chromedriver")
             npm list -g | grep -q chromedriver
             ;;
-        "docker")
+        "Docker")
             which docker >/dev/null 2>&1
             ;;
         *)
@@ -73,7 +73,7 @@ function is_package_exists() {
 
 function install() {
     case $1 in
-        "zsh")
+        "Zsh")
             sudo apt-get install -y zsh
             ;;
         "oh-my-zsh")
@@ -82,7 +82,7 @@ function install() {
         "wget")
             sudo apt-get install -y wget
             ;;
-        "homebrew")
+        "Homebrew")
             NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/"$(whoami)"/.zprofile
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/"$(whoami)"/.zprofile
@@ -91,53 +91,53 @@ function install() {
             # recommendation after install homebrew
             brew install gcc
             ;;
-        "asdf")
+        "Asdf")
             brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
             ;;
-        "erlang")
+        "Erlang")
             sudo apt-get update
             sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
             asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
             asdf install erlang 25.1.2 && asdf global erlang 25.1.2
             ;;
-        "elixir")
+        "Elixir")
             asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
             asdf install elixir 1.14.2-otp-25
             asdf global elixir 1.14.2-otp-25
             asdf reshim elixir 1.14.2-otp-25
             ;;
-        "phoenix")
+        "Phoenix")
             source ~/.bashrc >/dev/null 2>&1
             source ~/.zshrc >/dev/null 2>&1
             mix local.hex --force
             echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
             ;;
-        "nodejs")
+        "Node.js")
             asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
             asdf install nodejs 16.17.0
             asdf global nodejs 16.17.0
             asdf reshim nodejs 16.17.0
             ;;
-        "postgresql")
+        "PostgreSQL")
             sudo apt-get update
             sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
             asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
             asdf install postgres 15.1
             asdf global postgres 15.1
             ;;
-        "vim")
+        "Vim")
             sudo apt-get install -y vim
             ;;
-        "chrome")
+        "Chrome")
             sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
             sudo apt install -y ./google-chrome-stable_current_amd64.deb
             ;;
-        "chromedriver")
+        "Chromedriver")
             source ~/.bashrc >/dev/null 2>&1
             source ~/.zshrc >/dev/null 2>&1
             npm install -g chromedriver
             ;;
-        "docker")
+        "Docker")
             sudo apt-get update
             sudo apt-get install -y \
             ca-certificates \
@@ -175,7 +175,7 @@ function add_env() {
     echo ""
     echo -e "${white}"
     sleep 2
-    get "zsh"
+    get "Zsh"
 
     echo -e "${white}"
     sleep 2 
@@ -187,46 +187,46 @@ function add_env() {
 
     echo -e "${white}"
     sleep 2
-    get "homebrew"
+    get "Homebrew"
 
     echo -e "${white}"
     sleep 3
-    get "asdf"
+    get "Asdf"
 
     echo -e "${white}"
     sleep 1.5
-    get "erlang"
+    get "Erlang"
 
     echo -e "${white}"
     sleep 1.5
-    get "elixir"
+    get "Elixir"
 
     echo -e "${white}"
     sleep 1.5
-    get "phoenix"
+    get "Phoenix"
     
     echo -e "${white}"
     sleep 1.5
-    get "postgresql"
+    get "PostgreSQL"
     
     echo -e "${white}"  
-    get "vim"
+    get "Vim"
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"  
         sleep 3
-        get "chrome" 
+        get "Chrome" 
         echo -e "${white}"  
 
         sleep 1.5
-        get "nodejs"
+        get "Node.js"
         echo -e "${white}"  
 
         sleep 2
-        get "chromedriver"
+        get "Chromedriver"
         echo -e "${white}"  
 
-        get "docker"
+        get "Docker"
         echo -e "${white}"   
     fi
 
@@ -284,7 +284,7 @@ echo -e "${cyan}${bold}"
 
 echo "1) Zsh"
 echo "2) Homebrew"
-echo "3) asdf"
+echo "3) Asdf"
 echo "4) Erlang"
 echo "5) Elixir"
 echo "6) Phoenix"
