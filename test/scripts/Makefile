@@ -1,4 +1,6 @@
 serve:
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	asdf reshim
 	mix archive.install --force hex phx_new 1.7.0-rc.0
 	pg_ctl start -D
 	mix phx.new --no-install phx_tools_test
