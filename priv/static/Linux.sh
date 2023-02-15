@@ -84,21 +84,31 @@ function install() {
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>/home/"$(whoami)"/.zprofile
-        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>/home/"$(whoami)"/.zprofile
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
+        (
+            echo
+            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+        ) >>~/.zshrc
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-        # recommendation after install homebrew
+        # recommendation after installing homebrew
         brew install gcc
         ;;
     "Asdf")
-        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+        brew install asdf
+        (
+            echo
+            echo '. $(brew --prefix asdf)/libexec/asdf.sh'
+        ) >>~/.zshrc
+        source ~/.zshrc
         ;;
     "Erlang")
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 25.1.2 && asdf global erlang 25.1.2
+        asdf install erlang 25.1.2
+        asdf global erlang 25.1.2
+        asdf reshim erlang 25.1.2
         ;;
     "Elixir")
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
@@ -107,8 +117,7 @@ function install() {
         asdf reshim elixir 1.14.2-otp-25
         ;;
     "Phoenix")
-        source ~/.bashrc >/dev/null 2>&1
-        source ~/.zshrc >/dev/null 2>&1
+        source ~/.zshrc
         mix local.hex --force
         echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
         ;;
@@ -124,6 +133,7 @@ function install() {
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
         asdf install postgres 15.1
         asdf global postgres 15.1
+        asdf reshim postgres
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.bashrc >/dev/null 2>&1
         source ~/.zshrc >/dev/null 2>&1
@@ -137,8 +147,7 @@ function install() {
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
         ;;
     "Chromedriver")
-        source ~/.bashrc >/dev/null 2>&1
-        source ~/.zshrc >/dev/null 2>&1
+        source ~/.zshrc
         npm install -g chromedriver
         ;;
     "Docker")
@@ -242,8 +251,8 @@ function add_env() {
 }
 
 phx_tools="
-        ██████╗░██╗░░██╗██╗░░██╗  ████████╗░█████╗░░█████╗░██╗░░░░░░██████╗     
-        ██╔══██╗██║░░██║╚██╗██╔╝  ╚══██╔══╝██╔══██╗██╔══██╗██║░░░░░██╔════╝     
+        ██████╗░██╗░░██╗██╗░░██╗  ████████╗░█████╗░░█████╗░██╗░░░░░░██████╗ 
+        ██╔══██╗██║░░██║╚██╗██╔╝  ╚══██╔══╝██╔══██╗██╔══██╗██║░░░░░██╔════╝ 
         ██████╔╝███████║░╚███╔╝░  ░░░██║░░░██║░░██║██║░░██║██║░░░░░╚█████╗░ 
         ██╔═══╝░██╔══██║░██╔██╗░  ░░░██║░░░██║░░██║██║░░██║██║░░░░░░╚═══██╗ 
         ██║░░░░░██║░░██║██╔╝╚██╗  ░░░██║░░░╚█████╔╝╚█████╔╝███████╗██████╔╝ 
