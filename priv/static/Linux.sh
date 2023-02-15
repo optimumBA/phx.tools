@@ -124,6 +124,10 @@ function install() {
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
         asdf install postgres 15.1
         asdf global postgres 15.1
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        source ~/.bashrc >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
+        source ~/.profile >/dev/null 2>&1
         ;;
     "Vim")
         sudo apt-get install -y vim
