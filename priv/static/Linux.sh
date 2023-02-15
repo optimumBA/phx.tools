@@ -89,7 +89,7 @@ function install() {
             echo
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
         ) >>~/.zshrc
-        source ~/.zshrc
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
         # recommendation after installing homebrew
         brew install gcc
