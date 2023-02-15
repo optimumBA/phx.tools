@@ -85,7 +85,10 @@ function install() {
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
-        echo 'eval "$(brew --prefix)/bin/brew shellenv"' >>~/.zshrc
+        (
+            echo
+            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+        ) >>~/.zshrc
         source ~/.zshrc
 
         # recommendation after installing homebrew
@@ -93,7 +96,10 @@ function install() {
         ;;
     "Asdf")
         brew install asdf
-        echo '. $(brew --prefix asdf)/libexec/asdf.sh' >>~/.zshrc
+        (
+            echo
+            echo '. $(brew --prefix asdf)/libexec/asdf.sh'
+        ) >>~/.zshrc
         source ~/.zshrc
         ;;
     "Erlang")
