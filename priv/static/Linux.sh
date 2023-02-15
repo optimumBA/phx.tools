@@ -84,15 +84,17 @@ function install() {
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>/home/"$(whoami)"/.zprofile
-        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>/home/"$(whoami)"/.zprofile
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
+        echo 'eval "$(brew --prefix)/bin/brew shellenv"' >>~/.zshrc
+        source ~/.zshrc
 
-        # recommendation after install homebrew
+        # recommendation after installing homebrew
         brew install gcc
         ;;
     "Asdf")
-        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+        brew install asdf
+        echo '. $(brew --prefix asdf)/libexec/asdf.sh' >>~/.zshrc
+        source ~/.zshrc
         ;;
     "Erlang")
         sudo apt-get update
@@ -109,8 +111,7 @@ function install() {
         asdf reshim elixir 1.14.2-otp-25
         ;;
     "Phoenix")
-        source ~/.bashrc >/dev/null 2>&1
-        source ~/.zshrc >/dev/null 2>&1
+        source ~/.zshrc
         mix local.hex --force
         echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
         ;;
@@ -136,8 +137,7 @@ function install() {
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
         ;;
     "Chromedriver")
-        source ~/.bashrc >/dev/null 2>&1
-        source ~/.zshrc >/dev/null 2>&1
+        source ~/.zshrc
         npm install -g chromedriver
         ;;
     "Docker")
