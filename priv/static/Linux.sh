@@ -133,7 +133,7 @@ function install() {
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
         asdf install postgres 15.1
         asdf global postgres 15.1
-        asdf reshim postgres 15.1
+        asdf reshim postgres
         ;;
     "Vim")
         sudo apt-get install -y vim
