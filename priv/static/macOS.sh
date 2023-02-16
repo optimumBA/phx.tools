@@ -23,14 +23,12 @@ cyan='\033[0;36m'
 
 function is_package_exists() {
     case $1 in
-        "zsh")
-            dpkg -l | grep -q zsh
-            ;;
+        "xcode")
+            which xcode-select > /dev/null
+            ;;  
+
         "oh-my-zsh")
             [ -d ~/.oh-my-zsh ]
-            ;;
-        "wget")
-            dpkg -l | grep -q wget
             ;;
         "homebrew")
             which brew >/dev/null 2>&1
@@ -53,9 +51,6 @@ function is_package_exists() {
         "postgresql")
             which psql >/dev/null 2>&1
             ;;
-        "vim")
-            dpkg -l | grep -q vim
-            ;;
         "chrome")
             dpkg -l | grep -q google-chrome-stable
             ;;
@@ -73,34 +68,33 @@ function is_package_exists() {
 
 function install() {
     case $1 in
-        "zsh")
-            sudo apt-get install -y zsh
-            ;;
+        "xcode")
+            xcode-select --install
+            ;;  
         "oh-my-zsh")
             sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
             ;;
-        "wget")
-            sudo apt-get install -y wget
-            ;;
         "homebrew")
-            NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/"$(whoami)"/.zprofile
-            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/"$(whoami)"/.zprofile
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-            # recommendation after install homebrew
-            brew install gcc
+             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             ;;
         "asdf")
+            # Deps for asdf
+            brew install coreutils curl git
+
             brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
             ;;
         "erlang")
-            sudo apt-get update
-            sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
+            # Deps for erlang
+            brew install autoconf openssl@1.1 wxwidgets libxslt fop
+
+            export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
             asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-            asdf install erlang 25.1.2 && asdf global erlang 25.1.2
+            asdf install erlang 25.2.2 && asdf global erlang 25.2.2
             ;;
         "elixir")
+            # Deps for elixir
+            brew install unzip
+
             asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
             asdf install elixir 1.14.2-otp-25
             asdf global elixir 1.14.2-otp-25
@@ -119,38 +113,26 @@ function install() {
             asdf reshim nodejs 16.17.0
             ;;
         "postgresql")
-            sudo apt-get update
-            sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
+            # Dependencies for PSQL
+            brew install gcc readline zlib curl ossp-uuid
+
             asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
             asdf install postgres 15.1
             asdf global postgres 15.1
             ;;
-        "vim")
-            sudo apt-get install -y vim
-            ;;
         "chrome")
-            sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo apt install -y ./google-chrome-stable_current_amd64.deb
+            brew install google-chrome
             ;;
         "chromedriver")
-            source ~/.bashrc >/dev/null 2>&1
-            source ~/.zshrc >/dev/null 2>&1
-            npm install -g chromedriver
+            # Dependencies for chromedriver
+            brew install zip
+            
+            asdf plugin add chromedriver
+            asdf install chromedriver latest
+            asdf global chromedriver latest
             ;;
         "docker")
-            sudo apt-get update
-            sudo apt-get install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
-            sudo mkdir -p /etc/apt/keyrings
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-            echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-            sudo apt-get update
-            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+            brew install docker
             ;;
         *)
             echo "Invalid name argument on install"
@@ -158,7 +140,7 @@ function install() {
     esac
 }
 
-function get() {
+function maybe_install() {
     if is_package_exists $1; then
         echo "$1 is already installed. Skipping..."
     else
@@ -175,58 +157,51 @@ function add_env() {
     echo ""
     echo -e "${white}"
     sleep 2
-    get "zsh"
+    maybe_install "xcode"
 
     echo -e "${white}"
     sleep 2 
-    get "oh-my-zsh"
+    maybe_install "oh-my-zsh"
 
     echo -e "${white}"
     sleep 2
-    get "wget"
-
-    echo -e "${white}"
-    sleep 2
-    get "homebrew"
+    maybe_install "homebrew"
 
     echo -e "${white}"
     sleep 3
-    get "asdf"
+    maybe_install "asdf"
 
     echo -e "${white}"
     sleep 1.5
-    get "erlang"
+    maybe_install "erlang"
 
     echo -e "${white}"
     sleep 1.5
-    get "elixir"
+    maybe_install "elixir"
 
     echo -e "${white}"
     sleep 1.5
-    get "phoenix"
+    maybe_install "phoenix"
     
     echo -e "${white}"
     sleep 1.5
-    get "postgresql"
-    
-    echo -e "${white}"  
-    get "vim"
+    maybe_install "postgresql"
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"  
         sleep 3
-        get "chrome" 
+        maybe_install "chrome" 
         echo -e "${white}"  
 
         sleep 1.5
-        get "nodejs"
+        maybe_install "nodejs"
         echo -e "${white}"  
 
         sleep 2
-        get "chromedriver"
+        maybe_install "chromedriver"
         echo -e "${white}"  
 
-        get "docker"
+        maybe_install "docker"
         echo -e "${white}"   
     fi
 
@@ -272,7 +247,7 @@ sleep 3
 
 echo ""
 
-echo -e "${bblue}${bold}Welcome to the phx.tools shell script for Linux-based OS."
+echo -e "${bblue}${bold}Welcome to the phx.tools shell script for macOS."
 
 sleep 3
 
@@ -282,14 +257,14 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 
 echo -e "${cyan}${bold}"
 
-echo "1) Zsh"
-echo "2) Homebrew"
-echo "3) asdf"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
-echo "8) Vim"
+echo "1) Command Line Developer Tools(xcode-select)"
+echo "2) OhmyZSH"
+echo "3) Homebrew"
+echo "4) asdf"
+echo "5) Erlang"
+echo "6) Elixir"
+echo "7) Phoenix"
+echo "8) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
@@ -351,7 +326,7 @@ while ! is_yn "$answer";do
 
             sleep 3
 
-            sudo -S chsh -s '/bin/zsh' "${USER}" 
+            chsh -s /usr/local/bin/zsh
             
             add_env "$optional"
             ;;
