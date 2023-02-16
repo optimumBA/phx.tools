@@ -32,10 +32,10 @@ function is_package_exists() {
     "wget")
         dpkg -l | grep -q wget
         ;;
-    "Homebrew")
+    "homebrew")
         which brew >/dev/null 2>&1
         ;;
-    "Asdf")
+    "asdf")
         brew list | grep -q asdf
         ;;
     "Erlang")
@@ -60,7 +60,7 @@ function is_package_exists() {
     "Node.js")
         which node >/dev/null 2>&1
         ;;
-    "Chromedriver")
+    "ChromeDriver")
         npm list -g | grep -q chromedriver
         ;;
     "Docker")
@@ -83,7 +83,7 @@ function install() {
     "wget")
         sudo apt-get install -y wget
         ;;
-    "Homebrew")
+    "homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
         (
@@ -95,7 +95,7 @@ function install() {
         # recommendation after installing homebrew
         brew install gcc
         ;;
-    "Asdf")
+    "asdf")
         brew install asdf
         (
             echo
@@ -147,7 +147,7 @@ function install() {
         asdf global nodejs 16.17.0
         asdf reshim nodejs 16.17.0
         ;;
-    "Chromedriver")
+    "ChromeDriver")
         source ~/.zshrc >/dev/null 2>&1
         npm install -g chromedriver
         ;;
@@ -201,11 +201,11 @@ function add_env() {
 
     echo -e "${white}"
     sleep 2
-    get "Homebrew"
+    get "homebrew"
 
     echo -e "${white}"
     sleep 3
-    get "Asdf"
+    get "asdf"
 
     echo -e "${white}"
     sleep 1.5
@@ -237,7 +237,7 @@ function add_env() {
         echo -e "${white}"
 
         sleep 2
-        get "Chromedriver"
+        get "ChromeDriver"
         echo -e "${white}"
 
         get "Docker"
@@ -297,8 +297,8 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Zsh"
-echo "2) Homebrew"
-echo "3) Asdf"
+echo "2) homebrew"
+echo "3) asdf"
 echo "4) Erlang"
 echo "5) Elixir"
 echo "6) Phoenix"
@@ -338,7 +338,7 @@ while ! is_yn "$answer"; do
 
         echo "1) Chrome"
         echo "2) Node.js"
-        echo "3) Chromedriver"
+        echo "3) ChromeDriver"
         echo "4) Docker"
 
         echo -e "${white}"
