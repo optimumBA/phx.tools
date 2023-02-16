@@ -47,9 +47,6 @@ function is_package_exists() {
     "Phoenix")
         mix phx.new --version >/dev/null 2>&1
         ;;
-    "Node.js")
-        which node >/dev/null 2>&1
-        ;;
     "PostgreSQL")
         # which psql >/dev/null 2>&1
         false
@@ -59,6 +56,9 @@ function is_package_exists() {
         ;;
     "Chrome")
         dpkg -l | grep -q google-chrome-stable
+        ;;
+    "Node.js")
+        which node >/dev/null 2>&1
         ;;
     "Chromedriver")
         npm list -g | grep -q chromedriver
@@ -122,12 +122,6 @@ function install() {
         mix local.hex --force
         echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
         ;;
-    "Node.js")
-        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-        asdf install nodejs 16.17.0
-        asdf global nodejs 16.17.0
-        asdf reshim nodejs 16.17.0
-        ;;
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
@@ -146,6 +140,12 @@ function install() {
     "Chrome")
         sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
+        ;;
+    "Node.js")
+        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+        asdf install nodejs 16.17.0
+        asdf global nodejs 16.17.0
+        asdf reshim nodejs 16.17.0
         ;;
     "Chromedriver")
         source ~/.zshrc >/dev/null 2>&1
