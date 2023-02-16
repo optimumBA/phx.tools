@@ -100,7 +100,7 @@ function install() {
             echo
             echo '. $(brew --prefix asdf)/libexec/asdf.sh'
         ) >>~/.zshrc
-        source ~/.zshrc
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -117,7 +117,7 @@ function install() {
         asdf reshim elixir 1.14.2-otp-25
         ;;
     "Phoenix")
-        source ~/.zshrc
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
         ;;
