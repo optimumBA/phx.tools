@@ -134,10 +134,6 @@ function install() {
         asdf install postgres 15.1
         asdf global postgres 15.1
         asdf reshim postgres
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.bashrc >/dev/null 2>&1
-        source ~/.zshrc >/dev/null 2>&1
-        source ~/.profile >/dev/null 2>&1
         ;;
     "Vim")
         sudo apt-get install -y vim
@@ -242,6 +238,12 @@ function add_env() {
         get "Docker"
         echo -e "${white}"
     fi
+
+    # register the pg_ctl so it could be used with pg_ctl
+    echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+    source ~/.bashrc >/dev/null 2>&1
+    source ~/.zshrc >/dev/null 2>&1
+    source ~/.profile >/dev/null 2>&1
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
