@@ -172,7 +172,7 @@ function install() {
     esac
 }
 
-function get() {
+function maybe_install() {
     if already_installed $1; then
         echo "$1 is already installed. Skipping..."
     else
@@ -189,58 +189,58 @@ function add_env() {
     echo ""
     echo -e "${white}"
     sleep 2
-    get "Zsh"
+    maybe_install "Zsh"
 
     echo -e "${white}"
     sleep 2
-    get "oh-my-zsh"
+    maybe_install "oh-my-zsh"
 
     echo -e "${white}"
     sleep 2
-    get "wget"
+    maybe_install "wget"
 
     echo -e "${white}"
     sleep 2
-    get "homebrew"
+    maybe_install "homebrew"
 
     echo -e "${white}"
     sleep 3
-    get "asdf"
+    maybe_install "asdf"
 
     echo -e "${white}"
     sleep 1.5
-    get "Erlang"
+    maybe_install "Erlang"
 
     echo -e "${white}"
     sleep 1.5
-    get "Elixir"
+    maybe_install "Elixir"
 
     echo -e "${white}"
     sleep 1.5
-    get "Phoenix"
+    maybe_install "Phoenix"
 
     echo -e "${white}"
     sleep 1.5
-    get "PostgreSQL"
+    maybe_install "PostgreSQL"
 
     echo -e "${white}"
-    get "Vim"
+    maybe_install "Vim"
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"
         sleep 3
-        get "Chrome"
+        maybe_install "Chrome"
         echo -e "${white}"
 
         sleep 1.5
-        get "Node.js"
+        maybe_install "Node.js"
         echo -e "${white}"
 
         sleep 2
-        get "ChromeDriver"
+        maybe_install "ChromeDriver"
         echo -e "${white}"
 
-        get "Docker"
+        maybe_install "Docker"
         echo -e "${white}"
     fi
 
