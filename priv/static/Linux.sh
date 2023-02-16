@@ -51,7 +51,8 @@ function is_package_exists() {
         which node >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which psql >/dev/null 2>&1
+        # which psql >/dev/null 2>&1
+        false
         ;;
     "Vim")
         dpkg -l | grep -q vim
@@ -147,7 +148,7 @@ function install() {
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
         ;;
     "Chromedriver")
-        source ~/.zshrc
+        source ~/.zshrc >/dev/null 2>&1
         npm install -g chromedriver
         ;;
     "Docker")
