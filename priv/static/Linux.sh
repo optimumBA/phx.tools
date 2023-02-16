@@ -51,8 +51,7 @@ function is_package_exists() {
         which node >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        # which psql >/dev/null 2>&1
-        false
+        which psql >/dev/null 2>&1
         ;;
     "Vim")
         dpkg -l | grep -q vim
