@@ -21,7 +21,7 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
-function is_package_exists() {
+function already_installed() {
     case $1 in
     "Zsh")
         dpkg -l | grep -q zsh
@@ -173,7 +173,7 @@ function install() {
 }
 
 function get() {
-    if is_package_exists $1; then
+    if already_installed $1; then
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
