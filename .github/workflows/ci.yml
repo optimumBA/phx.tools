@@ -279,7 +279,7 @@ jobs:
       - name: Check HTTP status code
         uses: nick-fields/retry@v2
         with:
-          command: 'INPUT_SITES=''["http://localhost:4000"]'' INPUT_EXPECTED=''[200]'' ./test/scripts/check_status_code.sh'
+          command: "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh"
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
@@ -309,7 +309,7 @@ jobs:
       - name: Check HTTP status code
         uses: nick-fields/retry@v2
         with:
-          command: 'INPUT_SITES=''["http://localhost:4000"]'' INPUT_EXPECTED=''[200]'' ./test/scripts/check_status_code.sh'
+          command: "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh"
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
