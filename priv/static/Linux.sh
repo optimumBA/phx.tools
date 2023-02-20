@@ -32,7 +32,7 @@ function already_installed() {
     "wget")
         dpkg -l | grep -q wget
         ;;
-    "homebrew")
+    "Homebrew")
         which brew >/dev/null 2>&1
         ;;
     "asdf")
@@ -80,7 +80,7 @@ function install() {
     "wget")
         sudo apt-get install -y wget
         ;;
-    "homebrew")
+    "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
         (
@@ -171,7 +171,7 @@ function maybe_install() {
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "homebrew" || $1 == "Erlang" ]]; then
+        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
@@ -195,7 +195,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 2
-    maybe_install "homebrew"
+    maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 3
@@ -288,7 +288,7 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Zsh"
-echo "2) homebrew"
+echo "2) Homebrew"
 echo "3) asdf"
 echo "4) Erlang"
 echo "5) Elixir"
