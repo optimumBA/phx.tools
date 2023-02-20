@@ -257,8 +257,8 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 
 echo -e "${cyan}${bold}"
 
-echo "1) Command Line Developer Tools(xcode-select)"
-echo "2) OhmyZSH"
+echo "1) Build dependencies"
+echo "2) oh-my-zsh"
 echo "3) Homebrew"
 echo "4) asdf"
 echo "5) Erlang"
