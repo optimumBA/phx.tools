@@ -51,9 +51,6 @@ function already_installed() {
         # which psql >/dev/null 2>&1
         false
         ;;
-    "Vim")
-        dpkg -l | grep -q vim
-        ;;
     "Chrome")
         dpkg -l | grep -q google-chrome-stable
         ;;
@@ -133,9 +130,6 @@ function install() {
         source ~/.bashrc >/dev/null 2>&1
         source ~/.zshrc >/dev/null 2>&1
         source ~/.profile >/dev/null 2>&1
-        ;;
-    "Vim")
-        sudo apt-get install -y vim
         ;;
     "Chrome")
         sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -223,9 +217,6 @@ function add_env() {
     sleep 1.5
     maybe_install "PostgreSQL"
 
-    echo -e "${white}"
-    maybe_install "Vim"
-
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"
         sleep 3
@@ -303,7 +294,6 @@ echo "4) Erlang"
 echo "5) Elixir"
 echo "6) Phoenix"
 echo "7) PostgreSQL"
-echo "8) Vim"
 
 echo ""
 echo -e "${white} ${bold}"
