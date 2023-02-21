@@ -48,7 +48,6 @@ function already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        # which psql >/dev/null 2>&1
         false
         ;;
     "Chrome")
@@ -88,9 +87,6 @@ function install() {
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
         ) >>~/.zshrc
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-        # recommendation after installing homebrew
-        brew install gcc
         ;;
     "asdf")
         brew install asdf
@@ -127,9 +123,7 @@ function install() {
         asdf global postgres 15.1
         asdf reshim postgres
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.bashrc >/dev/null 2>&1
         source ~/.zshrc >/dev/null 2>&1
-        source ~/.profile >/dev/null 2>&1
         ;;
     "Chrome")
         sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
