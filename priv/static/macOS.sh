@@ -30,34 +30,34 @@ function is_package_exists() {
         "oh-my-zsh")
             [ -d ~/.oh-my-zsh ]
             ;;
-        "homebrew")
+        "Homebrew")
             which brew >/dev/null 2>&1
             ;;
         "asdf")
             brew list | grep -q asdf
             ;;
-        "erlang")
+        "Erlang")
             command -v erl >/dev/null 2>&1
             ;;
-        "elixir")
+        "Elixir")
             which elixir >/dev/null 2>&1
             ;;
-        "phoenix")
+        "Phoenix")
             mix phx.new --version >/dev/null 2>&1
             ;;
-        "nodejs")
+        "Node.js")
             which node >/dev/null 2>&1
             ;;
-        "postgresql")
+        "PostgreSQL")
             which psql >/dev/null 2>&1
             ;;
-        "chrome")
+        "Chrome")
             dpkg -l | grep -q google-chrome-stable
             ;;
-        "chromedriver")
+        "ChromeDriver")
             npm list -g | grep -q chromedriver
             ;;
-        "docker")
+        "Docker")
             which docker >/dev/null 2>&1
             ;;
         *)
@@ -74,7 +74,7 @@ function install() {
         "oh-my-zsh")
             sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
             ;;
-        "homebrew")
+        "Homebrew")
              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             ;;
         "asdf")
@@ -83,7 +83,7 @@ function install() {
 
             brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
             ;;
-        "erlang")
+        "Erlang")
             # Deps for erlang
             brew install autoconf openssl@1.1 wxwidgets libxslt fop
 
@@ -91,7 +91,7 @@ function install() {
             asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
             asdf install erlang 25.2.2 && asdf global erlang 25.2.2
             ;;
-        "elixir")
+        "Elixir")
             # Deps for elixir
             brew install unzip
 
@@ -100,19 +100,19 @@ function install() {
             asdf global elixir 1.14.2-otp-25
             asdf reshim elixir 1.14.2-otp-25
             ;;
-        "phoenix")
+        "Phoenix")
             source ~/.bashrc >/dev/null 2>&1
             source ~/.zshrc >/dev/null 2>&1
             mix local.hex --force
             echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
             ;;
-        "nodejs")
+        "Node.js")
             asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
             asdf install nodejs 16.17.0
             asdf global nodejs 16.17.0
             asdf reshim nodejs 16.17.0
             ;;
-        "postgresql")
+        "PostgreSQL")
             # Dependencies for PSQL
             brew install gcc readline zlib curl ossp-uuid
 
@@ -120,10 +120,10 @@ function install() {
             asdf install postgres 15.1
             asdf global postgres 15.1
             ;;
-        "chrome")
+        "Chrome")
             brew install google-chrome
             ;;
-        "chromedriver")
+        "ChromeDriver")
             # Dependencies for chromedriver
             brew install zip
             
@@ -131,7 +131,7 @@ function install() {
             asdf install chromedriver latest
             asdf global chromedriver latest
             ;;
-        "docker")
+        "Docker")
             brew install docker
             ;;
         *)
@@ -145,7 +145,7 @@ function maybe_install() {
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "homebrew" || $1 == "erlang" ]]; then
+        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
@@ -165,7 +165,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 2
-    maybe_install "homebrew"
+    maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 3
@@ -173,35 +173,35 @@ function add_env() {
 
     echo -e "${white}"
     sleep 1.5
-    maybe_install "erlang"
+    maybe_install "Erlang"
 
     echo -e "${white}"
     sleep 1.5
-    maybe_install "elixir"
+    maybe_install "Elixir"
 
     echo -e "${white}"
     sleep 1.5
-    maybe_install "phoenix"
+    maybe_install "Phoenix"
     
     echo -e "${white}"
     sleep 1.5
-    maybe_install "postgresql"
+    maybe_install "PostgreSQL"
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"  
         sleep 3
-        maybe_install "chrome" 
+        maybe_install "Chrome" 
         echo -e "${white}"  
 
         sleep 1.5
-        maybe_install "nodejs"
+        maybe_install "Node.js"
         echo -e "${white}"  
 
         sleep 2
-        maybe_install "chromedriver"
+        maybe_install "ChromeDriver"
         echo -e "${white}"  
 
-        maybe_install "docker"
+        maybe_install "Docker"
         echo -e "${white}"   
     fi
 
