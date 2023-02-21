@@ -113,8 +113,7 @@ function install() {
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        local.rebar --force
-        echo "y" | mix archive.install hex phx_new 1.7.0-rc.3
+        mix archive.install --force hex phx_new 1.7.0-rc.3
         ;;
     "PostgreSQL")
         sudo apt-get update
