@@ -114,7 +114,7 @@ function install() {
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         local.rebar --force
-        echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
+        echo "y" | mix archive.install hex phx_new 1.7.0-rc.4
         ;;
     "PostgreSQL")
         sudo apt-get update
