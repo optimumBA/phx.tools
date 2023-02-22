@@ -49,7 +49,7 @@ function is_package_exists() {
             which node >/dev/null 2>&1
             ;;
         "PostgreSQL")
-            which psql >/dev/null 2>&1
+            false
             ;;
         "Chrome")
             dpkg -l | grep -q google-chrome-stable
@@ -106,7 +106,7 @@ function install() {
             source ~/.bashrc >/dev/null 2>&1
             source ~/.zshrc >/dev/null 2>&1
             mix local.hex --force
-            echo "y" | mix archive.install hex phx_new 1.7.0-rc.2
+            mix archive.install --force hex phx_new 1.7.0-rc.3
             ;;
         "Node.js")
             asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
@@ -122,6 +122,9 @@ function install() {
             asdf install postgres 15.1
             asdf global postgres 15.1
             asdf reshim postgres 15.1
+
+            echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >> ~/.profile
+            source ~/.zshrc >/dev/null 2>&1
             ;;
         "Chrome")
             brew install google-chrome
