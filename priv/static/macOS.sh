@@ -89,7 +89,9 @@ function install() {
 
             export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
             asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-            asdf install erlang 25.2.2 && asdf global erlang 25.2.2
+            asdf install erlang 25.2.2
+            asdf global erlang 25.2.2
+            asdf reshim erlang 25.2.2
             ;;
         "Elixir")
             # Deps for elixir
@@ -119,6 +121,7 @@ function install() {
             asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
             asdf install postgres 15.1
             asdf global postgres 15.1
+            asdf reshim postgres 15.1
             ;;
         "Chrome")
             brew install google-chrome
@@ -130,6 +133,7 @@ function install() {
             asdf plugin add chromedriver
             asdf install chromedriver latest
             asdf global chromedriver latest
+            asdf reshim chromedriver latest
             ;;
         "Docker")
             brew install docker
