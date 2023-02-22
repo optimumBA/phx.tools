@@ -89,9 +89,9 @@ function install() {
 
         export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 25.2.2
-        asdf global erlang 25.2.2
-        asdf reshim erlang 25.2.2
+        asdf install erlang 25.1.2
+        asdf global erlang 25.1.2
+        asdf reshim erlang 25.1.2
         ;;
     "Elixir")
         # Deps for elixir
@@ -120,7 +120,7 @@ function install() {
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
         asdf install postgres 15.1
         asdf global postgres 15.1
-        asdf reshim postgres 15.1
+        asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
