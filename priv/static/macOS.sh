@@ -15,134 +15,133 @@ HOME="${HOME:-$(eval echo ~$USER)}"
 bold=$(tput bold)
 normal=$(tput sgr0)
 red='\033[0;31m'
-blue='\033[0;34m'  
-bblue='\033[1;34m'  
-white='\033[0;37m' 
-green='\033[0;32m' 
-cyan='\033[0;36m' 
+blue='\033[0;34m'
+bblue='\033[1;34m'
+white='\033[0;37m'
+green='\033[0;32m'
+cyan='\033[0;36m'
 
 function already_installed() {
     case $1 in
-        "xcode")
-            which xcode-select > /dev/null
-            ;;  
+    "xcode")
+        which xcode-select >/dev/null
+        ;;
 
-        "oh-my-zsh")
-            [ -d ~/.oh-my-zsh ]
-            ;;
-        "Homebrew")
-            which brew >/dev/null 2>&1
-            ;;
-        "asdf")
-            brew list | grep -q asdf
-            ;;
-        "Erlang")
-            command -v erl >/dev/null 2>&1
-            ;;
-        "Elixir")
-            which elixir >/dev/null 2>&1
-            ;;
-        "Phoenix")
-            mix phx.new --version >/dev/null 2>&1
-            ;;
-        "Node.js")
-            which node >/dev/null 2>&1
-            ;;
-        "PostgreSQL")
-            false
-            ;;
-        "Chrome")
-            dpkg -l | grep -q google-chrome-stable
-            ;;
-        "ChromeDriver")
-            npm list -g | grep -q chromedriver
-            ;;
-        "Docker")
-            which docker >/dev/null 2>&1
-            ;;
-        *)
-            echo "Invalid name argument on checking"
+    "oh-my-zsh")
+        [ -d ~/.oh-my-zsh ]
+        ;;
+    "Homebrew")
+        which brew >/dev/null 2>&1
+        ;;
+    "asdf")
+        brew list | grep -q asdf
+        ;;
+    "Erlang")
+        command -v erl >/dev/null 2>&1
+        ;;
+    "Elixir")
+        which elixir >/dev/null 2>&1
+        ;;
+    "Phoenix")
+        mix phx.new --version >/dev/null 2>&1
+        ;;
+    "Node.js")
+        which node >/dev/null 2>&1
+        ;;
+    "PostgreSQL")
+        false
+        ;;
+    "Chrome")
+        dpkg -l | grep -q google-chrome-stable
+        ;;
+    "ChromeDriver")
+        npm list -g | grep -q chromedriver
+        ;;
+    "Docker")
+        which docker >/dev/null 2>&1
+        ;;
+    *)
+        echo "Invalid name argument on checking"
         ;;
     esac
 }
 
 function install() {
     case $1 in
-        "xcode")
-            xcode-select --install
-            ;;  
-        "oh-my-zsh")
-            sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-            ;;
-        "Homebrew")
-             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            ;;
-        "asdf")
-            # Deps for asdf
-            brew install coreutils curl git
+    "xcode")
+        xcode-select --install
+        ;;
+    "oh-my-zsh")
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        ;;
+    "Homebrew")
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ;;
+    "asdf")
+        # Deps for asdf
+        brew install coreutils curl git
 
-            brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
-            ;;
-        "Erlang")
-            # Deps for erlang
-            brew install autoconf openssl@1.1 wxwidgets libxslt fop
+        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+        ;;
+    "Erlang")
+        # Deps for erlang
+        brew install autoconf openssl@1.1 wxwidgets libxslt fop
 
-            export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
-            asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-            asdf install erlang 25.2.2
-            asdf global erlang 25.2.2
-            asdf reshim erlang 25.2.2
-            ;;
-        "Elixir")
-            # Deps for elixir
-            brew install unzip
+        export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
+        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+        asdf install erlang 25.2.2
+        asdf global erlang 25.2.2
+        asdf reshim erlang 25.2.2
+        ;;
+    "Elixir")
+        # Deps for elixir
+        brew install unzip
 
-            asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-            asdf install elixir 1.14.2-otp-25
-            asdf global elixir 1.14.2-otp-25
-            asdf reshim elixir 1.14.2-otp-25
-            ;;
-        "Phoenix")
-            source ~/.bashrc >/dev/null 2>&1
-            source ~/.zshrc >/dev/null 2>&1
-            mix local.hex --force
-            mix archive.install --force hex phx_new 1.7.0-rc.3
-            ;;
-        "Node.js")
-            asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-            asdf install nodejs 16.17.0
-            asdf global nodejs 16.17.0
-            asdf reshim nodejs 16.17.0
-            ;;
-        "PostgreSQL")
-            # Dependencies for PSQL
-            brew install gcc readline zlib curl ossp-uuid
+        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
+        asdf install elixir 1.14.2-otp-25
+        asdf global elixir 1.14.2-otp-25
+        asdf reshim elixir 1.14.2-otp-25
+        ;;
+    "Phoenix")
+        source ~/.zshrc >/dev/null 2>&1
+        mix local.hex --force
+        mix archive.install --force hex phx_new 1.7.0-rc.3
+        ;;
+    "Node.js")
+        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+        asdf install nodejs 16.17.0
+        asdf global nodejs 16.17.0
+        asdf reshim nodejs 16.17.0
+        ;;
+    "PostgreSQL")
+        # Dependencies for PSQL
+        brew install gcc readline zlib curl ossp-uuid
 
-            asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-            asdf install postgres 15.1
-            asdf global postgres 15.1
-            asdf reshim postgres 15.1
+        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres 15.1
+        asdf global postgres 15.1
+        asdf reshim postgres 15.1
 
-            echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >> ~/.profile
-            source ~/.zshrc >/dev/null 2>&1
-            ;;
-        "Chrome")
-            brew install google-chrome
-            ;;
-        "ChromeDriver")
-            # Dependencies for chromedriver
-            brew install zip
-            
-            asdf plugin add chromedriver
-            asdf install chromedriver latest
-            asdf global chromedriver latest
-            asdf reshim chromedriver latest
-            ;;
-        "Docker")
-            brew install docker
-            ;;
-        *)
-            echo "Invalid name argument on install"
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        source ~/.zshrc >/dev/null 2>&1
+        ;;
+    "Chrome")
+        brew install google-chrome
+        ;;
+    "ChromeDriver")
+        # Dependencies for chromedriver
+        brew install zip
+
+        asdf plugin add chromedriver
+        asdf install chromedriver latest
+        asdf global chromedriver latest
+        asdf reshim chromedriver latest
+        ;;
+    "Docker")
+        brew install docker
+        ;;
+    *)
+        echo "Invalid name argument on install"
         ;;
     esac
 }
@@ -167,7 +166,7 @@ function add_env() {
     maybe_install "xcode"
 
     echo -e "${white}"
-    sleep 2 
+    sleep 2
     maybe_install "oh-my-zsh"
 
     echo -e "${white}"
@@ -189,27 +188,27 @@ function add_env() {
     echo -e "${white}"
     sleep 1.5
     maybe_install "Phoenix"
-    
+
     echo -e "${white}"
     sleep 1.5
     maybe_install "PostgreSQL"
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        echo -e "${white}"  
+        echo -e "${white}"
         sleep 3
-        maybe_install "Chrome" 
-        echo -e "${white}"  
+        maybe_install "Chrome"
+        echo -e "${white}"
 
         sleep 1.5
         maybe_install "Node.js"
-        echo -e "${white}"  
+        echo -e "${white}"
 
         sleep 2
         maybe_install "ChromeDriver"
-        echo -e "${white}"  
+        echo -e "${white}"
 
         maybe_install "Docker"
-        echo -e "${white}"   
+        echo -e "${white}"
     fi
 
     echo -e "${white}"
@@ -244,7 +243,7 @@ optimum="
     ░╚════╝░╚═╝░░░░░░░░╚═╝░░░╚═╝╚═╝░░░░░╚═╝░╚═════╝░╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝
 "
 
-echo -e "$phx_tools" 
+echo -e "$phx_tools"
 
 echo -e "$by"
 
@@ -295,55 +294,55 @@ is_yn() {
 
 answer=''
 
-while ! is_yn "$answer";do
+while ! is_yn "$answer"; do
     read -p "Do you want to continue? (y/n) " answer
     echo ""
     case "$answer" in
-        [yY] | [yY][eE][sS])
-            echo -e "${bblue}${bold}We can also install some optional tools:"
+    [yY] | [yY][eE][sS])
+        echo -e "${bblue}${bold}We can also install some optional tools:"
 
-            echo -e "${cyan}${bold}"
+        echo -e "${cyan}${bold}"
 
-            echo "1) Chrome" 
-            echo "2) Node.js" 
-            echo "3) Chromedriver" 
-            echo "4) Docker"
+        echo "1) Chrome"
+        echo "2) Node.js"
+        echo "3) ChromeDriver"
+        echo "4) Docker"
 
-            echo -e "${white}"
-            echo -e "${white} ${bold}"
+        echo -e "${white}"
+        echo -e "${white} ${bold}"
 
-            optional=""
+        optional=""
 
-            while ! is_yn "$optional"; do
-                read -p "Do you want us to install those as well? (y/n) " optional
+        while ! is_yn "$optional"; do
+            read -p "Do you want us to install those as well? (y/n) " optional
 
-                if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
-                    echo "Please enter y or n"
-                    echo ""
-                fi
-            done
+            if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
+                echo "Please enter y or n"
+                echo ""
+            fi
+        done
 
-            echo ""
+        echo ""
 
-            echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
+        echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
 
-            echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
+        echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
 
-            echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
+        echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
 
-            sleep 3
+        sleep 3
 
-            sudo -S chsh -s '/bin/zsh' "${USER}"
-            
-            add_env "$optional"
-            ;;
-        [nN] | [nN][oO])
-            echo "Thank you for your time"
-            echo ""
-            ;;
-        *)
-            echo "Please enter y or n"
-            echo ""
-            ;;
+        sudo -S chsh -s '/bin/zsh' "${USER}"
+
+        add_env "$optional"
+        ;;
+    [nN] | [nN][oO])
+        echo "Thank you for your time"
+        echo ""
+        ;;
+    *)
+        echo "Please enter y or n"
+        echo ""
+        ;;
     esac
 done
