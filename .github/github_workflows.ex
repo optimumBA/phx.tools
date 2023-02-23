@@ -304,8 +304,7 @@ defmodule GitHubWorkflows do
     test_shell_script_job(
       "Linux",
       "ubuntu-latest",
-      "sudo apt-get update && sudo apt-get install -y expect",
-      "sudo systemctl start postgresql.service"
+      "sudo apt-get update && sudo apt-get install -y expect"
     )
   end
 
@@ -313,7 +312,7 @@ defmodule GitHubWorkflows do
     test_shell_script_job("macOS", "macos-latest", "brew install expect")
   end
 
-  defp test_shell_script_job(os, runs_on, expect_install_command, enable_postgres_command \\ "") do
+  defp test_shell_script_job(os, runs_on, expect_install_command) do
     [
       name: "Test #{os} script",
       "runs-on": runs_on,
@@ -339,11 +338,6 @@ defmodule GitHubWorkflows do
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           run: "cd test/scripts && expect script.exp #{os}.sh"
-        ],
-        [
-          name: "Enable PostgreSQL",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: enable_postgres_command
         ],
         [
           name: "Generate an app and start the server",
