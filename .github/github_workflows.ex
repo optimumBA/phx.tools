@@ -17,7 +17,7 @@ defmodule GitHubWorkflows do
         name: "CI",
         on: [
           pull_request: [
-            branches: ["main"]
+            branches: ["main", "shell-scripts"]
           ]
         ],
         jobs: [

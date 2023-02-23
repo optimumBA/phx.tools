@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - main
+      - shell-scripts
 jobs:
   compile:
     name: Install deps and compile
