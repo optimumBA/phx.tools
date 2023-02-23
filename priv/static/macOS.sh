@@ -125,6 +125,8 @@ function install() {
         echo 'export PGDATA="~/.asdf/installs/postgres/15.1/data"' >>~/.zshrc
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
+
+        pg_ctl start
         ;;
     "Chrome")
         brew install google-chrome
@@ -178,17 +180,17 @@ function add_env() {
     sleep 3
     maybe_install "asdf"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Elixir"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
     echo -e "${white}"
     sleep 1.5
