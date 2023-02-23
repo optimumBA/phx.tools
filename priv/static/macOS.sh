@@ -52,7 +52,7 @@ function already_installed() {
         false
         ;;
     "Chrome")
-        dpkg -l | grep -q google-chrome-stable
+        brew list | grep -q google-chrome
         ;;
     "ChromeDriver")
         npm list -g | grep -q chromedriver
