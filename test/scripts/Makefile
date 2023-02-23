@@ -1,5 +1,5 @@
 serve:
-	pg_ctl start
+	pg_ctl start -D
 	mix phx.new --no-install phx_tools_test
 	cd phx_tools_test && mix local.rebar --force && mix setup
 	cd phx_tools_test && elixir --erl '-detached' -S mix phx.server
