@@ -122,11 +122,8 @@ function install() {
         asdf global postgres 15.1
         asdf reshim postgres
 
-        echo 'export PGDATA="~/.asdf/installs/postgres/15.1/data"' >>~/.zshrc
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
-
-        pg_ctl start
         ;;
     "Chrome")
         brew install google-chrome
