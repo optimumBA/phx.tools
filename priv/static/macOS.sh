@@ -23,7 +23,7 @@ cyan='\033[0;36m'
 
 function already_installed() {
     case $1 in
-    "xcode")
+    "Xcode Command Line Tools")
         which xcode-select >/dev/null
         ;;
 
@@ -68,7 +68,7 @@ function already_installed() {
 
 function install() {
     case $1 in
-    "xcode")
+    "Xcode Command Line Tools")
         xcode-select --install
         ;;
     "oh-my-zsh")
