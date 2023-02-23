@@ -118,10 +118,13 @@ function install() {
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
+
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
         asdf install postgres 15.1
         asdf global postgres 15.1
         asdf reshim postgres
+
+        echo 'export PGDATA=~/.asdf/installs/postgres/15.1/data' >>~/.profile
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
         ;;
