@@ -273,7 +273,7 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-      - name: Start PostgreSQL
+      - name: Enable PostgreSQL
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo systemctl start postgresql.service
       - name: Generate an app and start the server
@@ -307,7 +307,9 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp macOS.sh
-      - []
+      - name: Enable PostgreSQL
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: ''
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: /bin/zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'
