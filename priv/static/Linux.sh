@@ -48,7 +48,7 @@ function already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        false
+        which pg_ctl >/dev/null 2>&1
         ;;
     "Chrome")
         dpkg -l | grep -q google-chrome-stable
