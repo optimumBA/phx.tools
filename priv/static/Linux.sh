@@ -197,17 +197,17 @@ function add_env() {
     sleep 3
     maybe_install "asdf"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Erlang"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Elixir"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Elixir"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Phoenix"
 
     echo -e "${white}"
     sleep 1.5
