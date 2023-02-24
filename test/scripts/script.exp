@@ -1,0 +1,12 @@
+#!/usr/bin/expect
+
+set script [lindex $argv 0];
+
+set timeout -1
+spawn ./../../priv/static/$script
+match_max 100000
+expect "Do you want to continue? (y/n) "
+send -- "y\r"
+expect "Do you want us to install those as well? (y/n) "
+send -- "y\r"
+expect eof
