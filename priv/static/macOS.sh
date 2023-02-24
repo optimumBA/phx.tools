@@ -55,7 +55,7 @@ function already_installed() {
         brew list | grep -q google-chrome
         ;;
     "ChromeDriver")
-        npm list -g | grep -q chromedriver
+        brew list | grep -q chromedriver
         ;;
     "Docker")
         which docker >/dev/null 2>&1
