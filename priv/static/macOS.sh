@@ -23,7 +23,7 @@ cyan='\033[0;36m'
 
 function already_installed() {
     case $1 in
-    "xcode")
+    "Xcode Command Line Tools")
         which xcode-select >/dev/null
         ;;
 
@@ -52,10 +52,10 @@ function already_installed() {
         which pg_ctl >/dev/null 2>&1
         ;;
     "Chrome")
-        dpkg -l | grep -q google-chrome-stable
+        brew list | grep -q google-chrome
         ;;
     "ChromeDriver")
-        npm list -g | grep -q chromedriver
+        brew list | grep -q chromedriver
         ;;
     "Docker")
         which docker >/dev/null 2>&1
@@ -68,7 +68,7 @@ function already_installed() {
 
 function install() {
     case $1 in
-    "xcode")
+    "Xcode Command Line Tools")
         xcode-select --install
         ;;
     "oh-my-zsh")
