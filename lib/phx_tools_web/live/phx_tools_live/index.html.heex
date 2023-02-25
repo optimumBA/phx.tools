@@ -8,7 +8,7 @@
       </:header>
 
       <:installation_command>
-        <%= "/bin/bash -c \"$(curl -fsSL #{@url}/Linux.sh)\"" %>
+        <%= "/bin/bash -c \"$(curl -fsSL #{url(~p"/Linux.sh")})\"" %>
       </:installation_command>
 
       <:instruction>
@@ -30,7 +30,7 @@
       </:header>
 
       <:installation_command>
-        <%= "/bin/bash -c \"$(curl -fsSL #{@url}/macOS.sh)\"" %>
+        <%= "/bin/bash -c \"$(curl -fsSL #{url(~p"/macOS.sh")})\"" %>
       </:installation_command>
 
       <:instruction>
