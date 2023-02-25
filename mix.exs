@@ -67,7 +67,8 @@ defmodule PhxTools.MixProject do
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.15", only: [:dev, :test]},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false}
+      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:ua_parser, "~> 1.8"}
     ]
   end
 
@@ -91,7 +92,8 @@ defmodule PhxTools.MixProject do
         "dialyzer --format short 2>&1",
         "deps.audit",
         "test --cover --warnings-as-errors"
-      ]
+      ],
+      prettier: ["cmd --cd assets npx prettier -w .."]
     ]
   end
 end
