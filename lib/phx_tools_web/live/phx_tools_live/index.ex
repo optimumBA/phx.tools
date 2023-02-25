@@ -1,6 +1,7 @@
 defmodule PhxToolsWeb.PhxToolsLive.Index do
   use PhxToolsWeb, :live_view
 
+  alias PhxToolsWeb.Endpoint
   alias PhxToolsWeb.InstructionComponents
   alias PhxToolsWeb.PhxToolsLive.LandingComponent
 
