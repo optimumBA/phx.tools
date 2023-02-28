@@ -23,6 +23,9 @@ cyan='\033[0;36m'
 
 function already_installed() {
     case $1 in
+    "Git")
+        which brew >/dev/null 2>&1
+        ;;
     "Zsh")
         dpkg -l | grep -q zsh
         ;;
@@ -70,6 +73,9 @@ function already_installed() {
 
 function install() {
     case $1 in
+    "Git")
+        sudo apt-get install -y git
+        ;;
     "Zsh")
         sudo apt-get install -y zsh
         ;;
@@ -179,6 +185,11 @@ function add_env() {
     echo ""
     echo -e "${white}"
     sleep 2
+    maybe_install "Git"
+
+    echo ""
+    echo -e "${white}"
+    sleep 2
     maybe_install "Zsh"
 
     echo -e "${white}"
@@ -283,13 +294,14 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 
 echo -e "${cyan}${bold}"
 
-echo "1) Zsh"
-echo "2) Homebrew"
-echo "3) asdf"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+echo "1) Build dependencies"
+echo "2) Zsh"
+echo "3) Homebrew"
+echo "4) asdf"
+echo "5) Erlang"
+echo "6) Elixir"
+echo "7) Phoenix"
+echo "8) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
