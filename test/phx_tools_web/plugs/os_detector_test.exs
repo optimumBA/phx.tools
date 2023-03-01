@@ -23,7 +23,7 @@ defmodule Plugs.OsDetectorTest do
     test "returns nil if there is no os", %{conn: conn} do
       conn =
         conn
-        |> put_req_header("user-agnet", "curl")
+        |> put_req_header("user-agent", "curl")
         |> get("/")
 
       assert get_session(conn, :operating_system) == nil
