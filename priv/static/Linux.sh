@@ -24,7 +24,7 @@ cyan='\033[0;36m'
 function already_installed() {
     case $1 in
     "Git")
-        which brew >/dev/null 2>&1
+        which git >/dev/null 2>&1
         ;;
     "Zsh")
         dpkg -l | grep -q zsh
