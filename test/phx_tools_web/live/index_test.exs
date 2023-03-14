@@ -14,6 +14,16 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       assert render(landing_live) =~ "bg-indigo-850"
     end
 
+    test "background of Linux card changes when Linux user visits the page", %{conn: conn} do
+      conn = put_req_header(conn, "user-agent", "Linux")
+
+      {:ok, landing_live, html} = live(conn, "/")
+
+      assert html =~ "Confirm your choice by clicking"
+
+      assert render(landing_live) =~ "bg-indigo-850"
+    end
+
     test "user visits the page", %{conn: conn} do
       {:ok, landing_live, html} = live(conn, "/")
 
