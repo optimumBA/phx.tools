@@ -1,0 +1,342 @@
+name: Deploy Preview App
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_ORG: optimum-bh-internship
+
+jobs:
+  compile:
+    name: Install deps and compile
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Install Elixir dependencies
+        env:
+          MIX_ENV: test
+        run: mix deps.get
+      - name: Compile
+        env:
+          MIX_ENV: test
+        run: mix compile
+  credo:
+    needs: compile
+    name: Credo
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Check code style
+        env:
+          MIX_ENV: test
+        run: mix credo --strict
+  deps_audit:
+    needs: compile
+    name: Deps audit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Check for vulnerable Mix dependencies
+        env:
+          MIX_ENV: test
+        run: mix deps.audit
+  dialyzer:
+    needs: compile
+    name: Dialyzer
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Restore PLT cache
+        uses: actions/cache@v3
+        id: plt_cache
+        with:
+          key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
+          restore-keys: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
+          path: priv/plts
+      - name: Create PLTs
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        env:
+          MIX_ENV: test
+        run: mix dialyzer --plt
+      - name: Run dialyzer
+        env:
+          MIX_ENV: test
+        run: mix dialyzer --format short 2>&1
+  format:
+    needs: compile
+    name: Format
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Check Elixir formatting
+        env:
+          MIX_ENV: test
+        run: mix format --check-formatted
+  hex_audit:
+    needs: compile
+    name: Hex audit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Check for retired Hex packages
+        env:
+          MIX_ENV: test
+        run: mix hex.audit
+  prettier:
+    name: Check formatting using Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Restore npm cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node
+          restore-keys: ${{ runner.os }}-node
+      - name: Install Prettier
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm i -g prettier
+      - name: Run Prettier
+        run: npx prettier -c .
+  sobelow:
+    needs: compile
+    name: Security check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Check for security issues using sobelow
+        env:
+          MIX_ENV: test
+        run: mix sobelow --config .sobelow-conf
+  test:
+    needs: compile
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    # Set up a Postgres DB service. By default, Phoenix applications
+    # use Postgres. This creates a database for running tests.
+    # Additional services can be defined here if required.
+    services:
+      db:
+        image: postgres:12
+        ports: ['5432:5432']
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Run tests
+        env:
+          MIX_ENV: test
+        run: mix test --cover --warnings-as-errors
+  unused_deps:
+    needs: compile
+    name: Check unused deps
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
+      - name: Check for unused Mix dependencies
+        env:
+          MIX_ENV: test
+        run: mix deps.unlock --check-unused
+  preview_app:
+    needs:
+      [
+        compile,
+        test,
+        credo,
+        deps_audit,
+        dialyzer,
+        format,
+        hex_audit,
+        prettier,
+        sobelow,
+        unused_deps,
+      ]
+    runs-on: ubuntu-latest
+
+    # Only run one deployment at a time per PR.
+    concurrency:
+      group: pr-${{ github.event.number }}
+
+    # Create a GitHub deployment environment per staging app so it shows up
+    # in the pull request UI.
+    environment:
+      name: pr-${{ github.event.number }}
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Deploy Preview App
+        id: deploy
+        uses: superfly/fly-pr-review-apps@1.0.0
+        with:
+          postgres: optimum-preview-apps-db
+
+      - name: Clean up GitHub environment
+        uses: strumwolf/delete-deployment-environment@v2
+        if: ${{ github.event.action == 'closed' }}
+        with:
+          # ⚠️ The provided token needs permission for admin write:org
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: pr-${{ github.event.number }}
