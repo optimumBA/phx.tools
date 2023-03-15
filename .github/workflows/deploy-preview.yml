@@ -5,7 +5,7 @@ on:
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-  FLY_ORG: optimum-bh-internship
+  FLY_ORG: Optimum BH Internship
 
 jobs:
   compile:
@@ -332,7 +332,6 @@ jobs:
         uses: superfly/fly-pr-review-apps@1.0.0
         with:
           postgres: optimum-preview-apps-db
-          args: 'apps create pr-${{ github.event.number }}-dev-phx.tools --org optimum'
 
       - name: Clean up GitHub environment
         uses: strumwolf/delete-deployment-environment@v2
