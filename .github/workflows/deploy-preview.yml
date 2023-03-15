@@ -5,7 +5,6 @@ on:
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-  FLY_ORG: optimum-bh-internship
 
 jobs:
   compile:
