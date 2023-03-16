@@ -300,12 +300,6 @@ jobs:
         unused_deps,
       ]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
 
     # Only run one deployment at a time per PR.
     concurrency:
@@ -317,23 +311,13 @@ jobs:
       name: pr-${{ github.event.number }}
       url: ${{ steps.deploy.outputs.url }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
-      - uses: actions/cache@v3
-        with:
-          path: "_build\ndeps"
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Deploy Preview App
         id: deploy
         uses: superfly/fly-pr-review-apps@1.0.0
         with:
           postgres: optimum-preview-apps-db
-
       - name: Clean up GitHub environment
         uses: strumwolf/delete-deployment-environment@v2
         if: ${{ github.event.action == 'closed' }}
