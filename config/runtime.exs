@@ -20,12 +20,12 @@ if System.get_env("PHX_SERVER") do
   config :phx_tools, PhxToolsWeb.Endpoint, server: true
 end
 
-# if config_env() == :prod do
-#   appsignal_app_env =
-#     System.get_env("APPSIGNAL_APP_ENV") ||
-#       raise """
-#       environment variable APPSIGNAL_APP_ENV is missing.
-#       """
+if config_env() == :prod do
+  # appsignal_app_env =
+  #   System.get_env("APPSIGNAL_APP_ENV") ||
+  #     raise """
+  #     environment variable APPSIGNAL_APP_ENV is missing.
+  #     """
 
   # appsignal_push_api_key =
   #   System.get_env("APPSIGNAL_PUSH_API_KEY") ||
@@ -33,7 +33,7 @@ end
   #     environment variable APPSIGNAL_PUSH_API_KEY is missing.
   #     """
 
-  # revision_file = Path.join([:code.priv_dir(:phx_tools), "REVISION"])
+  revision_file = Path.join([:code.priv_dir(:phx_tools), "REVISION"])
 
   # appsignal_revision =
   #   revision_file
@@ -50,12 +50,12 @@ end
   # want to use a different value for prod and you most likely don't want
   # to check this value into version control, so we use an environment
   # variable instead.
-  # secret_key_base =
-  #   System.get_env("SECRET_KEY_BASE") ||
-  #     raise """
-  #     environment variable SECRET_KEY_BASE is missing.
-  #     You can generate one by calling: mix phx.gen.secret
-  #     """
+  secret_key_base =
+    System.get_env("SECRET_KEY_BASE") ||
+      raise """
+      environment variable SECRET_KEY_BASE is missing.
+      You can generate one by calling: mix phx.gen.secret
+      """
 
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
@@ -70,7 +70,7 @@ end
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
-    # secret_key_base: secret_key_base
+    secret_key_base: secret_key_base
 
   # ## SSL Support
   #
