@@ -308,7 +308,7 @@ jobs:
     # Create a GitHub deployment environment per staging app so it shows up
     # in the pull request UI.
     environment:
-      name: pr-${{ github.event.number }}-${{ secrets.ORG_NAME }}-${{ secrets.REPO_NAME }}
+      name: pr-${{ github.event.number }}
       url: ${{ steps.deploy.outputs.url }}
 
     steps:
@@ -316,8 +316,10 @@ jobs:
 
       - name: Deploy Preview App
         id: deploy
-        uses: superfly/fly-pr-review-apps@1.0.0
+        uses: slashmili/fly-pr-review-apps@nodejs-action
         with:
+          org: optimum-bh
+          region: jnb
           postgres: optimum-preview-apps-db
 
       - name: Clean up GitHub environment
