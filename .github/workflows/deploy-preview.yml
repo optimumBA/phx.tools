@@ -330,7 +330,7 @@ jobs:
           restore-keys: ${{ runner.os }}-mix
       - name: Deploy Preview App
         id: deploy
-        uses: slashmili/fly-pr-review-apps@nodejs-action
+        uses: superfly/fly-pr-review-apps@1.0.0
         with:
           org: optimum-bh
           region: jnb
