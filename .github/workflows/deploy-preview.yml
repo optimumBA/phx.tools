@@ -332,8 +332,6 @@ jobs:
         id: deploy
         uses: superfly/fly-pr-review-apps@1.0.0
         with:
-          org: optimum-bh
-          region: jnb
           postgres: optimum-preview-apps-db
 
       - name: Clean up GitHub environment
