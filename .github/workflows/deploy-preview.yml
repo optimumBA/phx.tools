@@ -300,6 +300,12 @@ jobs:
         unused_deps,
       ]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp:
+          - 25.1.2
+        elixir:
+          - 1.14.2
 
     # Only run one deployment at a time per PR.
     concurrency:
@@ -310,14 +316,18 @@ jobs:
     environment:
       name: pr-${{ github.event.number }}
       url: ${{ steps.deploy.outputs.url }}
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Elixir
-        uses: erlef/setup-beam@e3f6ffe2878180f57318bf13febd3933ee81f664
+        uses: erlef/setup-beam@v1
         with:
-          elixir-version: 1.14.2
-          otp-version: 25.1.2
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v3
+        with:
+          path: "_build\ndeps"
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix
       - name: Deploy Preview App
         id: deploy
         uses: slashmili/fly-pr-review-apps@nodejs-action
