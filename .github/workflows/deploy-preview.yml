@@ -316,8 +316,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@e3f6ffe2878180f57318bf13febd3933ee81f664
         with:
-          elixir-version: ${{ env.ELIXIR_VERSION }}
-          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: 1.14.2
+          otp-version: 25.1.2
       - name: Deploy Preview App
         id: deploy
         uses: slashmili/fly-pr-review-apps@nodejs-action
