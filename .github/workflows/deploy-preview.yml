@@ -20,7 +20,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -51,7 +51,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -78,7 +78,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -105,7 +105,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -144,7 +144,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -171,7 +171,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -191,7 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Restore npm cache
         uses: actions/cache@v3
         id: npm-cache
@@ -216,7 +216,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -243,7 +243,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -270,7 +270,7 @@ jobs:
           - 1.14.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -309,19 +309,13 @@ jobs:
     # in the pull request UI.
     environment:
       name: pr-${{ github.event.number }}
-      url: ${{ steps.deploy.outputs.url }}
+      url: pr-${{ github.event.number }}-phxtools.fly.dev
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Deploy Preview App
         id: deploy
         uses: superfly/fly-pr-review-apps@1.0.0
         with:
           postgres: optimum-preview-apps-db
-      - name: Clean up GitHub environment
-        uses: strumwolf/delete-deployment-environment@v2
-        if: ${{ github.event.action == 'closed' }}
-        with:
-          # ⚠️ The provided token needs permission for admin write:org
-          token: ${{ secrets.GITHUB_TOKEN }}
-          environment: pr-${{ github.event.number }}
+          name: pr-${{ github.event.number }}-phxtools
