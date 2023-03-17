@@ -1,7 +1,7 @@
 name: Deploy Preview App
 on:
   pull_request:
-    types: [opened, reopened, synchronize, closed]
+    types: [opened, reopened, synchronize]
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
