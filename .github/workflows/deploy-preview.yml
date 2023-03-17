@@ -117,17 +117,25 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix
       - name: Restore PLT cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         id: plt_cache
         with:
           key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
           restore-keys: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
           path: priv/plts
-      - name: Create PLTs
+      - name: Create PLTs if no cache was found
         if: steps.plt_cache.outputs.cache-hit != 'true'
         env:
           MIX_ENV: test
         run: mix dialyzer --plt
+      - name: Save PLT cache
+        uses: actions/cache/save@v3
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        id: plt_cache_save
+        with:
+          key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
+          restore-keys: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
+          path: priv/plts
       - name: Run dialyzer
         env:
           MIX_ENV: test
