@@ -1,21 +1,30 @@
 name: Delete Preview App
 on:
   pull_request:
-    types: [closed]
+    types:
+      - closed
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 jobs:
   delete_preview_app:
     runs-on: ubuntu-latest
+    name: Delete Preview App & Environments
     environment:
       name: pr-${{ github.event.number }}
-      url: https://pr-${{ github.event.number }}-phx-tools.fly.dev
+      url: https://pr-${{ github.event.number }}-devfinder.fly.dev
     steps:
-      - uses: actions/checkout@v3
-      - name: Clean up GitHub environment
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get Token
+        uses: navikt/github-app-token-generator@a3831f44404199df32d8f39f7c0ad9bb8fa18b1c
+        id: get-token
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+      - name: Delete Deployment & its Environments
         uses: strumwolf/delete-deployment-environment@v2
         if: ${{ github.event.action == 'closed' }}
         with:
-          # ⚠️ The provided token needs permission for admin write:org
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use a JWT created with your GitHub App's private key
+          token: ${{ steps.get-token.outputs.token }}
           environment: pr-${{ github.event.number }}
