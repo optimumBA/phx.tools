@@ -341,10 +341,10 @@ jobs:
           URL: ${{ github.event.pull_request.comments_url }}
           COMMENTS_URL: https://api.github.com/repos/optimumBA/phx.tools/commits/COMMIT_SHA/comments
         run: |
-          curl \
+          curl -L \
             -X POST \
             $URL \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            - '{ "body": $DEPLOYED_URL }'
+            -d '{ "body": $DEPLOYED_URL }'
