@@ -339,8 +339,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOYED_URL: https://pr-${{ github.event.number }}-phx-tools.fly.dev
           URL: ${{ github.event.pull_request.comments_url }}
+          COMMENTS_URL: https://api.github.com/repos/optimumBA/phx.tools/commits/COMMIT_SHA/comments
         run: |
-          curl -L \
+          curl \
             -X POST \
             $URL \
             -H "Accept: application/vnd.github+json" \
