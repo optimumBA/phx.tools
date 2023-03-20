@@ -332,15 +332,17 @@ jobs:
       - preview_app
     name: Post Comment with Deployment Url
     runs-on: ubuntu-latest
+    # if: github.event.pull_request
     steps:
       - name: Add comment to PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          URL: https://pr-${{ github.event.number }}-phx-tools.fly.dev
+          DEPLOYED_URL: https://pr-${{ github.event.number }}-phx-tools.fly.dev
+          URL: ${{ github.event.pull_request.comments_url }}
         run: |
           curl \
             -X POST \
             $URL \
             -H "Content-Type: application/json" \
             -H "Authorization: token $GITHUB_TOKEN" \
-            --data '{ "body": $URL }'
+            --data '{ "body": $DEPLOYED_URL }'
