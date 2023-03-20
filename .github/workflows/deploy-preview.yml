@@ -334,9 +334,15 @@ jobs:
     runs-on: ubuntu-latest
     # if: github.event.pull_request
     steps:
+      - name: Get Token
+        uses: navikt/github-app-token-generator@a3831f44404199df32d8f39f7c0ad9bb8fa18b1c
+        id: get-token
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - name: Add comment to PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ steps.get-token.outputs.token }}
           DEPLOYED_URL: https://pr-${{ github.event.number }}-phx-tools.fly.dev
           URL: ${{ github.event.pull_request.comments_url }}
           COMMENTS_URL: https://api.github.com/repos/optimumBA/phx.tools/commits/COMMIT_SHA/comments
@@ -345,6 +351,6 @@ jobs:
             -X POST \
             $URL \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Authorization: token $TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -d '{ "body": $DEPLOYED_URL }'
