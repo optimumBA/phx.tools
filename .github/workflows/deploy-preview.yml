@@ -1,7 +1,7 @@
 name: Deploy Preview App
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, closed]
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_ORG: optimum-bh
@@ -327,4 +327,21 @@ jobs:
         with:
           postgres: preview-apps-db
           name: pr-${{ github.event.number }}-phx-tools
-          path: './'
+  comment:
+    needs:
+      - preview_app
+    name: Post Comment with Deployment Url
+    if: contains(github.event.comment.body, 'special string')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add comment to PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: https://pr-${{ github.event.number }}-phx-tools.fly.dev
+        run: |
+          curl \
+            -X POST \
+            $URL \
+            -H "Content-Type: text/html" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            --data $URL
