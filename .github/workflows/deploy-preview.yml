@@ -331,7 +331,6 @@ jobs:
     needs:
       - preview_app
     name: Post Comment with Deployment Url
-    if: contains(github.event.comment.body, 'special string')
     runs-on: ubuntu-latest
     steps:
       - name: Add comment to PR
@@ -342,6 +341,6 @@ jobs:
           curl \
             -X POST \
             $URL \
-            -H "Content-Type: text/html" \
+            -H "Content-Type: application/json" \
             -H "Authorization: token $GITHUB_TOKEN" \
-            --data $URL
+            --data '{ "body": "blah blah" }'
