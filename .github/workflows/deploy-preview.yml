@@ -340,8 +340,8 @@ jobs:
         uses: navikt/github-app-token-generator@a3831f44404199df32d8f39f7c0ad9bb8fa18b1c
         id: get-token
         with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          app-id: $app-id
+          private-key: $private-key
       - name: Add comment to PR
         env:
           TOKEN: ${{ steps.get-token.outputs.token }}
