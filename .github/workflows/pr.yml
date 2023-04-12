@@ -1,26 +1,27 @@
-name: CI
+name: PR
 on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - reopened
+      - synchronize
 jobs:
   compile:
     name: Install deps and compile
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -38,20 +39,17 @@ jobs:
     needs: compile
     name: Credo
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -61,24 +59,63 @@ jobs:
         env:
           MIX_ENV: test
         run: mix credo --strict
+  deploy_preview_app:
+    name: Deploy preview app
+    needs:
+      - compile
+      - credo
+      - deps_audit
+      - dialyzer
+      - format
+      - hex_audit
+      - prettier
+      - sobelow
+      - test
+      - test_linux_script_job
+      - test_macos_script_job
+      - unused_deps
+    permissions: write-all
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-${{ github.event.number }}
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      FLY_ORG: optimum-bh
+      FLY_REGION: fra
+      PHX_HOST: pr-${{ github.event.number }}-phx-tools.fly.dev
+      REPO_NAME: phx_tools
+    environment:
+      name: pr-${{ github.event.number }}-phx-tools
+      url: https://${{ env.PHX_HOST }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Delete previous deployments
+        uses: strumwolf/delete-deployment-environment@v2.2.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: pr-${{ github.event.number }}-phx-tools
+          ref: ${{ github.head_ref }}
+          onlyRemoveDeployments: true
+      - name: Deploy preview app
+        uses: almirsarajcic/fly-pr-review-apps@remote-builder
+        with:
+          name: pr-${{ github.event.number }}-phx-tools
+          secrets: APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} PHX_HOST=${{ env.PHX_HOST }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
   deps_audit:
     needs: compile
     name: Deps audit
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -92,20 +129,17 @@ jobs:
     needs: compile
     name: Dialyzer
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -115,8 +149,8 @@ jobs:
         uses: actions/cache@v3
         id: plt_cache
         with:
-          key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
-          restore-keys: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
+          key: ${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt
+          restore-keys: ${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt
           path: priv/plts
       - name: Create PLTs
         if: steps.plt_cache.outputs.cache-hit != 'true'
@@ -131,20 +165,17 @@ jobs:
     needs: compile
     name: Format
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -158,20 +189,17 @@ jobs:
     needs: compile
     name: Hex audit
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -203,20 +231,17 @@ jobs:
     needs: compile
     name: Security check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -230,20 +255,17 @@ jobs:
     needs: compile
     name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -319,20 +341,17 @@ jobs:
     needs: compile
     name: Check unused deps
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"

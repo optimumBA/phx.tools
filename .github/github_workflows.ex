@@ -5,43 +5,20 @@ defmodule GitHubWorkflows do
   """
 
   def get do
+    repo_name = "phx_tools"
+    app_name = "phx-tools"
+
     %{
-      "ci.yml" => ci_workflow(),
-      "cicd.yml" => cicd_workflow()
+      "main.yml" => main_workflow(),
+      "pr.yml" => pr_workflow(repo_name, app_name),
+      "pr_closure.yml" => pr_closure_workflow(repo_name, app_name)
     }
   end
 
-  defp ci_workflow do
+  defp main_workflow do
     [
       [
-        name: "CI",
-        on: [
-          pull_request: [
-            branches: ["main"]
-          ]
-        ],
-        jobs: [
-          compile: compile_job(),
-          credo: credo_job(),
-          deps_audit: deps_audit_job(),
-          dialyzer: dialyzer_job(),
-          format: format_job(),
-          hex_audit: hex_audit_job(),
-          prettier: prettier_job(),
-          sobelow: sobelow_job(),
-          test: test_job(),
-          test_linux_script_job: test_linux_script_job(),
-          test_macos_script_job: test_macos_script_job(),
-          unused_deps: unused_deps_job()
-        ]
-      ]
-    ]
-  end
-
-  defp cicd_workflow do
-    [
-      [
-        name: "CI & CD",
+        name: "Main",
         on: [
           push: [
             branches: ["main"]
@@ -60,8 +37,8 @@ defmodule GitHubWorkflows do
           test_linux_script_job: test_linux_script_job(),
           test_macos_script_job: test_macos_script_job(),
           unused_deps: unused_deps_job(),
-          deploy: [
-            name: "Deploy to Fly.io",
+          deploy_production_app: [
+            name: "Deploy production app",
             needs: [
               "compile",
               "credo",
@@ -76,7 +53,6 @@ defmodule GitHubWorkflows do
               "test_macos_script_job",
               "unused_deps"
             ],
-            if: "github.ref == 'refs/heads/main' && github.event_name != 'pull_request'",
             "runs-on": "ubuntu-latest",
             env: [FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"],
             steps: [
@@ -90,6 +66,52 @@ defmodule GitHubWorkflows do
               ]
             ]
           ]
+        ]
+      ]
+    ]
+  end
+
+  defp pr_workflow(repo_name, app_name) do
+    [
+      [
+        name: "PR",
+        on: [
+          pull_request: [
+            branches: ["main"],
+            types: ["opened", "reopened", "synchronize"]
+          ]
+        ],
+        jobs: [
+          compile: compile_job(),
+          credo: credo_job(),
+          deploy_preview_app: deploy_preview_app_job(repo_name, app_name),
+          deps_audit: deps_audit_job(),
+          dialyzer: dialyzer_job(),
+          format: format_job(),
+          hex_audit: hex_audit_job(),
+          prettier: prettier_job(),
+          sobelow: sobelow_job(),
+          test: test_job(),
+          test_linux_script_job: test_linux_script_job(),
+          test_macos_script_job: test_macos_script_job(),
+          unused_deps: unused_deps_job()
+        ]
+      ]
+    ]
+  end
+
+  defp pr_closure_workflow(repo_name, app_name) do
+    [
+      [
+        name: "PR closure",
+        on: [
+          pull_request: [
+            branches: ["main"],
+            types: ["closed"]
+          ]
+        ],
+        jobs: [
+          delete_preview_app: delete_preview_app_job(repo_name, app_name)
         ]
       ]
     ]
@@ -132,6 +154,106 @@ defmodule GitHubWorkflows do
     )
   end
 
+  defp delete_preview_app_job(repo_name, app_name) do
+    [
+      name: "Delete preview app",
+      "runs-on": "ubuntu-latest",
+      concurrency: [group: "pr-${{ github.event.number }}"],
+      env: [
+        FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}",
+        REPO_NAME: repo_name
+      ],
+      steps: [
+        [
+          uses: "actions/checkout@v2"
+        ],
+        [
+          name: "Delete preview app",
+          uses: "almirsarajcic/fly-pr-review-apps@remote-builder",
+          with: [
+            name: "pr-${{ github.event.number }}-#{app_name}"
+          ]
+        ],
+        [
+          name: "Generate token",
+          uses: "navikt/github-app-token-generator@v1.1.1",
+          id: "generate_token",
+          with: [
+            "app-id": "${{ secrets.GH_APP_ID }}",
+            "private-key": "${{ secrets.GH_APP_PRIVATE_KEY }}"
+          ]
+        ],
+        [
+          name: "Delete GitHub environment",
+          uses: "strumwolf/delete-deployment-environment@v2.2.3",
+          with: [
+            token: "${{ steps.generate_token.outputs.token  }}",
+            environment: "pr-${{ github.event.number }}-#{app_name}",
+            ref: "${{ github.head_ref }}"
+          ]
+        ]
+      ]
+    ]
+  end
+
+  defp deploy_preview_app_job(repo_name, app_name) do
+    [
+      name: "Deploy preview app",
+      needs: [
+        "compile",
+        "credo",
+        "deps_audit",
+        "dialyzer",
+        "format",
+        "hex_audit",
+        "prettier",
+        "sobelow",
+        "test",
+        "test_linux_script_job",
+        "test_macos_script_job",
+        "unused_deps"
+      ],
+      permissions: "write-all",
+      "runs-on": "ubuntu-latest",
+      concurrency: [group: "pr-${{ github.event.number }}"],
+      env: [
+        FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}",
+        FLY_ORG: "optimum-bh",
+        FLY_REGION: "fra",
+        PHX_HOST: "pr-${{ github.event.number }}-#{app_name}.fly.dev",
+        REPO_NAME: repo_name
+      ],
+      environment: [
+        name: "pr-${{ github.event.number }}-#{app_name}",
+        url: "https://${{ env.PHX_HOST }}"
+      ],
+      steps: [
+        [
+          uses: "actions/checkout@v2"
+        ],
+        [
+          name: "Delete previous deployments",
+          uses: "strumwolf/delete-deployment-environment@v2.2.3",
+          with: [
+            token: "${{ secrets.GITHUB_TOKEN }}",
+            environment: "pr-${{ github.event.number }}-#{app_name}",
+            ref: "${{ github.head_ref }}",
+            onlyRemoveDeployments: true
+          ]
+        ],
+        [
+          name: "Deploy preview app",
+          uses: "almirsarajcic/fly-pr-review-apps@remote-builder",
+          with: [
+            name: "pr-${{ github.event.number }}-#{app_name}",
+            secrets:
+              "APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} PHX_HOST=${{ env.PHX_HOST }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}"
+          ]
+        ]
+      ]
+    ]
+  end
+
   defp deps_audit_job do
     elixir_job("Deps audit",
       needs: :compile,
@@ -156,8 +278,9 @@ defmodule GitHubWorkflows do
           uses: "actions/cache@v3",
           id: "plt_cache",
           with: [
-            key: "${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt",
-            "restore-keys": "${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt",
+            key: "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt",
+            "restore-keys":
+              "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt",
             path: "priv/plts"
           ]
         ],
@@ -184,11 +307,9 @@ defmodule GitHubWorkflows do
     job = [
       name: name,
       "runs-on": "ubuntu-latest",
-      strategy: [
-        matrix: [
-          otp: ["25.1.2"],
-          elixir: ["1.14.2"]
-        ]
+      env: [
+        "elixir-version": "1.14.2",
+        "otp-version": "25.2.1"
       ],
       steps:
         [
@@ -197,8 +318,8 @@ defmodule GitHubWorkflows do
             name: "Set up Elixir",
             uses: "erlef/setup-beam@v1",
             with: [
-              "elixir-version": "${{matrix.elixir}}",
-              "otp-version": "${{matrix.otp}}"
+              "elixir-version": "${{ env.elixir-version }}",
+              "otp-version": "${{ env.otp-version }}"
             ]
           ],
           [
