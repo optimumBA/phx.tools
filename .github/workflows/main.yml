@@ -1,4 +1,4 @@
-name: CI & CD
+name: Main
 on:
   push:
     branches:
@@ -7,20 +7,17 @@ jobs:
   compile:
     name: Install deps and compile
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -38,20 +35,17 @@ jobs:
     needs: compile
     name: Credo
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -65,20 +59,17 @@ jobs:
     needs: compile
     name: Deps audit
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -92,20 +83,17 @@ jobs:
     needs: compile
     name: Dialyzer
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -115,8 +103,8 @@ jobs:
         uses: actions/cache@v3
         id: plt_cache
         with:
-          key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
-          restore-keys: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
+          key: ${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt
+          restore-keys: ${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt
           path: priv/plts
       - name: Create PLTs
         if: steps.plt_cache.outputs.cache-hit != 'true'
@@ -131,20 +119,17 @@ jobs:
     needs: compile
     name: Format
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -158,20 +143,17 @@ jobs:
     needs: compile
     name: Hex audit
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -203,20 +185,17 @@ jobs:
     needs: compile
     name: Security check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -230,20 +209,17 @@ jobs:
     needs: compile
     name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -319,20 +295,17 @@ jobs:
     needs: compile
     name: Check unused deps
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp:
-          - 25.1.2
-        elixir:
-          - 1.14.2
+    env:
+      elixir-version: 1.14.2
+      otp-version: 25.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
       - uses: actions/cache@v3
         with:
           path: "_build\ndeps"
@@ -342,8 +315,8 @@ jobs:
         env:
           MIX_ENV: test
         run: mix deps.unlock --check-unused
-  deploy:
-    name: Deploy to Fly.io
+  deploy_production_app:
+    name: Deploy production app
     needs:
       - compile
       - credo
@@ -357,7 +330,6 @@ jobs:
       - test_linux_script_job
       - test_macos_script_job
       - unused_deps
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
