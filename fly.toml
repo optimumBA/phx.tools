@@ -3,6 +3,7 @@
 app = "phx-tools"
 kill_signal = "SIGTERM"
 kill_timeout = 5
+primary_region = "fra"
 processes = []
 
 [env]

@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Delete preview app
-        uses: almirsarajcic/fly-pr-review-apps@remote-builder
+        uses: optimumBA/fly-preview-apps@main
         with:
           name: pr-${{ github.event.number }}-phx-tools
       - name: Generate token
