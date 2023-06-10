@@ -138,7 +138,7 @@ function install() {
         asdf reshim chromedriver latest
         ;;
     "Docker")
-        brew install docker
+        brew install --cask docker
         ;;
     *)
         echo "Invalid name argument on install"
