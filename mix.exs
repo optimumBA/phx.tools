@@ -66,6 +66,7 @@ defmodule PhxTools.MixProject do
       {:credo, "~> 1.6", only: [:test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.15", only: [:dev, :test]},
+      {:github_workflows_generator, "~> 0.1", only: :dev, runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ua_parser, "~> 1.8"}
@@ -80,20 +81,22 @@ defmodule PhxTools.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get"],
+      setup: ["deps.get", "assets.setup", "assets.build"],
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       ci: [
         "deps.unlock --check-unused",
+        "deps.audit",
         "hex.audit",
         "sobelow --config .sobelow-conf",
         "format --check-formatted",
         "cmd npx prettier -c .",
         "credo --strict",
-        "dialyzer --format short 2>&1",
-        "deps.audit",
+        "dialyzer",
         "test --cover --warnings-as-errors"
       ],
-      prettier: ["cmd --cd assets npx prettier -w .."]
+      prettier: ["cmd npx prettier -w ."]
     ]
   end
 end

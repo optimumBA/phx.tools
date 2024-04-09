@@ -1,17 +1,20 @@
-defmodule GitHubWorkflows do
+defmodule GithubWorkflows do
   @moduledoc """
-  Used by a custom tool to generate GitHub workflows.
-  Reduces repetition.
+  Run `mix github_workflows.generate` after updating this module.
+  See https://hexdocs.pm/github_workflows_generator.
   """
 
-  def get do
-    repo_name = "phx_tools"
-    app_name = "phx-tools"
+  @app_name "phx-tools"
+  @environment_name "pr-${{ github.event.number }}"
+  @preview_app_name "#{@app_name}-#{@environment_name}"
+  @preview_app_host "#{@preview_app_name}.fly.dev"
+  @repo_name "phx_tools"
 
+  def get do
     %{
       "main.yml" => main_workflow(),
-      "pr.yml" => pr_workflow(repo_name, app_name),
-      "pr_closure.yml" => pr_closure_workflow(repo_name, app_name)
+      "pr.yml" => pr_workflow(),
+      "pr_closure.yml" => pr_closure_workflow()
     }
   end
 
@@ -24,54 +27,16 @@ defmodule GitHubWorkflows do
             branches: ["main"]
           ]
         ],
-        jobs: [
-          compile: compile_job(),
-          credo: credo_job(),
-          deps_audit: deps_audit_job(),
-          dialyzer: dialyzer_job(),
-          format: format_job(),
-          hex_audit: hex_audit_job(),
-          prettier: prettier_job(),
-          sobelow: sobelow_job(),
-          test: test_job(),
-          test_linux_script_job: test_linux_script_job(),
-          test_macos_script_job: test_macos_script_job(),
-          unused_deps: unused_deps_job(),
-          deploy_production_app: [
-            name: "Deploy production app",
-            needs: [
-              "compile",
-              "credo",
-              "deps_audit",
-              "dialyzer",
-              "format",
-              "hex_audit",
-              "prettier",
-              "sobelow",
-              "test",
-              "test_linux_script_job",
-              "test_macos_script_job",
-              "unused_deps"
-            ],
-            "runs-on": "ubuntu-latest",
-            env: [FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"],
-            steps: [
-              checkout_step(),
-              [
-                name: "Deploy",
-                uses: "superfly/flyctl-actions@1.3",
-                with: [
-                  args: "deploy"
-                ]
-              ]
+        jobs:
+          elixir_ci_jobs() ++
+            [
+              deploy_production_app: deploy_production_app_job()
             ]
-          ]
-        ]
       ]
     ]
   end
 
-  defp pr_workflow(repo_name, app_name) do
+  defp pr_workflow do
     [
       [
         name: "PR",
@@ -81,26 +46,16 @@ defmodule GitHubWorkflows do
             types: ["opened", "reopened", "synchronize"]
           ]
         ],
-        jobs: [
-          compile: compile_job(),
-          credo: credo_job(),
-          deploy_preview_app: deploy_preview_app_job(repo_name, app_name),
-          deps_audit: deps_audit_job(),
-          dialyzer: dialyzer_job(),
-          format: format_job(),
-          hex_audit: hex_audit_job(),
-          prettier: prettier_job(),
-          sobelow: sobelow_job(),
-          test: test_job(),
-          test_linux_script_job: test_linux_script_job(),
-          test_macos_script_job: test_macos_script_job(),
-          unused_deps: unused_deps_job()
-        ]
+        jobs:
+          elixir_ci_jobs() ++
+            [
+              deploy_preview_app: deploy_preview_app_job()
+            ]
       ]
     ]
   end
 
-  defp pr_closure_workflow(repo_name, app_name) do
+  defp pr_closure_workflow do
     [
       [
         name: "PR closure",
@@ -111,16 +66,26 @@ defmodule GitHubWorkflows do
           ]
         ],
         jobs: [
-          delete_preview_app: delete_preview_app_job(repo_name, app_name)
+          delete_preview_app: delete_preview_app_job()
         ]
       ]
     ]
   end
 
-  defp checkout_step do
+  defp elixir_ci_jobs do
     [
-      name: "Checkout",
-      uses: "actions/checkout@v2"
+      compile: compile_job(),
+      credo: credo_job(),
+      deps_audit: deps_audit_job(),
+      dialyzer: dialyzer_job(),
+      format: format_job(),
+      hex_audit: hex_audit_job(),
+      prettier: prettier_job(),
+      sobelow: sobelow_job(),
+      test: test_job(),
+      test_linux_script_job: test_linux_script_job(),
+      test_macos_script_job: test_macos_script_job(),
+      unused_deps: unused_deps_job()
     ]
   end
 
@@ -154,24 +119,22 @@ defmodule GitHubWorkflows do
     )
   end
 
-  defp delete_preview_app_job(repo_name, app_name) do
+  defp delete_preview_app_job do
     [
       name: "Delete preview app",
       "runs-on": "ubuntu-latest",
       concurrency: [group: "pr-${{ github.event.number }}"],
-      env: [
-        FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}",
-        REPO_NAME: repo_name
-      ],
       steps: [
-        [
-          uses: "actions/checkout@v2"
-        ],
+        checkout_step(),
         [
           name: "Delete preview app",
           uses: "optimumBA/fly-preview-apps@main",
+          env: [
+            FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}",
+            REPO_NAME: @repo_name
+          ],
           with: [
-            name: "pr-${{ github.event.number }}-#{app_name}"
+            name: @preview_app_name
           ]
         ],
         [
@@ -188,7 +151,7 @@ defmodule GitHubWorkflows do
           uses: "strumwolf/delete-deployment-environment@v2.2.3",
           with: [
             token: "${{ steps.generate_token.outputs.token  }}",
-            environment: "pr-${{ github.event.number }}-#{app_name}",
+            environment: @environment_name,
             ref: "${{ github.head_ref }}"
           ]
         ]
@@ -196,62 +159,64 @@ defmodule GitHubWorkflows do
     ]
   end
 
-  defp deploy_preview_app_job(repo_name, app_name) do
+  defp deploy_job(env, opts) do
     [
-      name: "Deploy preview app",
+      name: "Deploy #{env} app",
       needs: [
-        "compile",
-        "credo",
-        "deps_audit",
-        "dialyzer",
-        "format",
-        "hex_audit",
-        "prettier",
-        "sobelow",
-        "test",
-        "test_linux_script_job",
-        "test_macos_script_job",
-        "unused_deps"
+        :compile,
+        :credo,
+        :deps_audit,
+        :dialyzer,
+        :format,
+        :hex_audit,
+        :prettier,
+        :sobelow,
+        :test,
+        :test_linux_script_job,
+        :test_macos_script_job,
+        :unused_deps
       ],
+      "runs-on": "ubuntu-latest"
+    ] ++ opts
+  end
+
+  defp deploy_preview_app_job do
+    deploy_job("preview",
       permissions: "write-all",
-      "runs-on": "ubuntu-latest",
-      concurrency: [group: "pr-${{ github.event.number }}"],
-      env: [
-        FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}",
-        FLY_ORG: "optimum-bh",
-        FLY_REGION: "fra",
-        PHX_HOST: "pr-${{ github.event.number }}-#{app_name}.fly.dev",
-        REPO_NAME: repo_name
-      ],
-      environment: [
-        name: "pr-${{ github.event.number }}-#{app_name}",
-        url: "https://${{ env.PHX_HOST }}"
-      ],
+      concurrency: [group: @environment_name],
+      environment: preview_app_environment(),
       steps: [
-        [
-          uses: "actions/checkout@v2"
-        ],
-        [
-          name: "Delete previous deployments",
-          uses: "strumwolf/delete-deployment-environment@v2.2.3",
-          with: [
-            token: "${{ secrets.GITHUB_TOKEN }}",
-            environment: "pr-${{ github.event.number }}-#{app_name}",
-            ref: "${{ github.head_ref }}",
-            onlyRemoveDeployments: true
-          ]
-        ],
+        checkout_step(),
+        delete_previous_deployments_step(),
         [
           name: "Deploy preview app",
           uses: "optimumBA/fly-preview-apps@main",
+          env: fly_env(),
           with: [
-            name: "pr-${{ github.event.number }}-#{app_name}",
+            name: @preview_app_name,
             secrets:
               "APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} PHX_HOST=${{ env.PHX_HOST }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}"
           ]
         ]
       ]
-    ]
+    )
+  end
+
+  defp deploy_production_app_job do
+    deploy_job("production",
+      steps: [
+        checkout_step(),
+        [
+          uses: "superfly/flyctl-actions/setup-flyctl@master"
+        ],
+        [
+          run: "flyctl deploy --remote-only",
+          env: [
+            FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"
+          ]
+        ]
+      ]
+    )
   end
 
   defp deps_audit_job do
@@ -268,33 +233,28 @@ defmodule GitHubWorkflows do
   end
 
   defp dialyzer_job do
+    cache_key_prefix = "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt"
+
     elixir_job("Dialyzer",
       needs: :compile,
       steps: [
         [
-          # Don't cache PLTs based on mix.lock hash, as Dialyzer can incrementally update even old ones
-          # Cache key based on Elixir & Erlang version (also useful when running in matrix)
           name: "Restore PLT cache",
           uses: "actions/cache@v3",
-          id: "plt_cache",
-          with: [
-            key: "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt",
-            "restore-keys":
-              "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt",
-            path: "priv/plts"
-          ]
+          with:
+            [
+              path: "priv/plts"
+            ] ++ cache_opts(cache_key_prefix)
         ],
         [
-          # Create PLTs if no cache was found
           name: "Create PLTs",
-          if: "steps.plt_cache.outputs.cache-hit != 'true'",
           env: [MIX_ENV: "test"],
           run: "mix dialyzer --plt"
         ],
         [
           name: "Run dialyzer",
           env: [MIX_ENV: "test"],
-          run: "mix dialyzer --format short 2>&1"
+          run: "mix dialyzer"
         ]
       ]
     )
@@ -302,14 +262,17 @@ defmodule GitHubWorkflows do
 
   defp elixir_job(name, opts) do
     needs = Keyword.get(opts, :needs)
+    services = Keyword.get(opts, :services)
     steps = Keyword.get(opts, :steps, [])
+
+    cache_key_prefix = "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-mix"
 
     job = [
       name: name,
       "runs-on": "ubuntu-latest",
       env: [
         "elixir-version": "1.14.2",
-        "otp-version": "25.2.1"
+        "otp-version": "25.1.2"
       ],
       steps:
         [
@@ -324,20 +287,32 @@ defmodule GitHubWorkflows do
           ],
           [
             uses: "actions/cache@v3",
-            with: [
-              path: "_build\ndeps",
-              key: "${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}",
-              "restore-keys": "${{ runner.os }}-mix"
-            ]
+            with:
+              [
+                path: ~S"""
+                _build
+                deps
+                """
+              ] ++ cache_opts(cache_key_prefix)
           ]
         ] ++ steps
     ]
 
-    if needs do
-      Keyword.put(job, :needs, needs)
-    else
-      job
-    end
+    job
+    |> then(fn job ->
+      if needs do
+        Keyword.put(job, :needs, needs)
+      else
+        job
+      end
+    end)
+    |> then(fn job ->
+      if services do
+        Keyword.put(job, :services, services)
+      else
+        job
+      end
+    end)
   end
 
   defp format_job do
@@ -378,8 +353,7 @@ defmodule GitHubWorkflows do
           id: "npm-cache",
           with: [
             path: "~/.npm",
-            key: "${{ runner.os }}-node",
-            "restore-keys": "${{ runner.os }}-node"
+            key: "${{ runner.os }}-prettier"
           ]
         ],
         [
@@ -414,7 +388,9 @@ defmodule GitHubWorkflows do
       steps: [
         [
           name: "Run tests",
-          env: [MIX_ENV: "test"],
+          env: [
+            MIX_ENV: "test"
+          ],
           run: "mix test --cover --warnings-as-errors"
         ]
       ]
@@ -492,5 +468,51 @@ defmodule GitHubWorkflows do
         ]
       ]
     )
+  end
+
+  defp checkout_step do
+    [
+      name: "Checkout",
+      uses: "actions/checkout@v4"
+    ]
+  end
+
+  defp delete_previous_deployments_step do
+    [
+      name: "Delete previous deployments",
+      uses: "strumwolf/delete-deployment-environment@v2.2.3",
+      with: [
+        token: "${{ secrets.GITHUB_TOKEN }}",
+        environment: @environment_name,
+        ref: "${{ github.head_ref }}",
+        onlyRemoveDeployments: true
+      ]
+    ]
+  end
+
+  defp cache_opts(prefix) do
+    [
+      key: "#{prefix}-${{ github.sha }}",
+      "restore-keys": ~s"""
+      #{prefix}-
+      """
+    ]
+  end
+
+  defp fly_env do
+    [
+      FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}",
+      FLY_ORG: "optimum-bh",
+      FLY_REGION: "fra",
+      PHX_HOST: "#{@preview_app_name}.fly.dev",
+      REPO_NAME: @repo_name
+    ]
+  end
+
+  defp preview_app_environment do
+    [
+      name: @environment_name,
+      url: "https://#{@preview_app_host}"
+    ]
   end
 end

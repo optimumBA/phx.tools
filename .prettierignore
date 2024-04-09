@@ -1,6 +1,7 @@
 /_build/
 /.elixir_ls/
 /.git/
+/assets/vendor/
 /config/
 /cover/
 /deps/
@@ -9,9 +10,10 @@
 /priv/
 /rel/
 /test/
-.credo.exs
-.dialyzer_ignore.exs
-.dockerignore
-.formatter.exs
-.gitignore
-.erl_crash.dump
+/.credo.exs
+/.dialyzer_ignore.exs
+/.dockerignore
+/.env.sample
+/.formatter.exs
+/.gitignore
+/.erl_crash.dump
