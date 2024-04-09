@@ -11,15 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: pr-${{ github.event.number }}
-    env:
-      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      REPO_NAME: phx_tools
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Delete preview app
         uses: optimumBA/fly-preview-apps@main
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          REPO_NAME: phx_tools
         with:
-          name: pr-${{ github.event.number }}-phx-tools
+          name: phx-tools-pr-${{ github.event.number }}
       - name: Generate token
         uses: navikt/github-app-token-generator@v1.1.1
         id: generate_token
@@ -30,5 +31,5 @@ jobs:
         uses: strumwolf/delete-deployment-environment@v2.2.3
         with:
           token: ${{ steps.generate_token.outputs.token  }}
-          environment: pr-${{ github.event.number }}-phx-tools
+          environment: pr-${{ github.event.number }}
           ref: ${{ github.head_ref }}
