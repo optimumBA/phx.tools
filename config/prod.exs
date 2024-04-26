@@ -22,3 +22,5 @@ config :appsignal, :config,
   ignore_actions: ["PhxToolsWeb.HealthController#index"],
   name: "phx.tools",
   otp_app: :phx_tools
+
+config :logger, backends: [:console, {Appsignal.Logger.Backend, [group: "phoenix"]}]
