@@ -6,6 +6,9 @@ kill_timeout = 5
 primary_region = "fra"
 processes = []
 
+[deploy]
+  strategy = "bluegreen"
+
 [env]
   PORT = "8080"
 
