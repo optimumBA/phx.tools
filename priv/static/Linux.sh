@@ -106,15 +106,15 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 25.1.2
-        asdf global erlang 25.1.2
-        asdf reshim erlang 25.1.2
+        asdf install erlang 27.0
+        asdf global erlang 27.0
+        asdf reshim erlang 27.0
         ;;
     "Elixir")
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.14.2-otp-25
-        asdf global elixir 1.14.2-otp-25
-        asdf reshim elixir 1.14.2-otp-25
+        asdf install elixir 1.17.1-otp-27
+        asdf global elixir 1.17.1-otp-27
+        asdf reshim elixir 1.17.1-otp-27
         ;;
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
@@ -139,9 +139,9 @@ function install() {
         ;;
     "Node.js")
         asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-        asdf install nodejs 16.17.0
-        asdf global nodejs 16.17.0
-        asdf reshim nodejs 16.17.0
+        asdf install nodejs 20.14.0
+        asdf global nodejs 20.14.0
+        asdf reshim nodejs 20.14.0
         ;;
     "ChromeDriver")
         source ~/.zshrc >/dev/null 2>&1
