@@ -15,8 +15,8 @@ config :phx_tools, PhxToolsWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "hkRtCbt6klxMXvtj5SITdDbm6HmpDn7XXnA+lRqP/74Ei7u3J6KIOg/djMq/viBc",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:phx_tools, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:phx_tools, ~w(--watch)]}
   ]
 
 # ## SSL Support
