@@ -2,9 +2,10 @@ defmodule PhxToolsWeb.SystemDetector do
   @moduledoc """
   Parses User-Agent and saves it to the session.
   """
-  @behaviour Plug
 
   alias Plug.Conn
+
+  @behaviour Plug
 
   @spec init(Keyword.t()) :: nil
   def init(_opts), do: nil

@@ -24,12 +24,28 @@ _Optional_
 - ChromeDriver
 - Docker
 
+## Setup
+
 To start your Phoenix server:
 
-- Install dependencies with `mix deps.get`
-- Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+- install Elixir, Erlang and Node using [mise](https://mise.jdx.dev)
+  - install mise using either `curl https://mise.run | sh` or `brew install mise`
+  - make sure to activate it
+  - run `mise install`
+- run `mix setup`
+- start Phoenix server with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+## Docs
+
+- execute `mix docs --formatter html --open`
+
+It will open documentation in your browser.
+
+## Running tests
+
+- run `mix coveralls` or `mix coveralls.html`
 
 ## Contributing
 

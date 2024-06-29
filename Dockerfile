@@ -7,13 +7,13 @@
 # This file is based on these images:
 #
 #   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
-#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20221004-slim - for the release image
+#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20240612-slim - for the release image
 #   - https://pkgs.org/ - resource for finding needed packages
-#   - Ex: hexpm/elixir:1.14.2-erlang-25.1.2-debian-bullseye-20221004-slim
+#   - Ex: hexpm/elixir:1.17.1-erlang-27.0-debian-bullseye-20240612-slim
 #
-ARG ELIXIR_VERSION=1.14.2
-ARG OTP_VERSION=25.1.2
-ARG DEBIAN_VERSION=bullseye-20221004-slim
+ARG ELIXIR_VERSION=1.17.1
+ARG OTP_VERSION=27.0
+ARG DEBIAN_VERSION=bullseye-20240612-slim
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
@@ -60,18 +60,17 @@ RUN mix compile
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
-# Set the app revision from git commit sha
-COPY .git .git
-RUN cat .git/HEAD | awk '{print ".git/"$2}' | xargs cat | cut -c 1-7 >> priv/REVISION
-
 COPY rel rel
+COPY .git .git
+RUN cat .git/HEAD | grep "ref: " && (cat .git/HEAD | awk '{print ".git/"$2}' | xargs cat >> priv/REVISION) || cat .git/HEAD >> priv/REVISION
 RUN mix release
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
+RUN apt-get update -y && \
+  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -92,8 +91,9 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/phx_tools ./
 
 USER nobody
 
-CMD ["/app/bin/server"]
+# If using an environment that doesn't automatically reap zombie processes, it is
+# advised to add an init process such as tini via `apt-get install`
+# above and adding an entrypoint. See https://github.com/krallin/tini for details
+# ENTRYPOINT ["/tini", "--"]
 
-# Appended by flyctl
-ENV ECTO_IPV6 true
-ENV ERL_AFLAGS "-proto_dist inet6_tcp"
+CMD ["/app/bin/server"]

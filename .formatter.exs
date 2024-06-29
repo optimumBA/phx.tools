@@ -1,6 +1,6 @@
 [
   import_deps: [:phoenix],
-  plugins: [Phoenix.LiveView.HTMLFormatter],
+  plugins: [DoctestFormatter, Phoenix.LiveView.HTMLFormatter],
   inputs: [
     "*.{heex,ex,exs}",
     ".github/github_workflows.ex",

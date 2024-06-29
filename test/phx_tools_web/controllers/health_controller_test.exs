@@ -1,8 +1,8 @@
 defmodule PhxToolsWeb.HealthControllerTest do
   use PhxToolsWeb.ConnCase, async: true
 
-  describe "index" do
-    test "returns node info", %{conn: conn} do
+  describe "GET /health" do
+    test "returns cluster info", %{conn: conn} do
       conn = get(conn, ~p"/health")
 
       assert %{

@@ -20,7 +20,7 @@ config :phx_tools, PhxToolsWeb.Endpoint,
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.41",
-  default: [
+  phx_tools: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
@@ -30,7 +30,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "3.1.8",
-  default: [
+  phx_tools: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css
@@ -46,6 +46,14 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# AppSignal
+config :appsignal, :config,
+  active: false,
+  env: config_env(),
+  ignore_actions: ["PhxToolsWeb.HealthController#index"],
+  name: "phx_tools",
+  otp_app: :phx_tools
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

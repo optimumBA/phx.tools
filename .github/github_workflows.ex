@@ -4,9 +4,9 @@ defmodule GithubWorkflows do
   See https://hexdocs.pm/github_workflows_generator.
   """
 
-  @app_name "phx-tools"
+  @app_name_prefix "phx-tools"
   @environment_name "pr-${{ github.event.number }}"
-  @preview_app_name "#{@app_name}-#{@environment_name}"
+  @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
 
@@ -162,20 +162,7 @@ defmodule GithubWorkflows do
   defp deploy_job(env, opts) do
     [
       name: "Deploy #{env} app",
-      needs: [
-        :compile,
-        :credo,
-        :deps_audit,
-        :dialyzer,
-        :format,
-        :hex_audit,
-        :prettier,
-        :sobelow,
-        :test,
-        :test_linux_script_job,
-        :test_macos_script_job,
-        :unused_deps
-      ],
+      needs: Enum.map(elixir_ci_jobs(), &elem(&1, 0)),
       "runs-on": "ubuntu-latest"
     ] ++ opts
   end
@@ -233,7 +220,8 @@ defmodule GithubWorkflows do
   end
 
   defp dialyzer_job do
-    cache_key_prefix = "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-plt"
+    cache_key_prefix =
+      "${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt"
 
     elixir_job("Dialyzer",
       needs: :compile,
@@ -262,27 +250,24 @@ defmodule GithubWorkflows do
 
   defp elixir_job(name, opts) do
     needs = Keyword.get(opts, :needs)
-    services = Keyword.get(opts, :services)
     steps = Keyword.get(opts, :steps, [])
 
-    cache_key_prefix = "${{ runner.os }}-${{ env.elixir-version }}-${{ env.otp-version }}-mix"
+    cache_key_prefix =
+      "${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix"
 
     job = [
       name: name,
       "runs-on": "ubuntu-latest",
-      env: [
-        "elixir-version": "1.14.2",
-        "otp-version": "25.1.2"
-      ],
       steps:
         [
           checkout_step(),
           [
+            id: "setup-beam",
             name: "Set up Elixir",
             uses: "erlef/setup-beam@v1",
             with: [
-              "elixir-version": "${{ env.elixir-version }}",
-              "otp-version": "${{ env.otp-version }}"
+              "version-file": ".tool-versions",
+              "version-type": "strict"
             ]
           ],
           [
@@ -298,21 +283,11 @@ defmodule GithubWorkflows do
         ] ++ steps
     ]
 
-    job
-    |> then(fn job ->
-      if needs do
-        Keyword.put(job, :needs, needs)
-      else
-        job
-      end
-    end)
-    |> then(fn job ->
-      if services do
-        Keyword.put(job, :services, services)
-      else
-        job
-      end
-    end)
+    if needs do
+      Keyword.put(job, :needs, needs)
+    else
+      job
+    end
   end
 
   defp format_job do
@@ -352,14 +327,14 @@ defmodule GithubWorkflows do
           uses: "actions/cache@v3",
           id: "npm-cache",
           with: [
-            path: "~/.npm",
+            path: "node_modules",
             key: "${{ runner.os }}-prettier"
           ]
         ],
         [
           name: "Install Prettier",
           if: "steps.npm-cache.outputs.cache-hit != 'true'",
-          run: "npm i -g prettier"
+          run: "npm i -D prettier prettier-plugin-toml"
         ],
         [
           name: "Run Prettier",

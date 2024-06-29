@@ -12,15 +12,12 @@ import Config
 config :phx_tools, PhxToolsWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger,
+  backends: [:console, {Appsignal.Logger.Backend, [group: "phoenix"]}],
+  level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
 
-config :appsignal, :config,
-  active: true,
-  ignore_actions: ["PhxToolsWeb.HealthController#index"],
-  name: "phx.tools",
-  otp_app: :phx_tools
-
-config :logger, backends: [:console, {Appsignal.Logger.Backend, [group: "phoenix"]}]
+# AppSignal
+config :appsignal, :config, active: true

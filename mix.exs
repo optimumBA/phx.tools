@@ -9,7 +9,13 @@ defmodule PhxTools.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
+      deps: phoenix_deps() ++ optimum_deps() ++ app_deps(),
+
+      # CI
+      dialyzer: [
+        plt_add_apps: [:ex_unit, :mix],
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ],
       preferred_cli_env: [
         ci: :test,
         coveralls: :test,
@@ -20,10 +26,21 @@ defmodule PhxTools.MixProject do
         sobelow: :test
       ],
       test_coverage: [tool: ExCoveralls],
-      dialyzer: [
-        ignore_warnings: ".dialyzer_ignore.exs",
-        plt_add_apps: [:ex_unit, :mix],
-        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+
+      # Docs
+      name: "PhxTools",
+      source_url: "https://github.com/optimumBA/phx.tools",
+      docs: [
+        extras: ["README.md"],
+        main: "readme",
+        source_ref: "main"
+      ],
+
+      # Release
+      releases: [
+        phx_tools: [
+          include_executables_for: [:unix]
+        ]
       ]
     ]
   end
@@ -45,7 +62,28 @@ defmodule PhxTools.MixProject do
   # Specifies your project dependencies.
   #
   # Type `mix help deps` for examples and options.
-  defp deps do
+  defp app_deps do
+    [
+      {:ua_parser, "~> 1.8"}
+    ]
+  end
+
+  defp optimum_deps do
+    [
+      {:appsignal_phoenix, "~> 2.3"},
+      {:credo, "~> 1.7", only: :test, runtime: false},
+      {:dialyxir, "~> 1.4", only: :test, runtime: false},
+      {:doctest_formatter, "~> 0.3", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.18", only: :test},
+      {:faker, "~> 0.18", only: :test},
+      {:github_workflows_generator, "~> 0.1", only: :dev, runtime: false},
+      {:mix_audit, "~> 2.1", only: :test, runtime: false},
+      {:sobelow, "~> 0.13", only: :test, runtime: false}
+    ]
+  end
+
+  defp phoenix_deps do
     [
       {:phoenix, "~> 1.7.0-rc.0", override: true},
       {:phoenix_html, "~> 3.0"},
@@ -60,16 +98,7 @@ defmodule PhxTools.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"},
-      # ------------------------------------------------------------------------
-      {:appsignal_phoenix, "~> 2.0"},
-      {:credo, "~> 1.6", only: [:test], runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.15", only: [:dev, :test]},
-      {:github_workflows_generator, "~> 0.1", only: :dev, runtime: false},
-      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false},
-      {:ua_parser, "~> 1.8"}
+      {:plug_cowboy, "~> 2.5"}
     ]
   end
 
@@ -81,10 +110,19 @@ defmodule PhxTools.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "assets.setup", "assets.build"],
+      setup: [
+        "deps.get",
+        "cmd npm i -D prettier prettier-plugin-toml",
+        "assets.setup",
+        "assets.build"
+      ],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      "assets.build": ["tailwind phx_tools", "esbuild phx_tools"],
+      "assets.deploy": [
+        "tailwind phx_tools --minify",
+        "esbuild phx_tools --minify",
+        "phx.digest"
+      ],
       ci: [
         "deps.unlock --check-unused",
         "deps.audit",

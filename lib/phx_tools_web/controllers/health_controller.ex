@@ -4,8 +4,9 @@ defmodule PhxToolsWeb.HealthController do
   use PhxToolsWeb, :controller
 
   @type conn :: Plug.Conn.t()
+  @type params :: map()
 
-  @spec index(conn(), map()) :: conn()
+  @spec index(conn(), params()) :: conn()
   def index(conn, _params) do
     {:ok, hostname} = :inet.gethostname()
 
