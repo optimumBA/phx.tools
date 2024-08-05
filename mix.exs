@@ -70,7 +70,7 @@ defmodule PhxTools.MixProject do
 
   defp optimum_deps do
     [
-      {:appsignal_phoenix, "~> 2.3"},
+      {:appsignal_phoenix, "~> 2.4"},
       {:credo, "~> 1.7", only: :test, runtime: false},
       {:dialyxir, "~> 1.4", only: :test, runtime: false},
       {:doctest_formatter, "~> 0.3", only: [:dev, :test], runtime: false},
@@ -85,16 +85,16 @@ defmodule PhxTools.MixProject do
 
   defp phoenix_deps do
     [
-      {:phoenix, "~> 1.7.0-rc.0", override: true},
-      {:phoenix_html, "~> 3.0"},
+      {:phoenix, "~> 1.7"},
+      {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18.3"},
+      {:phoenix_live_view, "~> 1.0.0-rc.6", override: true},
       {:heroicons, "~> 0.5"},
       {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.7.2"},
+      {:phoenix_live_dashboard, "~> 0.8"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
-      {:telemetry_metrics, "~> 0.6"},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
