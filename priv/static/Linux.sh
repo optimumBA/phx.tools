@@ -38,8 +38,8 @@ function already_installed() {
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
-    "asdf")
-        brew list | grep -q asdf
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -53,18 +53,11 @@ function already_installed() {
     "PostgreSQL")
         which pg_ctl >/dev/null 2>&1
         ;;
-    "Chrome")
-        dpkg -l | grep -q google-chrome-stable
-        ;;
+
     "Node.js")
         which node >/dev/null 2>&1
         ;;
-    "ChromeDriver")
-        npm list -g | grep -q chromedriver
-        ;;
-    "Docker")
-        which docker >/dev/null 2>&1
-        ;;
+
     *)
         echo "Invalid name argument on checking"
         ;;
@@ -74,16 +67,16 @@ function already_installed() {
 function install() {
     case $1 in
     "Git")
-        sudo apt-get install -y git
+        sudo apt install -y git
         ;;
     "Zsh")
-        sudo apt-get install -y zsh
+        sudo apt install -y zsh
         ;;
     "oh-my-zsh")
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         ;;
     "wget")
-        sudo apt-get install -y wget
+        sudo apt install -y wget
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -94,74 +87,37 @@ function install() {
         ) >>~/.zshrc
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         ;;
-    "asdf")
-        brew install asdf
-        (
-            echo
-            echo '. $(brew --prefix asdf)/libexec/asdf.sh'
-        ) >>~/.zshrc
-        source ~/.zshrc >/dev/null 2>&1
+    
+    "mise")
+        curl https://mise.run | sh
+        echo 'eval "$(~/.local/bin/mise activate bash)"' >>~/.bashrc
         ;;
     "Erlang")
-        sudo apt-get update
-        sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0
-        asdf global erlang 27.0
-        asdf reshim erlang 27.0
+        mise use -g erlang@27.0.1
         ;;
     "Elixir")
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.1-otp-27
-        asdf global elixir 1.17.1-otp-27
-        asdf reshim elixir 1.17.1-otp-27
+        mise use -g elixir@1.17.2-otp-27
         ;;
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3
+        mix archive.install --force hex phx_new 1.7.14
         ;;
     "PostgreSQL")
-        sudo apt-get update
-        sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
+        sudo apt update
+         sudo apt -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
-        asdf reshim postgres
+        mise plugins install https://github.com/smashedtoatoms/asdf-postgres.git
+        mise use -g postgres@15.1
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
         ;;
-    "Chrome")
-        sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo apt install -y ./google-chrome-stable_current_amd64.deb
-        ;;
+
     "Node.js")
-        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-        asdf install nodejs 20.14.0
-        asdf global nodejs 20.14.0
-        asdf reshim nodejs 20.14.0
+        mise use -g nodejs@20.16.0
         ;;
-    "ChromeDriver")
-        source ~/.zshrc >/dev/null 2>&1
-        npm install -g chromedriver
-        ;;
-    "Docker")
-        sudo apt-get update
-        sudo apt-get install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
-        sudo mkdir -p /etc/apt/keyrings
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-        echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-        sudo apt-get update
-        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-        ;;
+
     *)
         echo "Invalid name argument on install"
         ;;
@@ -206,7 +162,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 3
-    maybe_install "asdf"
+    maybe_install "mise"
 
     echo -e "${white}"
     sleep 1.5
@@ -226,20 +182,11 @@ function add_env() {
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"
-        sleep 3
-        maybe_install "Chrome"
-        echo -e "${white}"
 
         sleep 1.5
         maybe_install "Node.js"
         echo -e "${white}"
 
-        sleep 2
-        maybe_install "ChromeDriver"
-        echo -e "${white}"
-
-        maybe_install "Docker"
-        echo -e "${white}"
     fi
 
     echo -e "${white}"
@@ -297,7 +244,7 @@ echo -e "${cyan}${bold}"
 echo "1) Build dependencies"
 echo "2) Zsh"
 echo "3) Homebrew"
-echo "4) asdf"
+echo "4) mise"
 echo "5) Erlang"
 echo "6) Elixir"
 echo "7) Phoenix"
@@ -330,22 +277,11 @@ while ! is_yn "$answer"; do
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
-        echo -e "${bblue}${bold}We can also install some optional tools:"
-
-        echo -e "${cyan}${bold}"
-
-        echo "1) Chrome"
-        echo "2) Node.js"
-        echo "3) ChromeDriver"
-        echo "4) Docker"
-
-        echo -e "${white}"
-        echo -e "${white} ${bold}"
 
         optional=""
 
         while ! is_yn "$optional"; do
-            read -p "Do you want us to install those as well? (y/n) " optional
+            read -p "Do you want us to install Node.js as well? (y/n) " optional
 
             if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
                 echo "Please enter y or n"

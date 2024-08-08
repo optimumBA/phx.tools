@@ -1,2 +1,5 @@
 [env]
 _.file = '.env'
+elixir 1.17.2-otp-27
+erlang 27.0.1
+nodejs 22.5.1_.file = '.env'
