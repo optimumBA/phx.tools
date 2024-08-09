@@ -18,13 +18,12 @@
     </script>
   </head>
 
-  <body class="font-montserrat bg-[#110B33]">
-    <div class="relative flex items-center justify-center lg:mb-[22px] md:mb-[33px] sm:mb-[35px] mt-[5%] px-[30%]">
+  <body class="font-montserrat bg-[#110B33] mx-auto max-w-lg px-4">
+    <%= @inner_content %>
+    <div class="relative flex items-center justify-center lg:mb-[22px] md:mb-[33px] sm:mb-[35px] mt-[5%] px-[30%] ">
       <.link target="_blank" href="https://optimum.ba">
         <SharedComponents.optimum_logo />
       </.link>
     </div>
-
-    <%= @inner_content %>
   </body>
 </html>
