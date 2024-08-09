@@ -33,8 +33,8 @@ function already_installed() {
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
-    "asdf")
-        brew list | grep -q asdf
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -51,15 +51,7 @@ function already_installed() {
     "PostgreSQL")
         which pg_ctl >/dev/null 2>&1
         ;;
-    "Chrome")
-        brew list | grep -q google-chrome
-        ;;
-    "ChromeDriver")
-        brew list | grep -q chromedriver
-        ;;
-    "Docker")
-        which docker >/dev/null 2>&1
-        ;;
+
     *)
         echo "Invalid name argument on checking"
         ;;
@@ -77,69 +69,37 @@ function install() {
     "Homebrew")
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
-    "asdf")
-        # Deps for asdf
-        brew install coreutils curl git
-
-        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+    "mise")
+        curl https://mise.run | sh
+        echo 'eval "$(~/.local/bin/mise activate zsh)"' >>~/.zshrc
         ;;
     "Erlang")
-        # Deps for erlang
-        brew install autoconf openssl@1.1 wxwidgets libxslt fop
-
-        export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0
-        asdf global erlang 27.0
-        asdf reshim erlang 27.0
+        mise use -g erlang@27.0.1
         ;;
     "Elixir")
-        # Deps for elixir
-        brew install unzip
-
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.1-otp-27
-        asdf global elixir 1.17.1-otp-27
-        asdf reshim elixir 1.17.1-otp-27
+        mise use -g elixir@1.17.2-otp-27
         ;;
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3
+        mix archive.install --force hex phx_new 1.7.14
         ;;
     "Node.js")
-        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-        asdf install nodejs 20.14.0
-        asdf global nodejs 20.14.0
-        asdf reshim nodejs 20.14.0
+        mise use -g nodejs@20.16.0
         ;;
     "PostgreSQL")
         # Dependencies for PSQL
         brew install gcc readline zlib curl ossp-uuid
-
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
-        asdf reshim postgres
+        
+        
+        mise install postgres 15.1
+        mise use -g postgres@15.1
+        
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
         ;;
-    "Chrome")
-        brew install google-chrome
-        ;;
-    "ChromeDriver")
-        # Dependencies for chromedriver
-        brew install zip
 
-        asdf plugin add chromedriver
-        asdf install chromedriver latest
-        asdf global chromedriver latest
-        asdf reshim chromedriver latest
-        ;;
-    "Docker")
-        brew install --cask docker
-        ;;
     *)
         echo "Invalid name argument on install"
         ;;
@@ -173,9 +133,10 @@ function add_env() {
     sleep 2
     maybe_install "Homebrew"
 
+
     echo -e "${white}"
     sleep 3
-    maybe_install "asdf"
+    maybe_install "mise"
 
     echo -e "${white}"
     sleep 1.5
@@ -195,20 +156,11 @@ function add_env() {
 
     if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo -e "${white}"
-        sleep 3
-        maybe_install "Chrome"
-        echo -e "${white}"
 
         sleep 1.5
         maybe_install "Node.js"
         echo -e "${white}"
 
-        sleep 2
-        maybe_install "ChromeDriver"
-        echo -e "${white}"
-
-        maybe_install "Docker"
-        echo -e "${white}"
     fi
 
     echo -e "${white}"
@@ -266,7 +218,7 @@ echo -e "${cyan}${bold}"
 echo "1) Build dependencies"
 echo "2) oh-my-zsh"
 echo "3) Homebrew"
-echo "4) asdf"
+echo "4) mise"
 echo "5) Erlang"
 echo "6) Elixir"
 echo "7) Phoenix"
@@ -299,22 +251,11 @@ while ! is_yn "$answer"; do
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
-        echo -e "${bblue}${bold}We can also install some optional tools:"
-
-        echo -e "${cyan}${bold}"
-
-        echo "1) Chrome"
-        echo "2) Node.js"
-        echo "3) ChromeDriver"
-        echo "4) Docker"
-
-        echo -e "${white}"
-        echo -e "${white} ${bold}"
 
         optional=""
 
         while ! is_yn "$optional"; do
-            read -p "Do you want us to install those as well? (y/n) " optional
+            read -p "Do you want us to install Node.js as well? (y/n) " optional
 
             if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
                 echo "Please enter y or n"
