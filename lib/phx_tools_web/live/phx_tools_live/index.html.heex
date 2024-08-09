@@ -1,16 +1,18 @@
-<%= case @live_action do %>
-  <% :index -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} />
-  <% :linux -> %>
+<div>
+  <%= if @operating_system do %>
+    <LandingComponent.landing_page operating_system={@operating_system}>
+      <:installation_command>
+        <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/Linux.sh"})\"" %>
+      </:installation_command>
+    </LandingComponent.landing_page>
     <InstructionComponents.os_instructions>
       <:header>
         Linux installation process
       </:header>
 
-      <:installation_command>
-        <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/Linux.sh"})\"" %>
-      </:installation_command>
-
+      <:instruction>
+        1. Press the button to copy this command to your clipboard:
+      </:instruction>
       <:instruction>
         2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
       </:instruction>
@@ -23,6 +25,15 @@
         4. Run the command by hitting <b>ENTER</b>
       </:instruction>
     </InstructionComponents.os_instructions>
+  <% else %>
+    <p>hello mac</p>
+  <% end %>
+</div>
+<%!-- <%= case @live_action do %>
+  <% :index -> %>
+    
+  <% :linux -> %>
+    
   <% :macOS -> %>
     <InstructionComponents.os_instructions>
       <:header>
@@ -49,4 +60,4 @@
         5. Run the command by hitting <b>RETURN</b>
       </:instruction>
     </InstructionComponents.os_instructions>
-<% end %>
+<% end %> --%>

@@ -37,12 +37,12 @@ defmodule PhxToolsWeb.CoreComponents do
       <div
         id={@id}
         class={[
-          "block border-[2px] border-[#5337FF] py-2 rounded-md cursor-pointer hover:bg-indigo-850",
+          "border-[2px] border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center h-12",
           @class
         ]}
       >
-        <img src={@os_icon} />
-        <h1 class="text-white text-center"><%= @os_name %></h1>
+        <img src={@os_icon} class="h-9 w-9 " />
+        <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
       </div>
     </.link>
     """
@@ -83,18 +83,18 @@ defmodule PhxToolsWeb.CoreComponents do
       {@rest}
     >
       <p :if={@title} class="flex items-center gap-1.5 text-[0.8125rem] font-semibold leading-6">
-        <Heroicons.information_circle :if={@kind == :info} mini class="h-4 w-4" />
-        <Heroicons.exclamation_circle :if={@kind == :error} mini class="h-4 w-4" />
+        <Heroicons.information_circle :if={@kind == :info} mini class="w-4 h-4" />
+        <Heroicons.exclamation_circle :if={@kind == :error} mini class="w-4 h-4" />
         <%= @title %>
       </p>
       <p class="mt-2 text-[0.8125rem] leading-5"><%= msg %></p>
       <button
         :if={@close}
         type="button"
-        class="group absolute top-2 right-1 p-2"
+        class="absolute p-2 group top-2 right-1"
         aria-label={gettext("close")}
       >
-        <Heroicons.x_mark solid class="h-5 w-5 stroke-current opacity-40 group-hover:opacity-70" />
+        <Heroicons.x_mark solid class="w-5 h-5 stroke-current opacity-40 group-hover:opacity-70" />
       </button>
     </div>
     """
@@ -118,7 +118,7 @@ defmodule PhxToolsWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <Heroicons.arrow_left solid class="w-3 h-3 stroke-current inline" />
+        <Heroicons.arrow_left solid class="inline w-3 h-3 stroke-current" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>

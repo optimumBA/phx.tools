@@ -22,6 +22,9 @@ module.exports = {
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
       },
+      fontFamily: {
+        martian: ['Martian', 'sans-serif']
+      },
       colors: {
         brand: '#FD4F00',
         indigo: {
