@@ -20,6 +20,8 @@ defmodule Plugs.OsDetectorTest do
       assert get_session(conn, :operating_system) == "Mac OS X"
     end
 
+    # fit it after response is sent from designer
+    @tag :skip
     test "returns nil if there is no os", %{conn: conn} do
       conn =
         conn
