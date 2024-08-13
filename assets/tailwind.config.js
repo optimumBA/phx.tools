@@ -23,7 +23,7 @@ module.exports = {
         montserrat: ['Montserrat', 'sans-serif'],
       },
       fontFamily: {
-        martian: ['Martian', 'sans-serif']
+        pixelify: ['Pixelify Sans', 'sans-serif'],
       },
       colors: {
         brand: '#FD4F00',

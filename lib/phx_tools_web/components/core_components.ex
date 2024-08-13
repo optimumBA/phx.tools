@@ -37,11 +37,11 @@ defmodule PhxToolsWeb.CoreComponents do
       <div
         id={@id}
         class={[
-          "border-[2px] border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center h-12",
+          "border-[2px] border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center h-12 md:w-44",
           @class
         ]}
       >
-        <img src={@os_icon} class="h-9 w-9 " />
+        <img src={@os_icon} class="h-7 w-7 " />
         <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
       </div>
     </.link>

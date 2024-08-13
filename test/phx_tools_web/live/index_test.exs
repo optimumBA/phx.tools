@@ -9,7 +9,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       {:ok, landing_live, html} = live(conn, "/")
 
-      assert html =~ "Confirm your choice by clicking"
+      assert html =~ "The Complete Development Environment for Elixir and Phoenix"
 
       assert render(landing_live) =~ "bg-indigo-850"
     end
@@ -19,17 +19,27 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       {:ok, landing_live, html} = live(conn, "/")
 
-      assert html =~ "Confirm your choice by clicking"
+      assert html =~ "The Complete Development Environment for Elixir and Phoenix"
 
       assert render(landing_live) =~ "bg-indigo-850"
     end
 
-    test "user visits the page", %{conn: conn} do
-      {:ok, landing_live, html} = live(conn, "/")
+    test "user visits the page with Linux OS user agent", %{conn: conn} do
+      updated_conn = put_req_header(conn, "user-agent", "Linux")
+      {:ok, landing_live, html} = live(updated_conn, "/")
 
-      assert html =~ "Choose your operating system"
-      assert render(landing_live) =~ "Choose your operating system"
+      assert html =~ "The Complete Development Environment for Elixir and Phoenix"
+      assert html =~ "Linux.sh"
+
       assert has_element?(landing_live, "#macOS")
+    end
+
+    test "user visits the page with Mac OS user agent", %{conn: conn} do
+      updated_conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
+      {:ok, landing_live, html} = live(updated_conn, "/")
+
+      assert html =~ "The Complete Development Environment for Elixir and Phoenix"
+      assert html =~ "macOS.sh"
       assert has_element?(landing_live, "#linux")
     end
 
