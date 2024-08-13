@@ -13,10 +13,10 @@ cyan='\033[0;36m'
 current_shell=$(basename "$SHELL")
 
 if [[ $current_shell == "zsh" ]]; then
-    config_file="~/.zshrc"
+    config_file="$HOME/.zshrc"
 else
     current_shell="bash"
-    config_file="~/.bashrc"
+    config_file="$HOME/.bashrc"
 fi
 
 function already_installed() {
@@ -58,8 +58,8 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(~/.local/bin/mise activate $current_shell)"' >>"$config_file"
-        eval "$(~/.local/bin/mise activate $current_shell --shims)"
+        echo 'eval "$($HOME/.local/bin/mise activate $current_shell)"' >>"$config_file"
+        eval "$($HOME/.local/bin/mise activate $current_shell --shims)"
         ;;
     "Erlang")
         mise use -g erlang@27.0.1
