@@ -12,11 +12,11 @@ green='\033[0;32m'
 cyan='\033[0;36m'
 current_shell=$(basename "$SHELL")
 
-if [[ $current_shell == "zsh" ]]; then
-    config_file="/Users/$USER/.zshrc"
-else
-    current_shell="bash"
+if [[ $current_shell == "bash" ]]; then
     config_file="/Users/$USER/.bashrc"
+else
+    current_shell="zsh"
+    config_file="/Users/$USER/.zshrc"
 fi
 
 function already_installed() {
@@ -59,13 +59,13 @@ function install() {
         (
             echo
             echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-        ) >>~/"$config_file"
+        ) >>"$config_file"
         eval "$(/opt/homebrew/bin/brew shellenv)"
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(~/.local/bin/mise activate $current_shell)"' >>~/"$config_file"
-        eval "$(~/.local/bin/mise activate $current_shell --shims)"
+        echo 'eval "$(/Users/$USER/.local/bin/mise activate $current_shell)"' >>"$config_file"
+        eval "$(/Users/$USER/.local/bin/mise activate $current_shell --shims)"
         ;;
     "Erlang")
         # Deps for erlang
@@ -93,7 +93,7 @@ function install() {
             export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
             export LDFLAGS="-L/opt/homebrew/opt/postgresql@16/lib"
             export CPPFLAGS="-I/opt/homebrew/opt/postgresql@16/include"
-        ) >>~/"$config_file"
+        ) >>"$config_file"
         ;;
     *)
         echo "Invalid name argument on install"
