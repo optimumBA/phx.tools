@@ -25,7 +25,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp apply_action(socket, :macOS) do
-    assign(socket, seo_attributes: %{ url: url(~p"/macOS")})
+    assign(socket, seo_attributes: %{url: url(~p"/macOS")})
   end
 
   defp apply_action(socket, _index), do: socket
