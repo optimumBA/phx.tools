@@ -94,7 +94,7 @@ function install() {
             export LDFLAGS="-L/opt/homebrew/opt/postgresql@16/lib"
             export CPPFLAGS="-I/opt/homebrew/opt/postgresql@16/include"
         ) >>"$config_file"
-        brew services start postgresql
+        brew services start postgresql@16
         ;;
     *)
         echo "Invalid name argument on install"
