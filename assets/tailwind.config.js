@@ -25,6 +25,9 @@ module.exports = {
       fontFamily: {
         pixelify: ['Pixelify Sans', 'sans-serif'],
       },
+      fontFamily: {
+        martian: ['Martian Mono', 'sans-serif'],
+      },
       colors: {
         brand: '#FD4F00',
         indigo: {

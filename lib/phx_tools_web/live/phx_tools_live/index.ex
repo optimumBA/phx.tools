@@ -2,7 +2,10 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   use PhxToolsWeb, :live_view
 
   alias PhxToolsWeb.Endpoint
+  alias PhxToolsWeb.InstructionComponents
+  alias PhxToolsWeb.PhxToolsLive.ButtonsComponents
   alias PhxToolsWeb.PhxToolsLive.LandingComponent
+  # alias PhxToolsWeb.PhxToolsLive.MacLandingComponent
 
   @impl Phoenix.LiveView
   def mount(_params, session, socket), do: {:ok, assign_os(socket, session)}

@@ -1,14 +1,62 @@
 <%= case @live_action do %>
+  <% :index -> %>
+    <LandingComponent.landing_page operating_system={@operating_system} />
   <% :linux -> %>
     <LandingComponent.landing_page operating_system={@operating_system}>
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/Linux.sh"})\"" %>
       </:installation_command>
     </LandingComponent.landing_page>
+
+    <InstructionComponents.os_instructions>
+      <:header>
+        Linux installation process
+      </:header>
+
+      <:instruction>
+        1. Press the button to copy this command to your clipboard:
+      </:instruction>
+      <:instruction>
+        2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
+      </:instruction>
+
+      <:instruction>
+        3. Paste the shell command by pressing <b>Shift + Ctrl + V</b> together
+      </:instruction>
+
+      <:instruction>
+        4. Run the command by hitting <b>ENTER</b>
+      </:instruction>
+    </InstructionComponents.os_instructions>
+    <ButtonsComponents.render_buttons operating_system={@operating_system} />
   <% :macOS -> %>
-    <LandingComponent.landing_page operating_system={@operating_system}>
+  <LandingComponent.landing_page operating_system={@operating_system}>
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/macOS.sh"})\"" %>
       </:installation_command>
     </LandingComponent.landing_page>
+    <InstructionComponents.os_instructions>
+      <:header>
+        macOS installation process
+      </:header>
+
+      
+
+      <:instruction>
+        2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
+      </:instruction>
+
+      <:instruction>
+        3. Type "Terminal" and hit <b>RETURN</b>
+      </:instruction>
+
+      <:instruction>
+        4. Paste the shell command by hitting<b> ⌘ + V </b> together.
+      </:instruction>
+
+      <:instruction>
+        5. Run the command by hitting <b>RETURN</b>
+      </:instruction>
+    </InstructionComponents.os_instructions>
+    <ButtonsComponents.render_buttons operating_system={@operating_system} />
 <% end %>
