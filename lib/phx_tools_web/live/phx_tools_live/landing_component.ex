@@ -12,7 +12,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
   @spec landing_page(map()) :: Phoenix.LiveView.Rendered.t()
   def landing_page(assigns) do
     ~H"""
-    <div class=" bg-green-400 solved-height">
+    <div class="solved-height">
       <div class="min-h-full">
         <div class=" mt-[5%]">
           <div>
