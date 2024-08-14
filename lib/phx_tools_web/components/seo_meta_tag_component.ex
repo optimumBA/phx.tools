@@ -19,6 +19,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   @default_title "The Complete Development Environment for Elixir and Phoenix"
   @default_type "website"
   @default_image "phx_tools.png"
+  @default_keywords "elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
 
   attr :attributes, :map
 
@@ -28,6 +29,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
       assigns
       |> assign_description()
       |> assign_image_url()
+      |> assign_keywords()
       |> assign_title()
       |> assign_type()
       |> assign_url()
@@ -41,7 +43,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
       url={@url}
     />
 
-    <.other_meta_tags description={@description} />
+    <.other_meta_tags description={@description} keywords={@keywords} />
 
     <.twitter_meta_tags
       description={@description}
@@ -64,6 +66,13 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
     assign_new(assigns, :image_url, fn
       %{attributes: %{image_url: image_url}} when is_binary(image_url) -> image_url
       _assigns -> static_url(Endpoint, ~p"/images/#{@default_image}")
+    end)
+  end
+
+  defp assign_keywords(assigns) do
+    assign_new(assigns, :keywords, fn
+      %{attributes: %{keywords: keywords}} -> keywords
+      _assigns -> @default_keywords
     end)
   end
 
@@ -105,10 +114,12 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   end
 
   attr :description, :string, required: true
+  attr :keywords, :string, required: true
 
   defp other_meta_tags(assigns) do
     ~H"""
     <meta property="description" content={@description} />
+    <meta name="keywords" content={@keywords} />
     """
   end
 
