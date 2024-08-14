@@ -18,6 +18,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
 
   @default_title "The Complete Development Environment for Elixir and Phoenix"
   @default_type "website"
+  @default_image "phx_tools.png"
 
   attr :attributes, :map
 
@@ -62,7 +63,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   defp assign_image_url(assigns) do
     assign_new(assigns, :image_url, fn
       %{attributes: %{image_url: image_url}} when is_binary(image_url) -> image_url
-      _assigns -> static_url(Endpoint, ~p"/images/phx_tools.png")
+      _assigns -> static_url(Endpoint, ~p"/images/{#{@default_image}}")
     end)
   end
 

@@ -21,21 +21,11 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     do: {:noreply, apply_action(socket, socket.assigns.live_action)}
 
   defp apply_action(socket, :linux) do
-    seo_attributes = %{
-      image_url: static_url(Endpoint, ~p"/images/linux_installation.png"),
-      url: url(~p"/linux")
-    }
-
-    assign(socket, seo_attributes: seo_attributes)
+    assign(socket, seo_attributes: %{url: url(~p"/linux")})
   end
 
   defp apply_action(socket, :macOS) do
-    seo_attributes = %{
-      image_url: static_url(Endpoint, ~p"/images/mac_installation.png"),
-      url: url(~p"/macOS")
-    }
-
-    assign(socket, seo_attributes: seo_attributes)
+    assign(socket, seo_attributes: %{ url: url(~p"/macOS")})
   end
 
   defp apply_action(socket, _index), do: socket
