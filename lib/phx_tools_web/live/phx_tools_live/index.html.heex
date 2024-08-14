@@ -30,7 +30,7 @@
     </InstructionComponents.os_instructions>
     <ButtonsComponents.render_buttons operating_system={@operating_system} />
   <% :macOS -> %>
-  <LandingComponent.landing_page operating_system={@operating_system}>
+    <LandingComponent.landing_page operating_system={@operating_system}>
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/macOS.sh"})\"" %>
       </:installation_command>
@@ -39,8 +39,6 @@
       <:header>
         macOS installation process
       </:header>
-
-      
 
       <:instruction>
         2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together

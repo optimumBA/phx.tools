@@ -1,6 +1,7 @@
 defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
   use PhxToolsWeb, :html
 
+  @spec render_buttons(map()) :: Phoenix.LiveView.Rendered.t()
   def render_buttons(assigns) do
     ~H"""
     <div class="grid w-full grid-cols-2 gap-3 text-white md:my-5">
@@ -40,10 +41,16 @@ defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
       </p>
     </div>
     <div class="h-64 bg-[#2C2650]">
-            video
+      video
     </div>
     <div class="md:my-5">
-            <a href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix" class="text-[#24B2FF] font-martian text-sm"><span class="text-white">Read about website updates here -</span> https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix</a>
+      <a
+        href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix"
+        class="text-[#24B2FF] font-martian text-sm"
+      >
+        <span class="text-white">Read about website updates here -</span>
+        https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix
+      </a>
     </div>
     """
   end
