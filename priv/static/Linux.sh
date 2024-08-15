@@ -24,9 +24,6 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
-    "wget")
-        dpkg -l | grep -q wget
-        ;;
     "mise")
         which mise >/dev/null 2>&1
         ;;
@@ -52,9 +49,6 @@ function install() {
     case $1 in
     "Git")
         sudo apt-get install -y git
-        ;;
-    "wget")
-        sudo apt-get install -y wget
         ;;
     "mise")
         curl https://mise.run | sh
@@ -101,10 +95,6 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "Git"
-
-    echo -e "${white}"
-    sleep 2
-    maybe_install "wget"
 
     echo -e "${white}"
     sleep 3
