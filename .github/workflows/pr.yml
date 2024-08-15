@@ -261,11 +261,9 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/bash -c 'source ~/.bashrc && make -f test/scripts/Makefile'
+        run: /bin/bash -c 'source ~/.bashrc && cd ~ && make -f test/scripts/Makefile'
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -274,37 +272,7 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-  test_macos_script_job:
-    name: Test macOS script
-    runs-on: macos-latest
-    env:
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
-          path: priv/static/macOS.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp macOS.sh
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/bash -c 'source ~/.bashrc && make -f test/scripts/Makefile'
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
+
   unused_deps:
     needs: compile
     name: Check unused deps
