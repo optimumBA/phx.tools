@@ -1,7 +1,7 @@
 serve:
 	. ~/.bashrc
 	echo $?
-	mise activate
+	mise activate bash
 	echo $?
 	echo $(which mise)
 	echo $(which elixir)
