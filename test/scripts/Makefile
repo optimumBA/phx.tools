@@ -2,7 +2,7 @@ serve:
 	echo $(which mise)
 	echo $(which elixir)
 	echo $(which erl)
-	. ~/.bashrc
+	cat ~/.bashrc
 	mise doctor
 	mix phx.new --no-install phx_tools_test
 	cd phx_tools_test && mix local.rebar --force && mix setup
