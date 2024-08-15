@@ -1,6 +1,6 @@
 <%= case @live_action do %>
   <% :index -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} />
+    <UnsupportedOsComponent.unsupported_os_page />
   <% :linux -> %>
     <LandingComponent.landing_page operating_system={@operating_system}>
       <:installation_command>

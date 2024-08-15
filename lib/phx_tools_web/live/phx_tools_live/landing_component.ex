@@ -4,10 +4,6 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
   """
   use PhxToolsWeb, :html
 
-  alias PhxToolsWeb.Endpoint
-  alias PhxToolsWeb.PhxToolsLive.ButtonsComponents
-  alias PhxToolsWeb.PhxToolsLive.InstructionsComponent
-
   slot :installation_command, required: true
   @spec landing_page(map()) :: Phoenix.LiveView.Rendered.t()
   def landing_page(assigns) do

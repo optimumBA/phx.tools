@@ -43,12 +43,10 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       assert has_element?(landing_live, "#linux")
     end
 
-    # fit it after response is sent
-    @tag :skip
     test "if there is no operating system confirm message is not displayed", %{conn: conn} do
-      {:ok, landing_live, _html} = live(conn, "/")
+      {:ok, _landing_live, html} = live(conn, "/")
 
-      refute has_element?(landing_live, "#confirmation")
+      assert html =~ "Unsupported Operating System Detected"
     end
   end
 
@@ -64,18 +62,12 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
   end
 
   describe "macOS instructions page" do
-    # fit it after response is sent
-    @tag :skip
     test "user visits macOS instructions page", %{conn: conn} do
-      {:ok, linux_live, _html} = live(conn, "/macOS")
+      {:ok, linux_live, html} = live(conn, "/macOS")
 
-      assert linux_live
-             |> element("#copy > :first-child")
-             |> render_click() =~ "Press the button to copy this command to your clipboard:"
-
-      # assert render(linux_live) =~ "macOS installation process"
-      # assert has_element?(linux_live, "#tool-installation")
-      # assert has_element?(linux_live, "#copy")
+      assert html =~ "macOS installation process"
+      assert has_element?(linux_live, "#tool-installation")
+      assert has_element?(linux_live, "#copy")
     end
   end
 

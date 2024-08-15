@@ -18,12 +18,17 @@
     </script>
   </head>
 
-  <body class="bg-[#110A33] mx-auto flex flex-col items-center sm:px-2 md:max-w-3xl">
+  <body class="bg-[#110A33] mx-auto  sm:px-3 md:max-w-4xl sm:py-8">
     <%= @inner_content %>
     <div class="relative flex items-center justify-center lg:mb-[22px] md:mb-[33px] sm:mb-[35px] mt-[5%] px-[30%]">
       <.link target="_blank" href="https://optimum.ba">
         <SharedComponents.optimum_logo />
       </.link>
+    </div>
+    <div>
+      <p class="font-semibold text-center text-white font-montserrat">
+        Copyright <span>&copy; <%= Date.utc_today().year %></span> Optimum
+      </p>
     </div>
   </body>
 </html>

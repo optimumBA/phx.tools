@@ -5,7 +5,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   alias PhxToolsWeb.InstructionComponents
   alias PhxToolsWeb.PhxToolsLive.ButtonsComponents
   alias PhxToolsWeb.PhxToolsLive.LandingComponent
-  # alias PhxToolsWeb.PhxToolsLive.MacLandingComponent
+  alias PhxToolsWeb.PhxToolsLive.UnsupportedOsComponent
 
   @impl Phoenix.LiveView
   def mount(_params, session, socket), do: {:ok, assign_os(socket, session)}
