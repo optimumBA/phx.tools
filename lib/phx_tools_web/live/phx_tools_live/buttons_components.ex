@@ -37,8 +37,21 @@ defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
         Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
       </p>
     </div>
-    <div class="h-64 bg-[#2C2650]">
-      video
+    <div :if={@live_action == :macOS} class="mx-auto">
+      <script
+        src="https://asciinema.org/a/XhDpRstBJ4df2gfiRfp0awDPO.js"
+        id="asciicast-XhDpRstBJ4df2gfiRfp0awDPO"
+        async="true"
+      >
+      </script>
+    </div>
+    <div :if={@live_action == :linux} class="mx-auto">
+      <script
+        src="https://asciinema.org/a/bJMOlPe5F4mFLY0Rl6fiJSOp3.js"
+        id="asciicast-bJMOlPe5F4mFLY0Rl6fiJSOp3"
+        async
+      >
+      </script>
     </div>
     <div class="md:my-5">
       <a
