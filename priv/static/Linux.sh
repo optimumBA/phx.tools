@@ -52,7 +52,7 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$($HOME/.local/bin/mise activate $current_shell)"' >>"$config_file"
+        echo 'eval "$(mise activate $current_shell)"' >>"$config_file"
         eval "$($HOME/.local/bin/mise activate $current_shell --shims)"
         ;;
     "Erlang")
