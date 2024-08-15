@@ -311,7 +311,6 @@ jobs:
       - sobelow
       - test
       - test_linux_script_job
-      - test_macos_script_job
       - unused_deps
     runs-on: ubuntu-latest
     permissions: write-all
