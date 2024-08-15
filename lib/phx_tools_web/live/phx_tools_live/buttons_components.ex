@@ -4,35 +4,32 @@ defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
   @spec render_buttons(map()) :: Phoenix.LiveView.Rendered.t()
   def render_buttons(assigns) do
     ~H"""
-    <div class="grid w-full grid-cols-2 gap-3 text-white md:my-5">
-      <div :if={@operating_system == "Linux"} class="justify-end md:flex">
+    <div class="w-full gap-3 text-white md:my-5">
+      <div :if={@live_action == :linux} class="justify-center gap-4 md:flex" id="macOS-card">
         <.os_link_card
           id="macOS"
           href={~p"/macOS"}
           os_icon={~p"/images/macos.png"}
           os_name="macOS"
+          source_code="https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh"
           class={[
             "px-3 flex justify-center",
             @operating_system == "Mac" && "bg-indigo-850"
           ]}
         />
       </div>
-      <div :if={@operating_system == "Mac"}>
+      <div :if={@live_action == :macOS} class="justify-center gap-4 md:flex" id="linux-card">
         <.os_link_card
           id="linux"
           href={~p"/linux"}
           os_icon={~p"/images/linux.png"}
           os_name="Linux"
+          source_code="https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh"
           class={[
-            "px-1",
+            "px-3 flex justify-center",
             @operating_system == "Linux" && "bg-indigo-850"
           ]}
         />
-      </div>
-      <div class="border-[2px] border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
-        <button class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl">
-          <span><img src="/images/Icon.svg" alt="" /></span> <span>Source code</span>
-        </button>
       </div>
     </div>
     <div>

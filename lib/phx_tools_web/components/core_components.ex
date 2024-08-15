@@ -29,6 +29,7 @@ defmodule PhxToolsWeb.CoreComponents do
   attr :href, :string, required: true
   attr :os_icon, :string, required: true
   attr :os_name, :string, required: true
+  attr :source_code, :string, required: true
 
   @spec os_link_card(assigns()) :: rendered()
   def os_link_card(assigns) do
@@ -45,6 +46,14 @@ defmodule PhxToolsWeb.CoreComponents do
         <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
       </div>
     </.link>
+    <div class="border-[2px] border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
+      <.link
+        navigate={@source_code}
+        class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
+      >
+        <span><img src="/images/Icon.svg" alt="" /></span> <span>Source code</span>
+      </.link>
+    </div>
     """
   end
 

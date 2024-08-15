@@ -7,6 +7,12 @@ export default {
       copyBtn.innerHTML = 'Copied'
       copyBtn.setAttribute('disabled', '')
       copyBtn.classList.add('bg-[#9887FF]')
+
+      setTimeout(() => {
+        copyBtn.innerHTML = '<img src="/images/clipboard.svg" />'
+        copyBtn.removeAttribute('disabled')
+        copyBtn.classList.remove('bg-[#9887FF]')
+      }, 3000)
     })
   },
 }
