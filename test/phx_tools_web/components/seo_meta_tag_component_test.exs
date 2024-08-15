@@ -6,7 +6,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponentTest do
   alias PhxToolsWeb.SeoMetaTagComponent
 
   describe "seo_meta_tags/1" do
-    test "renders meta tags with default values if no attributes are given" do
+    test "renders meta tags with default values" do
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: nil) =~
                "<meta name=\"twitter:card\" content=\"summary_large_image\">"
 
@@ -48,25 +48,13 @@ defmodule PhxToolsWeb.SeoMetaTagComponentTest do
     end
 
     test "renders meta tags with the values passed" do
-      assigns = %{
-        description: "Test description",
-        title: "Phx.tools"
-      }
+      assigns = %{url: "http://sample.link"}
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: assigns) =~
-               "<meta name=\"twitter:description\" content=\"Test description\">\n"
+               "<meta name=\"twitter:url\" content=\"http://sample.link\">"
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: assigns) =~
-               "<meta name=\"twitter:title\" content=\"Phx.tools\">\n"
-
-      assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: assigns) =~
-               "<meta property=\"description\" content=\"Test description\">\n"
-
-      assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: assigns) =~
-               "<meta property=\"og:description\" content=\"Test description\">\n"
-
-      assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: assigns) =~
-               "<meta property=\"og:title\" content=\"Phx.tools\">"
+               "<meta property=\"og:url\" content=\"http://sample.link\">"
     end
   end
 end

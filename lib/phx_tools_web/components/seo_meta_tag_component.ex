@@ -1,8 +1,7 @@
 defmodule PhxToolsWeb.SeoMetaTagComponent do
   @moduledoc false
 
-  use Phoenix.Component
-  use PhxToolsWeb, :verified_routes
+  use PhxToolsWeb, :html
 
   alias PhxToolsWeb.Endpoint
 
@@ -16,99 +15,39 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   create a new Phoenix application, and launch the server...
   """
 
-  @default_title "The Complete Development Environment for Elixir and Phoenix"
-  @default_type "website"
-  @default_image "phx_tools.png"
-  @default_keywords "elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
-
   attr :attributes, :map
 
   @spec seo_meta_tags(assigns()) :: rendered()
   def seo_meta_tags(assigns) do
     assigns =
       assigns
-      |> assign_description()
-      |> assign_image_url()
-      |> assign_keywords()
-      |> assign_title()
-      |> assign_type()
-      |> assign_url()
+      |> assign_new(:description, fn -> String.trim(@default_description) end)
+      |> assign_new(:image_url, fn -> static_url(Endpoint, ~p"/images/phx_tools.png") end)
+      |> assign_new(:url, fn
+        %{attributes: %{url: url}} -> url
+        _assigns -> url(~p"/")
+      end)
 
     ~H"""
-    <.open_graph_meta_tags
+    <.open_graph_meta_tags description={@description} image_url={@image_url} url={@url} />
+    <.other_meta_tags
       description={@description}
-      image_url={@image_url}
-      title={@title}
-      type={@type}
-      url={@url}
+      keywords="elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
     />
-
-    <.other_meta_tags description={@description} keywords={@keywords} />
-
-    <.twitter_meta_tags
-      description={@description}
-      image_url={@image_url}
-      title={@title}
-      type={@type}
-      url={@url}
-    />
+    <.twitter_meta_tags description={@description} image_url={@image_url} url={@url} />
     """
-  end
-
-  defp assign_description(assigns) do
-    assign_new(assigns, :description, fn
-      %{attributes: %{description: description}} -> description
-      _assigns -> String.trim(@default_description)
-    end)
-  end
-
-  defp assign_image_url(assigns) do
-    assign_new(assigns, :image_url, fn
-      %{attributes: %{image_url: image_url}} when is_binary(image_url) -> image_url
-      _assigns -> static_url(Endpoint, ~p"/images/#{@default_image}")
-    end)
-  end
-
-  defp assign_keywords(assigns) do
-    assign_new(assigns, :keywords, fn
-      %{attributes: %{keywords: keywords}} -> keywords
-      _assigns -> @default_keywords
-    end)
-  end
-
-  defp assign_title(assigns) do
-    assign_new(assigns, :title, fn
-      %{attributes: %{title: title}} -> title
-      _assigns -> @default_title
-    end)
-  end
-
-  defp assign_type(assigns) do
-    assign_new(assigns, :type, fn
-      %{attributes: %{type: type}} -> type
-      _assigns -> @default_type
-    end)
-  end
-
-  defp assign_url(assigns) do
-    assign_new(assigns, :url, fn
-      %{attributes: %{url: url}} -> url
-      _assigns -> url(~p"/")
-    end)
   end
 
   attr :description, :string, required: true
   attr :image_url, :string, required: true
-  attr :title, :string, required: true
-  attr :type, :string, required: true
   attr :url, :string, required: true
 
   defp open_graph_meta_tags(assigns) do
     ~H"""
     <meta property="og:description" content={@description} />
     <meta property="og:image" content={@image_url} />
-    <meta property="og:title" content={@title} />
-    <meta property="og:type" content={@type} />
+    <meta property="og:title" content="The Complete Development Environment for Elixir and Phoenix" />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content={@url} />
     """
   end
@@ -119,14 +58,12 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   defp other_meta_tags(assigns) do
     ~H"""
     <meta property="description" content={@description} />
-    <meta name="keywords" content={@keywords} />
+    <meta name="keywords" content="elixir, erlang, homebrew, mise, phoenix, postgres, postgresql" />
     """
   end
 
   attr :description, :string, required: true
   attr :image_url, :string, required: true
-  attr :title, :string, required: true
-  attr :type, :string, required: true
   attr :url, :string, required: true
 
   defp twitter_meta_tags(assigns) do
@@ -135,8 +72,8 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
     <meta name="twitter:description" content={@description} />
     <meta name="twitter:image" content={@image_url} />
     <meta name="twitter:site" content="@optimumBA" />
-    <meta name="twitter:title" content={@title} />
-    <meta name="twitter:type" content={@type} />
+    <meta name="twitter:title" content="The Complete Development Environment for Elixir and Phoenix" />
+    <meta name="twitter:type" content="website" />
     <meta name="twitter:url" content={@url} />
     """
   end
