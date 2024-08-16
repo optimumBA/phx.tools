@@ -1,5 +1,5 @@
 serve:
-	. ~/.bashrc
+	. ~/.zshrc
 	mise use erlang@27.0.1
 	mise use elixir@1.17.2-otp-27
 	mix phx.new --no-install phx_tools_test
