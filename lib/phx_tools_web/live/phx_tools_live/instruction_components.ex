@@ -8,7 +8,7 @@ defmodule PhxToolsWeb.InstructionComponents do
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
   slot :header, required: true
-  slot :installation_command, required: true
+
   slot :instruction, required: true
 
   @spec os_instructions(assigns()) :: rendered()
@@ -17,16 +17,16 @@ defmodule PhxToolsWeb.InstructionComponents do
     <div
       id="installation-instructions"
       phx-click-away={JS.hide(to: "#installation-instructions")}
-      class="hidden font-normal solved-height font-martian"
+      class="hidden font-normal solved-height font-martian  bg-[#110A33] absolute md:w-[90%]"
     >
       <div class="block ">
-        <div class="h-full  border-4 shadow-[#28177E] shadow-md border-[#211666] rounded-md pb-2">
+        <div class="h-full shadow-[#28177E] shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
-            <h1 class="text-white text-center lg:text-2xl md:text-[22px] sm:text-xl lg:mb-[5%] md:mb-[2%] sm:mb-[2%] lg:pt-5">
+            <h1 class="text-white text-center lg:text-2xl md:text-[22px] sm:text-xl lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
               <%= render_slot(@header) %>
             </h1>
             <%= for item <- @instruction do %>
-              <h1 class="text-sm text-white lg:mt-4 sm:mt-4">
+              <h1 class="text-[12px] text-white lg:mt-4 sm:mt-4">
                 <%= render_slot(item) %>
               </h1>
             <% end %>

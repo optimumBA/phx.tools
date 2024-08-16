@@ -34,25 +34,28 @@ defmodule PhxToolsWeb.CoreComponents do
   @spec os_link_card(assigns()) :: rendered()
   def os_link_card(assigns) do
     ~H"""
-    <.link href={@href}>
-      <div
-        id={@id}
-        class={[
-          "border-[2px] border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44",
-          @class
-        ]}
-      >
-        <img src={@os_icon} class="h-7 w-7 " />
-        <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
-      </div>
-    </.link>
-    <div class="border-[2px] border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
-      <.link
-        navigate={@source_code}
-        class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
-      >
-        <span><img src="/images/Icon.svg" alt="" /></span> <span>Source code</span>
+    <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
+      <.link href={@href}>
+        <div
+          id={@id}
+          class={[
+            "border-[2px] border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44",
+            @class
+          ]}
+        >
+          <img src={@os_icon} class="h-7 w-7 " />
+          <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
+        </div>
       </.link>
+      <div class="border-[2px] border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
+        <.link
+          navigate={@source_code}
+          class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
+        >
+          <span><img src="/images/Icon.svg" alt="" /></span>
+          <span class="text-white">Source code</span>
+        </.link>
+      </div>
     </div>
     """
   end

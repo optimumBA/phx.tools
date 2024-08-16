@@ -8,7 +8,7 @@
       <%= assigns[:page_title] || "PhxTools" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
-    <link rel="preconnect" href="https://asciinema.org/">
+    <link rel="preconnect" href="https://asciinema.org/" />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
     <script
@@ -19,11 +19,12 @@
     </script>
   </head>
 
-  <body class="bg-[#110A33] mx-auto  sm:px-3 md:max-w-4xl sm:py-8">
+  <body class="bg-[#110A33] mx-auto  sm:px-2 md:px-7  lg:w-9/12 sm:py-8">
     <%= @inner_content %>
-    <div class="relative flex items-center justify-center lg:mb-[22px] md:mb-[33px] sm:mb-[35px] mt-[5%] px-[30%]">
-      <.link target="_blank" href="https://optimum.ba">
-        <SharedComponents.optimum_logo />
+    <div class="relative flex items-center justify-center lg:mb-[22px] md:mb-[33px] sm:mb-[35px] mt-[20%] px-[30%]">
+      <.link target="_blank" href="https://optimum.ba" class="flex items-center gap-3">
+        <img src="/images/optimum_logo.svg" alt="optimum logo" class="w-[36.45px] h-[36.45px]" />
+        <span class="font-bold font-montserrat text-white">OPTIMUM</span>
       </.link>
     </div>
     <div>

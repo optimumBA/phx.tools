@@ -4,9 +4,8 @@ export default {
       var copyText = document.getElementById('tool-installation').innerText
       navigator.clipboard.writeText(copyText)
       copyBtn = document.getElementById('copy')
-      copyBtn.innerHTML = 'Copied'
+      copyBtn.innerHTML = '<img src="/images/check.svg" />'
       copyBtn.setAttribute('disabled', '')
-      copyBtn.classList.add('bg-[#9887FF]')
 
       setTimeout(() => {
         copyBtn.innerHTML = '<img src="/images/clipboard.svg" />'
