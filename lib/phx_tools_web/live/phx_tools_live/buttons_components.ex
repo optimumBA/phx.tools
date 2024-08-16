@@ -41,7 +41,7 @@ defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
       <script
         src="https://asciinema.org/a/XhDpRstBJ4df2gfiRfp0awDPO.js"
         id="asciicast-XhDpRstBJ4df2gfiRfp0awDPO"
-        async="true"
+        async
       >
       </script>
     </div>
