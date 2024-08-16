@@ -73,6 +73,7 @@ defmodule PhxToolsWeb do
       use Phoenix.Component
 
       alias PhxToolsWeb.Components.SharedComponents
+      alias PhxToolsWeb.SeoMetaTagComponent
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
