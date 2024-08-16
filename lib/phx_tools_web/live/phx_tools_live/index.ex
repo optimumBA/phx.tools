@@ -6,7 +6,12 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   alias PhxToolsWeb.PhxToolsLive.UnsupportedOsComponent
 
   @impl Phoenix.LiveView
-  def mount(_params, session, socket), do: {:ok, assign_os(socket, session)}
+  def mount(_params, session, socket) do
+    {:ok,
+     socket
+     |> assign(:seo_attributes, %{})
+     |> assign_os(session)}
+  end
 
   defp assign_os(socket, %{"operating_system" => operating_system}),
     do: assign(socket, :operating_system, operating_system)
@@ -25,10 +30,16 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp apply_action(socket, :linux) do
-    {:noreply, assign(socket, :live_action, :linux)}
+    {:noreply,
+     socket
+     |> assign(:live_action, :linux)
+     |> assign(seo_attributes: %{url: url(~p"/linux")})}
   end
 
   defp apply_action(socket, :macOS) do
-    {:noreply, assign(socket, :live_action, :macOS)}
+    {:noreply,
+     socket
+     |> assign(:live_action, :macOS)
+     |> assign(seo_attributes: %{url: url(~p"/macOS")})}
   end
 end

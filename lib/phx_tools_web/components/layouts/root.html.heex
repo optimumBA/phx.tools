@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
+    <SeoMetaTagComponent.seo_meta_tags attributes={assigns[:seo_attributes]} />
     <.live_title>
       <%= assigns[:page_title] || "PhxTools" %>
     </.live_title>
