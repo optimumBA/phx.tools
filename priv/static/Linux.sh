@@ -114,6 +114,22 @@ function add_env() {
     maybe_install "mise"
 
     echo -e "${white}"
+    sleep 1.5
+    maybe_install "Erlang"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Elixir"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Phoenix"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "PostgreSQL"
+
+    echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
     echo -e "${cyan}${bold}Please restart the terminal and type in the following command:"
     echo -e "${cyan}${bold}mix phx.new"
