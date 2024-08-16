@@ -21,9 +21,11 @@ import 'phoenix_html'
 import { Socket } from 'phoenix'
 import { LiveSocket } from 'phoenix_live_view'
 import topbar from '../vendor/topbar'
+import AsciinemaHook from './hooks/asciinema_hook.js'
 import CopyHook from './hooks/copy_hook.js'
 
 const Hooks = {
+  AsciinemaHook,
   CopyHook,
 }
 

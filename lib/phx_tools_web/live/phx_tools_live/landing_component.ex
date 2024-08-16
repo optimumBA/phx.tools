@@ -3,6 +3,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
   Shows the landing page
   """
   use PhxToolsWeb, :html
+  alias Phoenix.LiveView.Utils
   alias PhxToolsWeb.PhxToolsLive.ButtonsComponents
   alias PhxToolsWeb.PhxToolsLive.RenderInstructionComponent
 
@@ -48,9 +49,8 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
               />
             </div>
             <ButtonsComponents.render_buttons
-              operating_system={@operating_system}
-              ,
               live_action={@live_action}
+              operating_system={@operating_system}
             />
           </div>
           <div>
@@ -58,6 +58,13 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
               <p class="text-sm text-center text-white font-martian md:mb-5 ">
                 Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
               </p>
+            </div>
+            <div
+              class="mx-auto"
+              data-live_action={@live_action}
+              id={"asciinema-#{Utils.random_id()}"}
+              phx-hook="AsciinemaHook"
+            >
             </div>
 
             <div class="md:my-5">
