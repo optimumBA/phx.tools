@@ -3,7 +3,9 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
   Shows the landing page
   """
   use PhxToolsWeb, :html
+
   alias Phoenix.LiveView.Utils
+  alias PhxToolsWeb.Endpoint
   alias PhxToolsWeb.PhxToolsLive.ButtonsComponents
   alias PhxToolsWeb.PhxToolsLive.RenderInstructionComponent
 
@@ -18,7 +20,11 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
       <div class="min-h-full">
         <div class=" mt-[5%] md:flex flex-col items-center">
           <div class="sm:flex flex-col items-center">
-            <img src="/images/Phx.tools.svg" alt="phx tools logo" class=" sm:w-4/12 " />
+            <img
+              src={static_url(Endpoint, ~p"/images/Phx.tools.svg")}
+              alt="phx tools logo"
+              class=" sm:w-4/12 "
+            />
             <p class="sm:py-6 text-center text-white md:text-md font-martian text-[14px] font-semibold ">
               The Complete Development Environment for Elixir and Phoenix
             </p>
@@ -28,7 +34,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
             <div class="md:flex">
               <div class="flex justify-end sm:py-3 md:order-last md:mx-2">
                 <img
-                  src="/images/info_icon.svg"
+                  src={static_url(Endpoint, ~p"/images/info_icon.svg")}
                   alt="installation command info"
                   phx-click={JS.show(to: "#installation-instructions")}
                 />
@@ -38,7 +44,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
                   <%= render_slot(@installation_command) %>
                 </h1>
                 <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0">
-                  <img src="/images/clipboard.svg" alt="copy icon" />
+                  <img src={static_url(Endpoint, ~p"/images/clipboard.svg")} alt="copy icon" />
                 </div>
               </div>
             </div>
