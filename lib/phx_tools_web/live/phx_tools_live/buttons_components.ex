@@ -8,7 +8,7 @@ defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
       <div :if={@live_action == :linux} class="justify-center gap-4 md:flex" id="macOS-card">
         <.os_link_card
           id="macOS"
-          href={~p"/macOS"}
+          patch={~p"/macOS"}
           os_icon={~p"/images/macos.png"}
           os_name="macOS"
           source_code="https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh"
@@ -21,7 +21,7 @@ defmodule PhxToolsWeb.PhxToolsLive.ButtonsComponents do
       <div :if={@live_action == :macOS} class="justify-center gap-4 md:flex" id="linux-card">
         <.os_link_card
           id="linux"
-          href={~p"/linux"}
+          patch={~p"/linux"}
           os_icon={~p"/images/linux.png"}
           os_name="Linux"
           source_code="https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh"

@@ -5,8 +5,8 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
   use PhxToolsWeb, :html
 
   alias Phoenix.LiveView.Utils
-  alias PhxToolsWeb.Endpoint
   alias PhxToolsWeb.PhxToolsLive.ButtonsComponents
+  alias PhxToolsWeb.PhxToolsLive.Icons
   alias PhxToolsWeb.PhxToolsLive.RenderInstructionComponent
 
   attr :live_action, :atom, required: true
@@ -20,11 +20,7 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
       <div class="min-h-full">
         <div class=" mt-[5%] md:flex flex-col items-center">
           <div class="sm:flex flex-col items-center">
-            <img
-              src={static_url(Endpoint, ~p"/images/Phx.tools.svg")}
-              alt="phx tools logo"
-              class=" sm:w-4/12 "
-            />
+            <Icons.phx_tools_svg class="sm:w-4/12" />
             <p class="sm:py-6 text-center text-white md:text-md font-martian text-[14px] font-semibold ">
               The Complete Development Environment for Elixir and Phoenix
             </p>
@@ -32,19 +28,15 @@ defmodule PhxToolsWeb.PhxToolsLive.LandingComponent do
 
           <div class="md:flex lg:w-[75%] flex-col relative">
             <div class="md:flex">
-              <div class="flex justify-end sm:py-3 md:order-last md:mx-2">
-                <img
-                  src={static_url(Endpoint, ~p"/images/info_icon.svg")}
-                  alt="installation command info"
-                  phx-click={JS.show(to: "#installation-instructions")}
-                />
+              <div class="flex justify-end items-center md:order-last md:mx-2">
+                <Heroicons.information_circle class="w-6 h-6 text-white cursor-pointer" />
               </div>
-              <div class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm">
+              <div class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm overflow-x-auto whitespace-nowrap no-scrollbar">
                 <h1 id="tool-installation" class="text-center text-white font-martian sm:text-sm">
                   <%= render_slot(@installation_command) %>
                 </h1>
-                <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0">
-                  <img src={static_url(Endpoint, ~p"/images/clipboard.svg")} alt="copy icon" />
+                <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
+                  <Icons.clipboard_icon />
                 </div>
               </div>
             </div>

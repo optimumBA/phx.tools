@@ -26,7 +26,7 @@ defmodule PhxToolsWeb.CoreComponents do
   """
   attr :id, :string, required: true
   attr :class, :list
-  attr :href, :string, required: true
+  attr :patch, :string, required: true
   attr :os_icon, :string, required: true
   attr :os_name, :string, required: true
   attr :source_code, :string, required: true
@@ -35,7 +35,7 @@ defmodule PhxToolsWeb.CoreComponents do
   def os_link_card(assigns) do
     ~H"""
     <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
-      <.link href={@href}>
+      <.link patch={@patch}>
         <div
           id={@id}
           class={[
@@ -52,7 +52,7 @@ defmodule PhxToolsWeb.CoreComponents do
           navigate={@source_code}
           class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
         >
-          <span><img src="/images/Icon.svg" alt="" /></span>
+          <Heroicons.code_bracket class="bold w-5 h-5 text-white" />
           <span class="text-white">Source code</span>
         </.link>
       </div>
