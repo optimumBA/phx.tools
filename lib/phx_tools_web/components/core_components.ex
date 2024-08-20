@@ -64,10 +64,10 @@ defmodule PhxToolsWeb.CoreComponents do
       <button
         :if={@close}
         type="button"
-        class="absolute p-2 group top-2 right-1"
+        class="group absolute top-2 right-1 p-2"
         aria-label={gettext("close")}
       >
-        <Heroicons.x_mark solid class="w-5 h-5 stroke-current opacity-40 group-hover:opacity-70" />
+        <Heroicons.x_mark solid class="h-5 w-5 stroke-current opacity-40 group-hover:opacity-70" />
       </button>
     </div>
     """
@@ -91,7 +91,7 @@ defmodule PhxToolsWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <Heroicons.arrow_left solid class="inline w-3 h-3 stroke-current" />
+        <Heroicons.arrow_left solid class="w-3 h-3 stroke-current inline" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>

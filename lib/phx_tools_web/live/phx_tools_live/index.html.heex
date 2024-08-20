@@ -2,15 +2,21 @@
   <% :index -> %>
     <UnsupportedOsComponent.unsupported_os_page />
   <% :linux -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} live_action={@live_action}>
+    <PhxToolsComponents.os_landing_card
+      operating_system={@operating_system}
+      live_action={@live_action}
+    >
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/Linux.sh"})\"" %>
       </:installation_command>
-    </LandingComponent.landing_page>
+    </PhxToolsComponents.os_landing_card>
   <% :macOS -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} live_action={@live_action}>
+    <PhxToolsComponents.os_landing_card
+      operating_system={@operating_system}
+      live_action={@live_action}
+    >
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/macOS.sh"})\"" %>
       </:installation_command>
-    </LandingComponent.landing_page>
+    </PhxToolsComponents.os_landing_card>
 <% end %>

@@ -2,7 +2,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   use PhxToolsWeb, :live_view
 
   alias PhxToolsWeb.Endpoint
-  alias PhxToolsWeb.PhxToolsLive.LandingComponent
+  alias PhxToolsWeb.PhxToolsComponents
   alias PhxToolsWeb.PhxToolsLive.UnsupportedOsComponent
 
   @impl Phoenix.LiveView
