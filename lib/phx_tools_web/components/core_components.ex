@@ -22,45 +22,6 @@ defmodule PhxToolsWeb.CoreComponents do
   @type selector :: String.t()
 
   @doc """
-  Renders a card for being able to select OS
-  """
-  attr :id, :string, required: true
-  attr :class, :list
-  attr :patch, :string, required: true
-  attr :os_icon, :string, required: true
-  attr :os_name, :string, required: true
-  attr :source_code, :string, required: true
-
-  @spec os_link_card(assigns()) :: rendered()
-  def os_link_card(assigns) do
-    ~H"""
-    <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
-      <.link patch={@patch}>
-        <div
-          id={@id}
-          class={[
-            "border-[2px] border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44",
-            @class
-          ]}
-        >
-          <img src={@os_icon} class="h-7 w-7 " />
-          <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
-        </div>
-      </.link>
-      <div class="border-[2px] border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
-        <.link
-          navigate={@source_code}
-          class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
-        >
-          <Heroicons.code_bracket class="bold w-5 h-5 text-white" />
-          <span class="text-white">Source code</span>
-        </.link>
-      </div>
-    </div>
-    """
-  end
-
-  @doc """
   Renders flash notices.
 
   ## Examples

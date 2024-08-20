@@ -2,13 +2,13 @@
   <% :index -> %>
     <UnsupportedOsComponent.unsupported_os_page />
   <% :linux -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} live_action={:linux}>
+    <LandingComponent.landing_page operating_system={@operating_system} live_action={@live_action}>
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/Linux.sh"})\"" %>
       </:installation_command>
     </LandingComponent.landing_page>
   <% :macOS -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} live_action={:macOS}>
+    <LandingComponent.landing_page operating_system={@operating_system} live_action={@live_action}>
       <:installation_command>
         <%= "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/macOS.sh"})\"" %>
       </:installation_command>

@@ -22,20 +22,5 @@
 
   <body class="bg-[#110A33] mx-auto  sm:px-2 md:px-7  lg:w-9/12 sm:py-8">
     <%= @inner_content %>
-    <div class="relative flex items-center justify-center lg:mb-[22px] md:mb-[33px] sm:mb-[35px] mt-[5%] px-[30%]">
-      <.link target="_blank" href="https://optimum.ba" class="flex items-center gap-3">
-        <img
-          src={static_url(PhxToolsWeb.Endpoint, ~p"/images/optimum_logo.svg")}
-          alt="optimum logo"
-          class="w-[36.45px] h-[36.45px]"
-        />
-        <span class="font-bold font-montserrat text-white">OPTIMUM</span>
-      </.link>
-    </div>
-    <div>
-      <p class="font-semibold text-center text-white font-montserrat">
-        Copyright <span>&copy; <%= Date.utc_today().year %></span> Optimum
-      </p>
-    </div>
   </body>
 </html>

@@ -17,7 +17,7 @@ defmodule PhxToolsWeb.PhxToolsLive.RenderInstructionComponent do
           </:header>
 
           <:instruction>
-            1. Press the button to copy this command to your clipboard:
+            1. Click on the copy icon to copy this command to your clipboard
           </:instruction>
           <:instruction>
             2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
@@ -36,6 +36,10 @@ defmodule PhxToolsWeb.PhxToolsLive.RenderInstructionComponent do
           <:header>
             macOS installation process
           </:header>
+
+          <:instruction>
+            1. Click on the copy icon to copy this command to your clipboard
+          </:instruction>
 
           <:instruction>
             2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
