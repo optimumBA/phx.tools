@@ -9,16 +9,15 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  @spec button(assigns()) :: rendered()
-  def button(%{live_action: :linux} = assigns) do
+  @spec command_select_button(assigns()) :: rendered()
+  def command_select_button(assigns) do
     ~H"""
-    <.os_link_button id="macOS" href={~p"/macOS"} os_name="MacOS" class="px-3 flex justify-center" />
-    """
-  end
-
-  def button(%{live_action: :macOS} = assigns) do
-    ~H"""
-    <.os_link_button id="linux" href={~p"/linux"} os_name="Linux" class="px-3 flex justify-center" />
+    <.os_link_button
+      id={if @live_action == :macOS, do: "linux", else: "macOS"}
+      href={if @live_action == :macOS, do: ~p"/linux", else: ~p"/macOS"}
+      os_name={if @live_action == :linux, do: "MacOS", else: "Linux"}
+      class="px-3 flex justify-center"
+    />
     """
   end
 
@@ -28,10 +27,12 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     <div class="relative flex items-center justify-center lg:mb-5 md:mb-8 sm:mb-9 mt-[5%] px-[30%]">
       <.link href="https://optimum.ba" target="_blank" class="flex items-center gap-3">
         <Icons.optimum_logo />
-        <span class="font-bold font-montserrat text-white sm:text-sm md:text-xl">OPTIMUM</span>
+        <span class="font-bold font-montserrat text-white sm:text-sm md:text-lg lg:text-xl">
+          OPTIMUM
+        </span>
       </.link>
     </div>
-    <p class="font-semibold text-center text-white sm:text-sm md:text-base  font-montserrat">
+    <p class="font-semibold text-center text-white text-xs md:text-sm lg:text-base  font-montserrat">
       Copyright <span>&copy; <%= Date.utc_today().year %></span> Optimum
     </p>
     """
@@ -48,21 +49,21 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     <div class="flex flex-col items-center max-w-5xl mx-auto">
       <div>
         <div class="sm:flex flex-col items-center">
-          <Icons.phx_tools_svg class="sm:w-4/12" />
-          <p class="sm:py-6 text-center text-white md:text-xl font-martian text-sm font-semibold ">
+          <Icons.phx_tools_svg class="h-7 md:h-12" />
+          <p class="sm:py-6 text-center text-white text-sm md:text-base lg:text-lg font-martian font-semibold ">
             The Complete Development Environment for Elixir and Phoenix
           </p>
         </div>
       </div>
-      <div class="flex flex-col items-center md:w-11/12 lg:w-[1300px]">
+      <div class="flex flex-col items-center md:w-11/12 lg:w-[1100px]">
         <div class="bg-[#110A33] rounded-xl shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
-          <div class="bg-[#2C2650] sm:p-3 rounded-t-xl md:flex items-center md:space-x-4 justify-center">
+          <div class="bg-[#2C2650] p-3 rounded-t-xl flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
             <Icons.exclamation_icon />
-            <p class="font-martian sm:text-base md:text-[1.375rem] md:py-2">
+            <p class="font-martian sm:text-sm md:text-base lg:text-lg md:py-2">
               Unsupported Operating System Detected
             </p>
           </div>
-          <p class="sm:text-sm sm:leading-6 md:text-base text-center sm:px-3  font-martian sm:py-6 md:px-8">
+          <p class="sm:text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3  font-martian sm:py-6 md:px-8">
             It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
           </p>
           <div class="flex-col items-center text-sm sm:flex font-martian sm:pb-8 md:block md:text-center">
@@ -75,12 +76,12 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </a>
           </div>
         </div>
-        <p class="text-center text-white font-martian sm:text-sm md:text-xl sm:py-8">
+        <p class="text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
           Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
         </p>
       </div>
       <div class="">
-        <p class="text-white font-martian text-center sm:text-sm md:text-xl sm:pb-4">
+        <p class="text-white font-martian text-center text-xs md:text-sm lg:text-base leading-6 sm:pb-4">
           Read about website updates here -
           <a
             href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix"
@@ -100,10 +101,10 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     ~H"""
     <div class="solved-height">
       <div class="min-h-full">
-        <div class="mt-[5%] md:flex flex-col items-center max-w-5xl mx-auto">
+        <div class="mt-[5%] md:flex flex-col items-center max-w-4xl mx-auto">
           <div class="sm:flex flex-col items-center">
-            <Icons.phx_tools_svg class="sm:w-4/12" />
-            <p class="sm:py-6 text-center text-white md:text-md font-martian text-[14px] font-semibold ">
+            <Icons.phx_tools_svg class="h-7 md:h-12" />
+            <p class="sm:py-6 text-center text-white text-sm md:text-base lg:text-lg font-martian font-semibold ">
               The Complete Development Environment for Elixir and Phoenix
             </p>
           </div>
@@ -127,18 +128,21 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               </div>
             </div>
             <div class="w-full bg-blue-600 flex justify-end">
-              <.render_instructions live_action={@live_action} operating_system={@operating_system} />
+              <.os_instructions live_action={@live_action} operating_system={@operating_system} />
             </div>
             <div class="justify-center gap-4 md:flex">
               <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
-                <.button live_action={@live_action} operating_system={@operating_system} />
+                <.command_select_button
+                  live_action={@live_action}
+                  operating_system={@operating_system}
+                />
                 <.source_code_button source_code_url={@source_code_url} />
               </div>
             </div>
           </div>
-          <div class="lg:w-[1200px]">
+          <div class="lg:w-[1100px]">
             <div>
-              <p class="text-sm text-center text-white font-martian md:mb-5 md:text-lg">
+              <p class="text-xs px-2 leading-5 text-center text-white font-martian md:mb-5 md:text-sm md:leading-6 lg:text-base">
                 Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
               </p>
             </div>
@@ -154,7 +158,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             >
             </div>
 
-            <p class="md:my-5 text-white md:px-12 md:text-lg">
+            <p class="md:my-5 text-white md:px-12 text-xs md:text-sm lg:text-base font-martian">
               Read about website updates here -
               <a
                 href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix"
@@ -172,28 +176,32 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  slot :header, required: true
-  slot :instruction, required: true
-
   @spec os_instructions(assigns()) :: rendered()
   def os_instructions(assigns) do
     ~H"""
     <div
       id="installation-instructions"
       phx-click-away={JS.hide(to: "#installation-instructions")}
-      class="hidden font-normal solved-height font-martian  bg-[#110A33] absolute md:w-[90%]"
+      class="hidden font-normal solved-height font-martian bg-[#110A33] absolute md:w-[90%]"
     >
-      <div class="block ">
-        <div class="h-full shadow-[#28177E] shadow-md rounded-md pb-2">
+      <div class="block">
+        <div class="h-full shadow-[#C2B8FF] shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
-            <h1 class="text-white text-center lg:text-2xl md:text-[22px] sm:text-xl lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= render_slot(@header) %>
+            <h1 class="text-white text-center text-sm md:text-base lg:text-xl lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
+              <%= case @live_action do %>
+                <% :linux -> %>
+                  Linux installation process
+                <% :macOS -> %>
+                  macOS installation process
+                <% _ -> %>
+                  Installation process
+              <% end %>
             </h1>
-            <%= for item <- @instruction do %>
-              <h1 class="text-[12px] text-white lg:mt-4 sm:mt-4">
-                <%= render_slot(item) %>
-              </h1>
-            <% end %>
+            <ol class="list-decimal pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
+              <%= for instruction <- render_instructions(@live_action) do %>
+                <li class="mb-2"><%= raw(instruction) %></li>
+              <% end %>
+            </ol>
           </div>
         </div>
       </div>
@@ -220,69 +228,34 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
           <Icons.os_icon os_name={@os_name} />
         </div>
-        <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
+        <h1 class="text-center text-white text-sm md:text-base font-martian"><%= @os_name %></h1>
       </div>
     </.link>
     """
   end
 
-  attr :live_action, :string, required: true
-  attr :operating_system, :string, required: true
+  defp render_instructions(live_action) do
+    case live_action do
+      :linux ->
+        [
+          "Click on the copy icon to copy this command to your clipboard",
+          "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
+          "Paste the shell command by pressing <b>Shift + Ctrl + V</b> together",
+          "Run the command by hitting <b>ENTER</b>"
+        ]
 
-  @spec render_instructions(assigns()) :: rendered()
-  def render_instructions(%{live_action: :linux} = assigns) do
-    ~H"""
-    <.os_instructions>
-      <:header>
-        Linux installation process
-      </:header>
+      :macOS ->
+        [
+          "Click on the copy icon to copy this command to your clipboard",
+          "Open Terminal by pressing <b class=\"font-extrabold\">⌘ + SPACE</b> together",
+          "Type \"Terminal\" and hit <b>RETURN</b>",
+          "Paste the shell command by hitting <b>⌘ + V</b> together",
+          "Run the command by hitting <b>RETURN</b>"
+        ]
 
-      <:instruction>
-        1. Click on the copy icon to copy this command to your clipboard
-      </:instruction>
-      <:instruction>
-        2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
-      </:instruction>
-
-      <:instruction>
-        3. Paste the shell command by pressing <b>Shift + Ctrl + V</b> together
-      </:instruction>
-
-      <:instruction>
-        4. Run the command by hitting <b>ENTER</b>
-      </:instruction>
-    </.os_instructions>
-    """
-  end
-
-  def render_instructions(%{live_action: :macOS} = assigns) do
-    ~H"""
-    <.os_instructions>
-      <:header>
-        macOS installation process
-      </:header>
-
-      <:instruction>
-        1. Click on the copy icon to copy this command to your clipboard
-      </:instruction>
-
-      <:instruction>
-        2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
-      </:instruction>
-
-      <:instruction>
-        3. Type "Terminal" and hit <b>RETURN</b>
-      </:instruction>
-
-      <:instruction>
-        4. Paste the shell command by hitting<b> ⌘ + V </b> together.
-      </:instruction>
-
-      <:instruction>
-        5. Run the command by hitting <b>RETURN</b>
-      </:instruction>
-    </.os_instructions>
-    """
+      _default ->
+        []
+    end
   end
 
   attr :source_code_url, :string, required: true
@@ -297,7 +270,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
       >
         <Heroicons.code_bracket class="bold w-5 h-5 text-white" />
-        <span class="text-white">Source code</span>
+        <span class="text-white text-sm md:text-base">Source code</span>
       </.link>
     </div>
     """
