@@ -6,6 +6,55 @@ defmodule PhxToolsWeb.PhxToolsLive.Icons do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  @spec copied_icon(assigns()) :: rendered()
+  def copied_icon(assigns) do
+    ~H"""
+    <svg
+      id="copied-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      class="icon icon-tabler icon-tabler-circle-check hidden"
+      viewBox="0 0 24 24"
+      width="44"
+      height="24"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="white"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+      <path d="M9 12l2 2l4 -4" />
+    </svg>
+    """
+  end
+
+  attr :class, :string, default: nil
+
+  @spec copy_icon(assigns()) :: rendered()
+  def copy_icon(assigns) do
+    ~H"""
+    <svg
+      id="copy-icon"
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class={@class}
+    >
+      <path
+        d="M5 3H3C1.89543 3 1 3.89543 1 5V17C1 18.1046 1.89543 19 3 19H13C14.1046 19 15 18.1046 15 17V16M5 3C5 4.10457 5.89543 5 7 5H9C10.1046 5 11 4.10457 11 3M5 3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3M11 3H13C14.1046 3 15 3.89543 15 5V8M17 12H7M7 12L10 9M7 12L10 15"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    """
+  end
+
   @spec exclamation_icon(assigns()) :: rendered()
   def exclamation_icon(assigns) do
     ~H"""
@@ -20,21 +69,6 @@ defmodule PhxToolsWeb.PhxToolsLive.Icons do
         fill-rule="evenodd"
         d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
         clip-rule="evenodd"
-      />
-    </svg>
-    """
-  end
-
-  @spec clipboard_icon(assigns()) :: rendered()
-  def clipboard_icon(assigns) do
-    ~H"""
-    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M5 3H3C1.89543 3 1 3.89543 1 5V17C1 18.1046 1.89543 19 3 19H13C14.1046 19 15 18.1046 15 17V16M5 3C5 4.10457 5.89543 5 7 5H9C10.1046 5 11 4.10457 11 3M5 3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3M11 3H13C14.1046 3 15 3.89543 15 5V8M17 12H7M7 12L10 9M7 12L10 15"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
       />
     </svg>
     """
@@ -69,7 +103,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Icons do
   end
 
   @spec os_icon(assigns()) :: rendered()
-  def os_icon(%{os_name: "macOS"} = assigns) do
+  def os_icon(%{os_name: "MacOS"} = assigns) do
     ~H"""
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_21_868)">

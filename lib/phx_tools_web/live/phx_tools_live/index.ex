@@ -3,18 +3,23 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
 
   alias PhxToolsWeb.Endpoint
   alias PhxToolsWeb.PhxToolsComponents
-  alias PhxToolsWeb.PhxToolsLive.UnsupportedOsComponent
 
   @impl Phoenix.LiveView
   def mount(_params, session, socket) do
     {:ok,
      socket
      |> assign(:seo_attributes, %{})
-     |> assign_os(session)}
+     |> assign_os_and_source_code_url(session)}
   end
 
-  defp assign_os(socket, %{"operating_system" => operating_system}),
-    do: assign(socket, :operating_system, operating_system)
+  defp assign_os_and_source_code_url(socket, %{"operating_system" => operating_system}) do
+    socket
+    |> assign(:operating_system, operating_system)
+    |> assign(
+      :source_code_url,
+      "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{decapitalize_os_name_first_letter(operating_system)}.sh"
+    )
+  end
 
   @impl Phoenix.LiveView
   def handle_params(_params, _uri, socket) do
@@ -24,22 +29,26 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp apply_action(socket, :index) do
     case socket.assigns.operating_system do
       "Linux" -> {:noreply, assign(socket, :live_action, :linux)}
-      "Mac" -> {:noreply, assign(socket, :live_action, :macOS)}
+      "MacOS" -> {:noreply, assign(socket, :live_action, :macOS)}
       _other -> {:noreply, socket}
     end
   end
 
-  defp apply_action(socket, :linux) do
+  defp apply_action(socket, action) do
     {:noreply,
      socket
-     |> assign(:live_action, :linux)
-     |> assign(seo_attributes: %{url: url(~p"/linux")})}
+     |> assign(seo_attributes: %{url: Endpoint.url() <> "/#{action}"})
+     |> assign(
+       :source_code_url,
+       "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{action}.sh"
+     )}
   end
 
-  defp apply_action(socket, :macOS) do
-    {:noreply,
-     socket
-     |> assign(:live_action, :macOS)
-     |> assign(seo_attributes: %{url: url(~p"/macOS")})}
+  defp installation_command(live_action) do
+    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{live_action}.sh"})\""
+  end
+
+  defp decapitalize_os_name_first_letter(<<first::utf8, rest::binary>>) do
+    String.downcase(<<first::utf8>>) <> rest
   end
 end

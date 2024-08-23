@@ -56,8 +56,8 @@ defmodule PhxToolsWeb.CoreComponents do
       {@rest}
     >
       <p :if={@title} class="flex items-center gap-1.5 text-[0.8125rem] font-semibold leading-6">
-        <Heroicons.information_circle :if={@kind == :info} mini class="w-4 h-4" />
-        <Heroicons.exclamation_circle :if={@kind == :error} mini class="w-4 h-4" />
+        <Heroicons.information_circle :if={@kind == :info} mini class="h-4 w-4" />
+        <Heroicons.exclamation_circle :if={@kind == :error} mini class="h-4 w-4" />
         <%= @title %>
       </p>
       <p class="mt-2 text-[0.8125rem] leading-5"><%= msg %></p>

@@ -12,31 +12,13 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   @spec button(assigns()) :: rendered()
   def button(%{live_action: :linux} = assigns) do
     ~H"""
-    <.os_link_card
-      id="macOS"
-      patch={~p"/macOS"}
-      os_name="macOS"
-      source_code="https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh"
-      class={[
-        "px-3 flex justify-center",
-        @operating_system == "Mac" && "bg-indigo-850"
-      ]}
-    />
+    <.os_link_button id="macOS" href={~p"/macOS"} os_name="MacOS" class="px-3 flex justify-center" />
     """
   end
 
   def button(%{live_action: :macOS} = assigns) do
     ~H"""
-    <.os_link_card
-      id="linux"
-      patch={~p"/linux"}
-      os_name="Linux"
-      source_code="https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh"
-      class={[
-        "px-3 flex justify-center",
-        @operating_system == "Linux" && "bg-indigo-850"
-      ]}
-    />
+    <.os_link_button id="linux" href={~p"/linux"} os_name="Linux" class="px-3 flex justify-center" />
     """
   end
 
@@ -57,9 +39,63 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   attr :live_action, :atom, required: true
   attr :operating_system, :string, required: true
+  attr :source_code_url, :string, required: true
 
   slot :installation_command, required: true
   @spec os_landing_card(assigns()) :: rendered()
+  def os_landing_card(%{live_action: :index} = assigns) do
+    ~H"""
+    <div class="flex flex-col items-center max-w-5xl mx-auto">
+      <div>
+        <div class="sm:flex flex-col items-center">
+          <Icons.phx_tools_svg class="sm:w-4/12" />
+          <p class="sm:py-6 text-center text-white md:text-xl font-martian text-sm font-semibold ">
+            The Complete Development Environment for Elixir and Phoenix
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-col items-center md:w-11/12 lg:w-[1300px]">
+        <div class="bg-[#110A33] rounded-xl shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
+          <div class="bg-[#2C2650] sm:p-3 rounded-t-xl md:flex items-center md:space-x-4 justify-center">
+            <Icons.exclamation_icon />
+            <p class="font-martian sm:text-base md:text-[1.375rem] md:py-2">
+              Unsupported Operating System Detected
+            </p>
+          </div>
+          <p class="sm:text-sm sm:leading-6 md:text-base text-center sm:px-3  font-martian sm:py-6 md:px-8">
+            It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
+          </p>
+          <div class="flex-col items-center text-sm sm:flex font-martian sm:pb-8 md:block md:text-center">
+            <a href="https://phx.tools/macOS" class="text-[#24B2FF] underline">
+              https://phx.tools/macOS
+            </a>
+            <span class="px-2">or</span>
+            <a href="http://phx.tools/linux" class="text-[#24B2FF] underline">
+              http://phx.tools/linux"
+            </a>
+          </div>
+        </div>
+        <p class="text-center text-white font-martian sm:text-sm md:text-xl sm:py-8">
+          Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
+        </p>
+      </div>
+      <div class="">
+        <p class="text-white font-martian text-center sm:text-sm md:text-xl sm:pb-4">
+          Read about website updates here -
+          <a
+            href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix"
+            target="_blank"
+            class="text-[#24B2FF] underline"
+          >
+            https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix
+          </a>
+        </p>
+      </div>
+      <.footer />
+    </div>
+    """
+  end
+
   def os_landing_card(assigns) do
     ~H"""
     <div class="solved-height">
@@ -85,7 +121,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                   <%= render_slot(@installation_command) %>
                 </h1>
                 <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
-                  <Icons.clipboard_icon />
+                  <Icons.copied_icon />
+                  <Icons.copy_icon />
                 </div>
               </div>
             </div>
@@ -93,7 +130,10 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               <.render_instructions live_action={@live_action} operating_system={@operating_system} />
             </div>
             <div class="justify-center gap-4 md:flex">
-              <.button live_action={@live_action} operating_system={@operating_system} />
+              <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
+                <.button live_action={@live_action} operating_system={@operating_system} />
+                <.source_code_button source_code_url={@source_code_url} />
+              </div>
             </div>
           </div>
           <div class="lg:w-[1200px]">
@@ -104,7 +144,11 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </div>
             <div
               class="mx-auto"
-              data-live_action={@live_action}
+              data-asciicast={
+                if @live_action == :macOS,
+                  do: "bJMOlPe5F4mFLY0Rl6fiJSOp3",
+                  else: "XhDpRstBJ4df2gfiRfp0awDPO"
+              }
               id={"asciinema-#{Utils.random_id()}"}
               phx-hook="AsciinemaHook"
             >
@@ -158,40 +202,27 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   end
 
   attr :id, :string, required: true
-  attr :class, :list
-  attr :patch, :string, required: true
+  attr :class, :string
+  attr :href, :string, required: true
   attr :os_name, :string, required: true
-  attr :source_code, :string, required: true
 
-  @spec os_link_card(assigns()) :: rendered()
-  def os_link_card(assigns) do
+  @spec os_link_button(assigns()) :: rendered()
+  def os_link_button(assigns) do
     ~H"""
-    <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
-      <.link patch={@patch} target="_blank">
-        <div
-          id={@id}
-          class={[
-            "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
-            @class
-          ]}
-        >
-          <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
-            <Icons.os_icon os_name={@os_name} />
-          </div>
-          <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
+    <.link href={@href}>
+      <div
+        id={@id}
+        class={[
+          "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
+          @class
+        ]}
+      >
+        <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
+          <Icons.os_icon os_name={@os_name} />
         </div>
-      </.link>
-      <div class="border-2 border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
-        <.link
-          href={@source_code}
-          target="_blank"
-          class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
-        >
-          <Heroicons.code_bracket class="bold w-5 h-5 text-white" />
-          <span class="text-white">Source code</span>
-        </.link>
+        <h1 class="text-center text-white font-martian"><%= @os_name %></h1>
       </div>
-    </div>
+    </.link>
     """
   end
 
@@ -199,57 +230,76 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   attr :operating_system, :string, required: true
 
   @spec render_instructions(assigns()) :: rendered()
-  def render_instructions(assigns) do
+  def render_instructions(%{live_action: :linux} = assigns) do
     ~H"""
-    <%= case @live_action do %>
-      <% :linux -> %>
-        <.os_instructions>
-          <:header>
-            Linux installation process
-          </:header>
+    <.os_instructions>
+      <:header>
+        Linux installation process
+      </:header>
 
-          <:instruction>
-            1. Click on the copy icon to copy this command to your clipboard
-          </:instruction>
-          <:instruction>
-            2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
-          </:instruction>
+      <:instruction>
+        1. Click on the copy icon to copy this command to your clipboard
+      </:instruction>
+      <:instruction>
+        2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
+      </:instruction>
 
-          <:instruction>
-            3. Paste the shell command by pressing <b>Shift + Ctrl + V</b> together
-          </:instruction>
+      <:instruction>
+        3. Paste the shell command by pressing <b>Shift + Ctrl + V</b> together
+      </:instruction>
 
-          <:instruction>
-            4. Run the command by hitting <b>ENTER</b>
-          </:instruction>
-        </.os_instructions>
-      <% :macOS -> %>
-        <.os_instructions>
-          <:header>
-            macOS installation process
-          </:header>
+      <:instruction>
+        4. Run the command by hitting <b>ENTER</b>
+      </:instruction>
+    </.os_instructions>
+    """
+  end
 
-          <:instruction>
-            1. Click on the copy icon to copy this command to your clipboard
-          </:instruction>
+  def render_instructions(%{live_action: :macOS} = assigns) do
+    ~H"""
+    <.os_instructions>
+      <:header>
+        macOS installation process
+      </:header>
 
-          <:instruction>
-            2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
-          </:instruction>
+      <:instruction>
+        1. Click on the copy icon to copy this command to your clipboard
+      </:instruction>
 
-          <:instruction>
-            3. Type "Terminal" and hit <b>RETURN</b>
-          </:instruction>
+      <:instruction>
+        2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
+      </:instruction>
 
-          <:instruction>
-            4. Paste the shell command by hitting<b> ⌘ + V </b> together.
-          </:instruction>
+      <:instruction>
+        3. Type "Terminal" and hit <b>RETURN</b>
+      </:instruction>
 
-          <:instruction>
-            5. Run the command by hitting <b>RETURN</b>
-          </:instruction>
-        </.os_instructions>
-    <% end %>
+      <:instruction>
+        4. Paste the shell command by hitting<b> ⌘ + V </b> together.
+      </:instruction>
+
+      <:instruction>
+        5. Run the command by hitting <b>RETURN</b>
+      </:instruction>
+    </.os_instructions>
+    """
+  end
+
+  attr :source_code_url, :string, required: true
+
+  @spec source_code_button(assigns()) :: rendered()
+  def source_code_button(assigns) do
+    ~H"""
+    <div class="border-2 border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
+      <.link
+        href={@source_code_url}
+        target="_blank"
+        class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
+      >
+        <Heroicons.code_bracket class="bold w-5 h-5 text-white" />
+        <span class="text-white">Source code</span>
+      </.link>
+    </div>
     """
   end
 end
