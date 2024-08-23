@@ -51,4 +51,6 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp decapitalize_os_name_first_letter(<<first::utf8, rest::binary>>) do
     String.downcase(<<first::utf8>>) <> rest
   end
+
+  defp decapitalize_os_name_first_letter(nil), do: nil
 end

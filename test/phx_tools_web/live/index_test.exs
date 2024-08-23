@@ -3,8 +3,10 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
   import Phoenix.LiveViewTest
 
-  describe "landing page" do
-    test "background of macOS card changes when macOS user visits the page", %{conn: conn} do
+  describe "/" do
+    test "background of macOS card changes when macOS user clicks to visit the page", %{
+      conn: conn
+    } do
       conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
 
       {:ok, landing_live, html} = live(conn, "/")
@@ -14,7 +16,9 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       assert render(landing_live) =~ "bg-indigo-850"
     end
 
-    test "background of Linux card changes when Linux user visits the page", %{conn: conn} do
+    test "background of Linux card changes when Linux user clicks to visit the page", %{
+      conn: conn
+    } do
       conn = put_req_header(conn, "user-agent", "Linux")
 
       {:ok, landing_live, html} = live(conn, "/")
@@ -29,7 +33,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       {:ok, landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
-      assert html =~ "Linux.sh"
+      assert html =~ "linux.sh"
 
       assert has_element?(landing_live, "#macOS")
     end
@@ -50,7 +54,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     end
   end
 
-  describe "Linux instructions page" do
+  describe "/linux" do
     test "user visits Linux instructions page", %{conn: conn} do
       {:ok, linux_live, html} = live(conn, "/linux")
 
@@ -61,7 +65,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     end
   end
 
-  describe "macOS instructions page" do
+  describe "/macOS" do
     test "user visits macOS instructions page", %{conn: conn} do
       {:ok, linux_live, html} = live(conn, "/macOS")
 
