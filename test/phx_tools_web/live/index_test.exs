@@ -69,7 +69,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     test "user visits macOS instructions page", %{conn: conn} do
       {:ok, linux_live, html} = live(conn, "/macOS")
 
-      assert html =~ "macOS installation process"
+      assert html =~ "MacOS installation process"
       assert has_element?(linux_live, "#tool-installation")
       assert has_element?(linux_live, "#copy")
     end
