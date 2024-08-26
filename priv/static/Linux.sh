@@ -60,6 +60,7 @@ function install() {
         ;;
     "oh-my-zsh")
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        ;;
     "mise")
         curl https://mise.run | sh
         echo 'eval "$(mise activate zsh)"' >>~/.zshrc
