@@ -24,7 +24,9 @@ function already_installed() {
     "xcode")
         which xcode-select >/dev/null
         ;;
-
+    "oh-my-zsh")
+        [ -d ~/.oh-my-zsh ]
+        ;;
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
@@ -54,6 +56,9 @@ function install() {
     "xcode")
         xcode-select --install
         ;;
+    "oh-my-zsh")
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        ;;
     "Homebrew")
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         (
@@ -81,6 +86,7 @@ function install() {
         mise use -g elixir@1.17.2-otp-27
         ;;
     "Phoenix")
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.0-rc.3
         ;;
@@ -120,6 +126,10 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "xcode"
+
+    echo -e "${white}"
+    sleep 2
+    maybe_install "oh-my-zsh"
 
     echo -e "${white}"
     sleep 2
@@ -198,6 +208,7 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
+echo "2) oh-my-zsh"
 echo "2) Homebrew"
 echo "3) mise"
 echo "4) Erlang"
@@ -231,6 +242,17 @@ while ! is_yn "$answer"; do
     read -p "Do you want to continue? (y/n) " answer
     case "$answer" in
     [yY] | [yY][eE][sS])
+    echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
+
+        echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
+
+        echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
+
+        sleep 3
+
+        sudo -S chsh -s '/bin/zsh' "${USER}"
+
+        add_env "$optional"
         add_env
         ;;
     [nN] | [nN][oO])

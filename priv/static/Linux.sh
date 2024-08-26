@@ -58,6 +58,8 @@ function install() {
     "Zsh")
         sudo apt-get install -y zsh
         ;;
+    "oh-my-zsh")
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     "mise")
         curl https://mise.run | sh
         echo 'eval "$(mise activate zsh)"' >>~/.zshrc
@@ -70,6 +72,7 @@ function install() {
         mise use -g elixir@1.17.2-otp-27
         ;;
     "Phoenix")
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
@@ -108,6 +111,10 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "Zsh"
+
+    echo -e "${white}"
+    sleep 2
+    maybe_install "oh-my-zsh"
 
     echo -e "${white}"
     sleep 3
@@ -182,11 +189,12 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) mise"
-echo "3) Erlang"
-echo "4) Elixir"
-echo "5) Phoenix"
-echo "6) PostgreSQL"
+echo "2) Zsh"
+echo "3) mise"
+echo "4) Erlang"
+echo "5) Elixir"
+echo "6) Phoenix"
+echo "7) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
