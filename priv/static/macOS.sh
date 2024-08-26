@@ -209,7 +209,6 @@ echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
 echo "2) oh-my-zsh"
-echo "2) Homebrew"
 echo "3) mise"
 echo "4) Erlang"
 echo "5) Elixir"
