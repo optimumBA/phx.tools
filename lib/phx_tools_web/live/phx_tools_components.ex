@@ -13,9 +13,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   def command_select_button(assigns) do
     ~H"""
     <.os_link_button
-      id={if @live_action == :macOS, do: "linux", else: "macOS"}
-      href={if @live_action == :macOS, do: ~p"/linux", else: ~p"/macOS"}
-      os_name={if @live_action == :linux, do: "MacOS", else: "Linux"}
+      id={if @live_action == :macOS, do: "Linux", else: "macOS"}
+      href={if @live_action == :macOS, do: ~p"/Linux", else: ~p"/macOS"}
+      os_name={if @live_action == :Linux, do: "macOS", else: "Linux"}
       class="px-3 flex justify-center"
     />
     """
@@ -84,11 +84,11 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <p class="text-white font-martian text-center text-xs md:text-sm lg:text-base leading-6 sm:pb-4">
           Read about website updates here -
           <a
-            href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix"
+            href="https://optimum.ba/blog/exciting-updates-to-phx-tools"
             target="_blank"
             class="text-[#24B2FF] underline"
           >
-            https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix
+            https://optimum.ba/blog/exciting-updates-to-phx-tools
           </a>
         </p>
       </div>
@@ -161,11 +161,11 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             <p class="md:my-5 text-white md:px-12 text-xs md:text-sm lg:text-base font-martian">
               Read about website updates here -
               <a
-                href="https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix"
+                href="https://optimum.ba/blog/exciting-updates-to-phx-tools"
                 class="text-[#24B2FF] font-martian text-sm underline"
                 target="_blank"
               >
-                https://optimum.ba/blog/phx-tools-complete-development-environment-for-elixir-and-phoenix
+                https://optimum.ba/blog/exciting-updates-to-phx-tools
               </a>
             </p>
           </div>
@@ -188,7 +188,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="h-full shadow-[#C2B8FF] shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
             <h1 class="text-white text-center text-sm md:text-base lg:text-xl lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= capitalize_os_name_first_letter(Atom.to_string(@live_action)) %> installation process
+              <%= @live_action %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
               <%= for instruction <- render_instructions(@live_action) do %>
@@ -229,7 +229,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   defp render_instructions(live_action) do
     case live_action do
-      :linux ->
+      :Linux ->
         [
           "Click on the copy icon to copy this command to your clipboard",
           "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
@@ -245,9 +245,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           "Paste the shell command by hitting <b>⌘ + V</b> together",
           "Run the command by hitting <b>RETURN</b>"
         ]
-
-      _default ->
-        []
     end
   end
 
@@ -267,9 +264,5 @@ defmodule PhxToolsWeb.PhxToolsComponents do
       </.link>
     </div>
     """
-  end
-
-  defp capitalize_os_name_first_letter(<<first::utf8, rest::binary>>) do
-    String.upcase(<<first::utf8>>) <> rest
   end
 end

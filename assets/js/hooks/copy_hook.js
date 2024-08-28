@@ -16,7 +16,7 @@ export default {
       setTimeout(() => {
         copyConfirmationElement.classList.add('hidden')
         copyElement.classList.remove('hidden')
-      }, 400)
+      }, 600)
     })
   },
 }

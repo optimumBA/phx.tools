@@ -33,7 +33,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       {:ok, landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
-      assert html =~ "linux.sh"
+      assert html =~ "Linux.sh"
 
       assert has_element?(landing_live, "#macOS")
     end
@@ -44,7 +44,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
       assert html =~ "macOS.sh"
-      assert has_element?(landing_live, "#linux")
+      assert has_element?(landing_live, "#Linux")
     end
 
     test "if there is no operating system confirm message is not displayed", %{conn: conn} do
@@ -54,9 +54,9 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     end
   end
 
-  describe "/linux" do
+  describe "/Linux" do
     test "user visits Linux instructions page", %{conn: conn} do
-      {:ok, linux_live, html} = live(conn, "/linux")
+      {:ok, linux_live, html} = live(conn, "/Linux")
 
       assert html =~ "Linux installation process"
       assert render(linux_live) =~ "Linux installation process"
@@ -69,7 +69,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     test "user visits macOS instructions page", %{conn: conn} do
       {:ok, linux_live, html} = live(conn, "/macOS")
 
-      assert html =~ "MacOS installation process"
+      assert html =~ "macOS installation process"
       assert has_element?(linux_live, "#tool-installation")
       assert has_element?(linux_live, "#copy")
     end

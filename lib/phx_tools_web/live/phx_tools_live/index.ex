@@ -17,7 +17,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     |> assign(:operating_system, operating_system)
     |> assign(
       :source_code_url,
-      "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{decapitalize_os_name_first_letter(operating_system)}.sh"
+      "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{operating_system}.sh"
     )
   end
 
@@ -28,8 +28,8 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
 
   defp apply_action(socket, :index) do
     case socket.assigns.operating_system do
-      "Linux" -> {:noreply, assign(socket, :live_action, :linux)}
-      "MacOS" -> {:noreply, assign(socket, :live_action, :macOS)}
+      "Linux" -> {:noreply, assign(socket, :live_action, :Linux)}
+      "macOS" -> {:noreply, assign(socket, :live_action, :macOS)}
       _other -> {:noreply, socket}
     end
   end
@@ -47,10 +47,4 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp installation_command(live_action) do
     "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{live_action}.sh"})\""
   end
-
-  defp decapitalize_os_name_first_letter(<<first::utf8, rest::binary>>) do
-    String.downcase(<<first::utf8>>) <> rest
-  end
-
-  defp decapitalize_os_name_first_letter(nil), do: nil
 end
