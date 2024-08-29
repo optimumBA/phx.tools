@@ -52,7 +52,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               Unsupported Operating System Detected
             </p>
           </div>
-          <p class="sm:text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3  font-martian sm:py-6 md:px-8">
+          <p class="text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3 font-martian sm:py-6 md:px-8">
             It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
           </p>
           <div class="flex-col items-center text-sm sm:flex font-martian sm:pb-8 md:block md:text-center">
@@ -188,9 +188,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
       class="hidden font-normal solved-height font-martian bg-[#110A33] absolute md:w-[90%]"
     >
       <div class="block">
-        <div class="h-full shadow-[#C2B8FF] shadow-md rounded-md pb-2">
+        <div class="h-full shadow-custom shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
-            <h1 class="text-white text-center text-sm md:text-base lg:text-xl lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
+            <h1 class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
               <%= @live_action %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
