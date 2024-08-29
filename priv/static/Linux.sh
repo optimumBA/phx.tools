@@ -21,6 +21,13 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
+if [[ $current_shell == "bash" ]]; then
+    config_file="/Users/$USER/.bashrc"
+else
+    current_shell="zsh"
+    config_file="/Users/$USER/.zshrc"
+fi
+
 function already_installed() {
     case $1 in
     "Git")
@@ -63,8 +70,8 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(mise activate zsh)"' >>~/.zshrc
-        eval "$(mise activate zsh --shims)"
+        echo 'eval "$(/Users/$USER/.local/bin/mise activate '$current_shell')"' >>"$config_file"
+        eval "$(/Users/$USER/.local/bin/mise activate $current_shell --shims)"
         ;;
     "Erlang")
         mise use -g erlang@27.0.1
@@ -73,7 +80,7 @@ function install() {
         mise use -g elixir@1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
+        source ~/.${current_shell}rc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;

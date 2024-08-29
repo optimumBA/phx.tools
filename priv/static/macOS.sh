@@ -69,7 +69,7 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(/Users/$USER/.local/bin/mise activate $current_shell)"' >>"$config_file"
+        echo 'eval "$(/Users/$USER/.local/bin/mise activate '$current_shell')"' >>"$config_file"
         eval "$(/Users/$USER/.local/bin/mise activate $current_shell --shims)"
         ;;
     "Erlang")
@@ -86,7 +86,7 @@ function install() {
         mise use -g elixir@1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
+        source ~/.${current_shell}rc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.0-rc.3
         ;;
