@@ -9,18 +9,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  @spec command_select_button(assigns()) :: rendered()
-  def command_select_button(assigns) do
-    ~H"""
-    <.os_link_button
-      id={if @live_action == :macOS, do: "Linux", else: "macOS"}
-      href={if @live_action == :macOS, do: ~p"/Linux", else: ~p"/macOS"}
-      os_name={if @live_action == :Linux, do: "macOS", else: "Linux"}
-      class="px-3 flex justify-center"
-    />
-    """
-  end
-
   @spec footer(assigns()) :: rendered()
   def footer(assigns) do
     ~H"""
@@ -43,6 +31,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   attr :source_code_url, :string, required: true
 
   slot :installation_command, required: true
+
   @spec os_landing_card(assigns()) :: rendered()
   def os_landing_card(%{live_action: :index} = assigns) do
     ~H"""
@@ -135,6 +124,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 <.command_select_button
                   live_action={@live_action}
                   operating_system={@operating_system}
+                  class="px-3 flex justify-center"
                 />
                 <.source_code_button source_code_url={@source_code_url} />
               </div>
@@ -202,50 +192,49 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  attr :id, :string, required: true
   attr :class, :string
-  attr :href, :string, required: true
-  attr :os_name, :string, required: true
+  attr :live_action, :atom, required: true
+  attr :operating_system, :string, required: true
 
-  @spec os_link_button(assigns()) :: rendered()
-  def os_link_button(assigns) do
+  @spec command_select_button(assigns()) :: rendered()
+  def command_select_button(assigns) do
     ~H"""
-    <.link href={@href}>
+    <.link href={if Atom.to_string(@live_action) == "macOS", do: ~p"/Linux", else: ~p"/macOS"}>
       <div
-        id={@id}
+        id={if Atom.to_string(@live_action) == "macOS", do: "Linux", else: "macOS"}
         class={[
           "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
           @class
         ]}
       >
         <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
-          <Icons.os_icon os_name={@os_name} />
+          <Icons.os_icon os_to_switch_to={if @live_action == :Linux, do: "macOS", else: "Linux"} />
         </div>
-        <h1 class="text-center text-white text-sm md:text-base font-martian"><%= @os_name %></h1>
+        <h1 class="text-center text-white text-sm md:text-base font-martian">
+          <%= if @live_action == :Linux, do: "macOS", else: "Linux" %>
+        </h1>
       </div>
     </.link>
     """
   end
 
-  defp render_instructions(live_action) do
-    case live_action do
-      :Linux ->
-        [
-          "Click on the copy icon to copy this command to your clipboard",
-          "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
-          "Paste the shell command by pressing <b>Shift + Ctrl + V</b> together",
-          "Run the command by hitting <b>ENTER</b>"
-        ]
+  defp render_instructions(:Linux) do
+    [
+      "Click on the copy icon to copy this command to your clipboard",
+      "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
+      "Paste the shell command by pressing <b>Shift + Ctrl + V</b> together",
+      "Run the command by hitting <b>ENTER</b>"
+    ]
+  end
 
-      :macOS ->
-        [
-          "Click on the copy icon to copy this command to your clipboard",
-          "Open Terminal by pressing <b class=\"font-extrabold\">⌘ + SPACE</b> together",
-          "Type \"Terminal\" and hit <b>RETURN</b>",
-          "Paste the shell command by hitting <b>⌘ + V</b> together",
-          "Run the command by hitting <b>RETURN</b>"
-        ]
-    end
+  defp render_instructions(:macOS) do
+    [
+      "Click on the copy icon to copy this command to your clipboard",
+      "Open Terminal by pressing <b class=\"font-extrabold\">⌘ + SPACE</b> together",
+      "Type \"Terminal\" and hit <b>RETURN</b>",
+      "Paste the shell command by hitting <b>⌘ + V</b> together",
+      "Run the command by hitting <b>RETURN</b>"
+    ]
   end
 
   attr :source_code_url, :string, required: true
