@@ -117,7 +117,14 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               </div>
             </div>
             <div class="w-full bg-blue-600 flex justify-end">
-              <.os_instructions live_action={@live_action} operating_system={@operating_system} />
+              <.os_instructions
+                :let={installation_instruction}
+                installation_instructions={render_instructions(@live_action)}
+                live_action={@live_action}
+                operating_system={@operating_system}
+              >
+                <%= raw(installation_instruction) %>
+              </.os_instructions>
             </div>
             <div class="justify-center gap-4 md:flex">
               <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
@@ -166,6 +173,12 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
+  attr :installation_instructions, :list
+  attr :live_action, :atom
+  attr :operating_system, :string
+
+  slot :inner_block, required: true
+
   @spec os_instructions(assigns()) :: rendered()
   def os_instructions(assigns) do
     ~H"""
@@ -181,8 +194,10 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               <%= @live_action %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
-              <%= for instruction <- render_instructions(@live_action) do %>
-                <li class="mb-2"><%= raw(instruction) %></li>
+              <%= for instruction <- @installation_instructions do %>
+                <li class="mb-2">
+                  <%= render_slot(@inner_block, instruction) %>
+                </li>
               <% end %>
             </ol>
           </div>
