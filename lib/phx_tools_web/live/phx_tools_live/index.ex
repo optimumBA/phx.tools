@@ -15,10 +15,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp assign_os_and_source_code_url(socket, %{"operating_system" => operating_system}) do
     socket
     |> assign(:operating_system, operating_system)
-    |> assign(
-      :source_code_url,
-      "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{operating_system}.sh"
-    )
+    |> assign(:source_code_url, source_code_url(operating_system))
   end
 
   @impl Phoenix.LiveView
@@ -38,13 +35,14 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     {:noreply,
      socket
      |> assign(seo_attributes: %{url: Endpoint.url() <> "/#{action}"})
-     |> assign(
-       :source_code_url,
-       "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{action}.sh"
-     )}
+     |> assign(:source_code_url, source_code_url(action))}
   end
 
   defp installation_command(live_action) do
     "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{live_action}.sh"})\""
+  end
+
+  defp source_code_url(os) do
+    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{os}.sh"
   end
 end
