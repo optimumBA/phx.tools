@@ -36,8 +36,14 @@ function already_installed() {
     "Zsh")
         dpkg -l | grep -q zsh
         ;;
-    "mise")
-        which mise >/dev/null 2>&1
+    "oh-my-zsh")
+        [ -d ~/.oh-my-zsh ]
+        ;;
+    "Homebrew")
+        which brew >/dev/null 2>&1
+        ;;
+    "asdf")
+        brew list | grep -q asdf
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -49,7 +55,7 @@ function already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which psql >/dev/null 2>&1
+        which pg_ctl >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on checking"
@@ -68,19 +74,39 @@ function install() {
     "oh-my-zsh")
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         ;;
-    "mise")
-        curl https://mise.run | sh
-        echo 'eval "$(/Users/$USER/.local/bin/mise activate '$current_shell')"' >>"$config_file"
-        eval "$(/Users/$USER/.local/bin/mise activate $current_shell --shims)"
+    "Homebrew")
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo '# set PATH, MANPATH, etc., for Homebrew' >>~/.zshrc
+        (
+            echo
+            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+        ) >>~/.zshrc
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        ;;
+    "asdf")
+        brew install asdf
+        (
+            echo
+            echo 'source $(brew --prefix asdf)/libexec/asdf.sh'
+        ) >>~/.zshrc
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     "Erlang")
-        mise use -g erlang@27.0.1
+        sudo apt-get update
+        sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
+        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+        asdf install erlang 27.0.1
+        asdf global erlang 27.0.1
+        asdf reshim erlang 27.0.1
         ;;
     "Elixir")
-        mise use -g elixir@1.17.2-otp-27
+        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
+        asdf install elixir 1.17.2-otp-27
+        asdf global elixir 1.17.2-otp-27
+        asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.${current_shell}rc >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
@@ -88,7 +114,13 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
-        RUNLEVEL=1 sudo apt-get -y install postgresql
+        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres 16
+        asdf global postgres 16
+        asdf reshim postgres
+
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -101,7 +133,7 @@ function maybe_install() {
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "Erlang" ]]; then
+        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
@@ -125,8 +157,12 @@ function add_env() {
     maybe_install "oh-my-zsh"
 
     echo -e "${white}"
+    sleep 2
+    maybe_install "Homebrew"
+
+    echo -e "${white}"
     sleep 3
-    maybe_install "mise"
+    maybe_install "asdf"
 
     echo -e "${white}"
     sleep 1.5
@@ -197,12 +233,13 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) Zsh"
-echo "3) mise"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+echo "2) oh-my-zsh"
+echo "3) Homebrew"
+echo "4) asdf"
+echo "5) Erlang"
+echo "6) Elixir"
+echo "7) Phoenix"
+echo "8) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
@@ -228,6 +265,7 @@ answer=''
 
 while ! is_yn "$answer"; do
     read -p "Do you want to continue? (y/n) " answer
+    echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
 
@@ -243,7 +281,7 @@ while ! is_yn "$answer"; do
 
         sudo -S chsh -s '/bin/zsh' "${USER}"
 
-        add_env
+        add_env "$optional"
         ;;
     [nN] | [nN][oO])
         echo "Thank you for your time"

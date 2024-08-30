@@ -1,6 +1,16 @@
 #! /bin/bash
 
 # Make sure important variables exist if not already defined
+#
+# $USER is defined by login(1) which is not always executed (e.g. containers)
+# POSIX: https://pubs.opengroup.org/onlinepubs/009695299/utilities/id.html
+USER=${USER:-$(id -u -n)}
+# $HOME is defined at the time of login, but it could be unset. If it is unset,
+# a tilde by itself (~) will not be expanded to the current user's home directory.
+# POSIX: https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap08.html#tag_08_03
+HOME="${HOME:-$(getent passwd $USER 2>/dev/null | cut -d: -f6)}"
+# macOS does not have getent, but this works even if $HOME is unset
+HOME="${HOME:-$(eval echo ~$USER)}"
 
 bold=$(tput bold)
 normal=$(tput sgr0)
@@ -11,13 +21,6 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 current_shell=$(basename "$SHELL")
-
-if [[ $current_shell == "bash" ]]; then
-    config_file="/Users/$USER/.bashrc"
-else
-    current_shell="zsh"
-    config_file="/Users/$USER/.zshrc"
-fi
 
 function already_installed() {
     case $1 in
@@ -30,8 +33,8 @@ function already_installed() {
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
-    "mise")
-        which mise >/dev/null 2>&1
+    "asdf")
+        brew list | grep -q asdf
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -43,7 +46,7 @@ function already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which psql >/dev/null 2>&1
+        which pg_ctl >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on checking"
@@ -61,32 +64,34 @@ function install() {
         ;;
     "Homebrew")
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        (
-            echo
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-        ) >>"$config_file"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
         ;;
-    "mise")
-        curl https://mise.run | sh
-        echo 'eval "$(/Users/$USER/.local/bin/mise activate '$current_shell')"' >>"$config_file"
-        eval "$(/Users/$USER/.local/bin/mise activate $current_shell --shims)"
+    "asdf")
+        # Deps for asdf
+        brew install coreutils curl git
+
+        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
         ;;
     "Erlang")
         # Deps for erlang
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
 
         export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
-        mise use -g erlang@27.0.1
+        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+        asdf install erlang 27.0.1
+        asdf global erlang 27.0.1
+        asdf reshim erlang 27.0.1
         ;;
     "Elixir")
         # Deps for elixir
         brew install unzip
 
-        mise use -g elixir@1.17.2-otp-27
+        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
+        asdf install elixir 1.17.2-otp-27
+        asdf global elixir 1.17.2-otp-27
+        asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.${current_shell}rc >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.0-rc.3
         ;;
@@ -94,13 +99,13 @@ function install() {
         # Dependencies for PSQL
         brew install gcc readline zlib curl ossp-uuid
 
-        brew install postgresql@16
-        (
-            export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
-            export LDFLAGS="-L/opt/homebrew/opt/postgresql@16/lib"
-            export CPPFLAGS="-I/opt/homebrew/opt/postgresql@16/include"
-        ) >>"$config_file"
-        brew services start postgresql@16
+        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres 16
+        asdf global postgres 16
+        asdf reshim postgres
+
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -137,7 +142,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 3
-    maybe_install "mise"
+    maybe_install "asdf"
 
     echo -e "${white}"
     sleep 1.5
@@ -209,11 +214,12 @@ echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
 echo "2) oh-my-zsh"
-echo "3) mise"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+echo "3) Homebrew"
+echo "4) asdf"
+echo "5) Erlang"
+echo "6) Elixir"
+echo "7) Phoenix"
+echo "8) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
@@ -252,7 +258,6 @@ while ! is_yn "$answer"; do
         sudo -S chsh -s '/bin/zsh' "${USER}"
 
         add_env "$optional"
-        add_env
         ;;
     [nN] | [nN][oO])
         echo "Thank you for your time"
