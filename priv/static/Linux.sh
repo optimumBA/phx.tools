@@ -21,13 +21,6 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
-if [[ $current_shell == "bash" ]]; then
-    config_file="/Users/$USER/.bashrc"
-else
-    current_shell="zsh"
-    config_file="/Users/$USER/.zshrc"
-fi
-
 function already_installed() {
     case $1 in
     "Git")
@@ -38,6 +31,9 @@ function already_installed() {
         ;;
     "oh-my-zsh")
         [ -d ~/.oh-my-zsh ]
+        ;;
+    "wget")
+        dpkg -l | grep -q wget
         ;;
     "Homebrew")
         which brew >/dev/null 2>&1
@@ -55,7 +51,7 @@ function already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which psql >/dev/null 2>&1
+        which pg_ctl >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on checking"
@@ -74,9 +70,12 @@ function install() {
     "oh-my-zsh")
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         ;;
+    "wget")
+        sudo apt-get install -y wget
+        ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew' >>~/.zshrc
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
         (
             echo
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
@@ -114,7 +113,13 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
-        RUNLEVEL=1 sudo apt-get -y install postgresql
+        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres 16.0
+        asdf global postgres 16.0
+        asdf reshim postgres
+
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -149,6 +154,10 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "oh-my-zsh"
+
+    echo -e "${white}"
+    sleep 2
+    maybe_install "wget"
 
     echo -e "${white}"
     sleep 2
@@ -227,7 +236,7 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) oh-my-zsh"
+echo "2) Zsh"
 echo "3) Homebrew"
 echo "4) asdf"
 echo "5) Erlang"
