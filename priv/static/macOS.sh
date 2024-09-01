@@ -98,9 +98,8 @@ function install() {
         # Dependencies for PSQL
         brew install gcc readline zlib curl ossp-uuid
 
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 16
-        asdf global postgres 16
+        asdf install postgres 15.1
+        asdf global postgres 15.1
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
