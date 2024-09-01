@@ -107,7 +107,6 @@ function install() {
 
         brew services start postgresql@16
         ;;
-        ;;
     *)
         echo "Invalid name argument on install"
         ;;
