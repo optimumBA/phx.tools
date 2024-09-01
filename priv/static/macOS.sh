@@ -94,13 +94,12 @@ function install() {
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
-    "PostgreSQL")
-        # Dependencies for PSQL
-        brew install gcc readline zlib curl ossp-uuid
-
+    "PostgreSQL") 
+        # Install PostgreSQL
         brew install postgresql@16
 
         echo 'export PATH="/usr/local/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
+        export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
         export LDFLAGS="-L/usr/local/opt/postgresql@16/lib"
         export CPPFLAGS="-I/usr/local/opt/postgresql@16/include"
         export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
