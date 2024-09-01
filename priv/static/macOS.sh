@@ -20,7 +20,6 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
-current_shell=$(basename "$SHELL")
 
 function already_installed() {
     case $1 in
@@ -245,6 +244,7 @@ answer=''
 
 while ! is_yn "$answer"; do
     read -p "Do you want to continue? (y/n) " answer
+    echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
     echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
