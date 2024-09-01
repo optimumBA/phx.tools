@@ -98,12 +98,15 @@ function install() {
         # Dependencies for PSQL
         brew install gcc readline zlib curl ossp-uuid
 
-        asdf install postgres 15.1
-        asdf global postgres 15.1
-        asdf reshim postgres
+        brew install postgresql@16
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.zshrc >/dev/null 2>&1
+        echo 'export PATH="/usr/local/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
+        export LDFLAGS="-L/usr/local/opt/postgresql@16/lib"
+        export CPPFLAGS="-I/usr/local/opt/postgresql@16/include"
+        export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
+
+        brew services start postgresql@16
+        ;;
         ;;
     *)
         echo "Invalid name argument on install"
