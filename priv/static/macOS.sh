@@ -93,7 +93,7 @@ function install() {
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3
+        mix archive.install --force hex phx_new 1.7.14
         ;;
     "PostgreSQL")
         # Dependencies for PSQL
