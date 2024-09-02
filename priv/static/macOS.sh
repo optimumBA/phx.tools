@@ -21,6 +21,24 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
+# possible shells (cat /etc/shells)
+# /bin/bash
+# /bin/csh
+# /bin/dash
+# /bin/ksh
+# /bin/sh
+# /bin/tcsh
+# /bin/zsh
+
+# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+
+# if [[ $current_shell == "bash" ]]; then
+#     config_file="/Users/$USER/.bashrc"
+# else
+#     current_shell="zsh"
+#     config_file="/Users/$USER/.zshrc"
+# fi
+
 function already_installed() {
     case $1 in
     "xcode")
@@ -95,16 +113,19 @@ function install() {
         mix archive.install --force hex phx_new 1.7.14
         ;;
     "PostgreSQL") 
-        brew install postgresql@16
+        # Dependencies for PSQL
+        brew install gcc openssl readline zlib curl libxml2 libxslt icu4c ossp-uuid
 
-        echo 'export PATH="/usr/local/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
-        export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
-        export LDFLAGS="-L/usr/local/opt/postgresql@16/lib"
-        export CPPFLAGS="-I/usr/local/opt/postgresql@16/include"
-        export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
-        source ~/.zshrc >/dev/null 2>&1
-        
-        brew services start postgresql@16
+        # Add Postgres plugin to asdf
+        asdf plugin-add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres 16.0
+        asdf global postgres 16.0
+        asdf reshim postgres
+
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        source ~/.zshrc
+
+        echo "Postgres installation complete."
         ;;
     *)
         echo "Invalid name argument on install"

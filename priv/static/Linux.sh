@@ -20,26 +20,26 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
-current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-case "$current_shell" in
-    "bash"|"rbash")
-        config_file="$HOME/.bashrc"
-        ;;
-    "fish")
-        config_file="$HOME/.config/fish/config.fish"
-        ;;
-    "dash")
-        config_file="$HOME/.profile"
-        ;;
-    "zsh")
-        config_file="$HOME/.zshrc"
-        ;;
-    *)
-        echo "Unsupported shell: $current_shell"
-        exit 1
-        ;;
-esac
+# case "$current_shell" in
+#     "bash"|"rbash")
+#         config_file="$HOME/.bashrc"
+#         ;;
+#     "fish")
+#         config_file="$HOME/.config/fish/config.fish"
+#         ;;
+#     "dash")
+#         config_file="$HOME/.profile"
+#         ;;
+#     "zsh")
+#         config_file="$HOME/.zshrc"
+#         ;;
+#     *)
+#         echo "Unsupported shell: $current_shell"
+#         exit 1
+#         ;;
+# esac
 
 
 function already_installed() {
@@ -96,11 +96,11 @@ function install() {
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>"$config_file"
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
         (
             echo
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-        ) >>"$config_file"
+        ) >>~/.zshrc
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         ;;
     "asdf")
@@ -108,8 +108,8 @@ function install() {
         (
             echo
             echo '. $(brew --prefix asdf)/libexec/asdf.sh'
-        ) >>"$config_file"
-        source "$config_file" >/dev/null 2>&1
+        ) >>~/.zshrc
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -126,7 +126,7 @@ function install() {
         asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source "$config_file" >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
@@ -140,7 +140,7 @@ function install() {
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source "$config_file" >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
