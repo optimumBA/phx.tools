@@ -95,7 +95,6 @@ function install() {
         mix archive.install --force hex phx_new 1.7.14
         ;;
     "PostgreSQL") 
-        # Install PostgreSQL
         brew install postgresql@16
 
         echo 'export PATH="/usr/local/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
@@ -103,9 +102,9 @@ function install() {
         export LDFLAGS="-L/usr/local/opt/postgresql@16/lib"
         export CPPFLAGS="-I/usr/local/opt/postgresql@16/include"
         export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
-
-        brew services start postgresql@16
         source ~/.zshrc >/dev/null 2>&1
+        
+        brew services start postgresql@16
         ;;
     *)
         echo "Invalid name argument on install"
