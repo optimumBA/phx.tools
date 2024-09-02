@@ -22,17 +22,24 @@ green='\033[0;32m'
 cyan='\033[0;36m'
 current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-if [[ $current_shell == "bash" ]]; then
-    config_file="/$HOME/.bashrc"
-elif [[ $current_shell == "fish" ]]; then
-    config_file="/$HOME/.config/fish/config.fish"
-elif [[ $current_shell == "rbash" ]]; then
-    config_file="/$HOME/.bashrc"
-elif [[ $current_shell == "dash" ]]; then
-    config_file="/$HOME/.profile"
-elif [[ $current_shell == "zsh" ]]; then
-    config_file="/$HOME/.zshrc"
-fi
+case "$current_shell" in
+    "bash"|"rbash")
+        config_file="$HOME/.bashrc"
+        ;;
+    "fish")
+        config_file="$HOME/.config/fish/config.fish"
+        ;;
+    "dash")
+        config_file="$HOME/.profile"
+        ;;
+    "zsh")
+        config_file="$HOME/.zshrc"
+        ;;
+    *)
+        echo "Unsupported shell: $current_shell"
+        exit 1
+        ;;
+esac
 
 
 function already_installed() {
