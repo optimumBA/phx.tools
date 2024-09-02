@@ -20,6 +20,20 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
+current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+
+if [[ $current_shell == "bash" ]]; then
+    config_file="/$HOME/.bashrc"
+elif [[ $current_shell == "fish" ]]; then
+    config_file="/$HOME/.config/fish/config.fish"
+elif [[ $current_shell == "rbash" ]]; then
+    config_file="/$HOME/.bashrc"
+elif [[ $current_shell == "dash" ]]; then
+    config_file="/$HOME/.profile"
+elif [[ $current_shell == "zsh" ]]; then
+    config_file="/$HOME/.zshrc"
+fi
+
 
 function already_installed() {
     case $1 in
@@ -75,11 +89,11 @@ function install() {
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>"$config_file"
         (
             echo
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-        ) >>~/.zshrc
+        ) >>"$config_file"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         ;;
     "asdf")
@@ -87,8 +101,8 @@ function install() {
         (
             echo
             echo '. $(brew --prefix asdf)/libexec/asdf.sh'
-        ) >>~/.zshrc
-        source ~/.zshrc >/dev/null 2>&1
+        ) >>"$config_file"
+        source "$config_file" >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -105,7 +119,7 @@ function install() {
         asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
+        source "$config_file" >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
@@ -119,7 +133,7 @@ function install() {
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.zshrc >/dev/null 2>&1
+        source "$config_file" >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
