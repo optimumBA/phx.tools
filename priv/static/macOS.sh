@@ -105,6 +105,7 @@ function install() {
         export PKG_CONFIG_PATH="/usr/local/opt/postgresql@16/lib/pkgconfig"
 
         brew services start postgresql@16
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
