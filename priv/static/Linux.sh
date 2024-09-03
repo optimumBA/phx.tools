@@ -22,24 +22,24 @@ green='\033[0;32m'
 cyan='\033[0;36m'
 # current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-# case "$current_shell" in
-#     "bash"|"rbash")
-#         config_file="$HOME/.bashrc"
-#         ;;
-#     "fish")
-#         config_file="$HOME/.config/fish/config.fish"
-#         ;;
-#     "dash")
-#         config_file="$HOME/.profile"
-#         ;;
-#     "zsh")
-#         config_file="$HOME/.zshrc"
-#         ;;
-#     *)
-#         echo "Unsupported shell: $current_shell"
-#         exit 1
-#         ;;
-# esac
+case "$current_shell" in
+    "bash"|"rbash")
+        config_file="$HOME/.bashrc"
+        ;;
+    "fish")
+        config_file="$HOME/.config/fish/config.fish"
+        ;;
+    "dash")
+        config_file="$HOME/.profile"
+        ;;
+    "zsh")
+        config_file="$HOME/.zshrc"
+        ;;
+    *)
+        echo "Unsupported shell: $current_shell"
+        exit 1
+        ;;
+esac
 
 
 function already_installed() {
@@ -96,11 +96,11 @@ function install() {
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>"$config_file"
         (
             echo
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-        ) >>~/.zshrc
+        ) >>"$config_file"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         ;;
     "asdf")
