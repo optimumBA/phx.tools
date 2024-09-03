@@ -33,7 +33,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       {:ok, landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
-      assert html =~ "Linux.sh"
+      assert html =~ "linux.sh"
 
       assert has_element?(landing_live, "#macOS")
     end
@@ -54,9 +54,9 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
     end
   end
 
-  describe "/Linux" do
+  describe "/linux" do
     test "user visits Linux instructions page", %{conn: conn} do
-      {:ok, linux_live, html} = live(conn, "/Linux")
+      {:ok, linux_live, html} = live(conn, "/linux")
 
       assert html =~ "Linux installation process"
       assert render(linux_live) =~ "Linux installation process"
@@ -77,7 +77,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
   describe "scripts" do
     test "user accesses Linux script", %{conn: conn} do
-      conn = get(conn, "/Linux.sh")
+      conn = get(conn, "/linux.sh")
       assert conn.resp_body =~ "Welcome to the phx.tools shell script for Linux-based OS."
     end
 

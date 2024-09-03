@@ -20,7 +20,7 @@ defmodule PhxToolsWeb.Router do
     live_session :default,
       session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
       live "/", PhxToolsLive.Index, :index
-      live "/Linux", PhxToolsLive.Index, :Linux
+      live "/linux", PhxToolsLive.Index, :linux
       live "/macOS", PhxToolsLive.Index, :macOS
     end
   end

@@ -191,7 +191,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="h-full shadow-custom shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
             <h1 class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= @live_action %> installation process
+              <%= capitalize_os_name_first_letter("#{@live_action}") %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
               <%= for instruction <- @installation_instructions do %>
@@ -214,7 +214,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   @spec command_select_button(assigns()) :: rendered()
   def command_select_button(assigns) do
     ~H"""
-    <.link href={if Atom.to_string(@live_action) == "macOS", do: ~p"/Linux", else: ~p"/macOS"}>
+    <.link href={if Atom.to_string(@live_action) == "macOS", do: ~p"/linux", else: ~p"/macOS"}>
       <div
         id={if Atom.to_string(@live_action) == "macOS", do: "Linux", else: "macOS"}
         class={[
@@ -223,17 +223,17 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         ]}
       >
         <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
-          <Icons.os_icon os_to_switch_to={if @live_action == :Linux, do: "macOS", else: "Linux"} />
+          <Icons.os_icon os_to_switch_to={if @live_action == :linux, do: "macOS", else: "Linux"} />
         </div>
         <h1 class="text-center text-white text-sm md:text-base font-martian">
-          <%= if @live_action == :Linux, do: "macOS", else: "Linux" %>
+          <%= if @live_action == :linux, do: "macOS", else: "Linux" %>
         </h1>
       </div>
     </.link>
     """
   end
 
-  defp render_instructions(:Linux) do
+  defp render_instructions(:linux) do
     [
       "Click on the copy icon to copy this command to your clipboard",
       "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
@@ -268,5 +268,13 @@ defmodule PhxToolsWeb.PhxToolsComponents do
       </.link>
     </div>
     """
+  end
+
+  defp capitalize_os_name_first_letter("linux" = <<first::utf8, rest::binary>>) do
+    String.upcase(<<first::utf8>>) <> rest
+  end
+
+  defp capitalize_os_name_first_letter("macOS") do
+    "macOS"
   end
 end

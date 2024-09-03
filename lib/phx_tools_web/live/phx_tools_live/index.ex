@@ -25,7 +25,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
 
   defp apply_action(socket, :index) do
     case socket.assigns.operating_system do
-      "Linux" -> {:noreply, assign(socket, :live_action, :Linux)}
+      "Linux" -> {:noreply, assign(socket, :live_action, :linux)}
       "macOS" -> {:noreply, assign(socket, :live_action, :macOS)}
       _other -> {:noreply, socket}
     end
