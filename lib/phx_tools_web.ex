@@ -18,7 +18,7 @@ defmodule PhxToolsWeb do
   """
 
   @spec static_paths() :: [String.t()]
-  def static_paths, do: ~w(assets fonts images favicon.ico linux.sh macOS.sh robots.txt)
+  def static_paths, do: ~w(assets fonts images favicon.ico Linux.sh macOS.sh robots.txt)
 
   def router do
     quote do

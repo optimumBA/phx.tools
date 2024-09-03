@@ -5,6 +5,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   alias Phoenix.LiveView.Utils
   alias PhxToolsWeb.PhxToolsLive.Icons
+  alias PhxToolsWeb.PhxToolsLive.Index
 
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
@@ -191,7 +192,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="h-full shadow-custom shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
             <h1 class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= capitalize_os_name_first_letter("#{@live_action}") %> installation process
+              <%= Index.capitalize_os_name_first_letter("#{@live_action}") %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
               <%= for instruction <- @installation_instructions do %>
@@ -268,13 +269,5 @@ defmodule PhxToolsWeb.PhxToolsComponents do
       </.link>
     </div>
     """
-  end
-
-  defp capitalize_os_name_first_letter("linux" = <<first::utf8, rest::binary>>) do
-    String.upcase(<<first::utf8>>) <> rest
-  end
-
-  defp capitalize_os_name_first_letter("macOS") do
-    "macOS"
   end
 end
