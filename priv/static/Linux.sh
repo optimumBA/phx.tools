@@ -20,7 +20,7 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
-# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
     "bash"|"rbash")
