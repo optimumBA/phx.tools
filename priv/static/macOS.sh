@@ -112,20 +112,17 @@ function install() {
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
-    "PostgreSQL") 
+    "PostgreSQL")
         # Dependencies for PSQL
-        brew install gcc openssl readline zlib curl libxml2 libxslt icu4c ossp-uuid
+        brew install gcc readline zlib curl ossp-uuid
 
-        # Add Postgres plugin to asdf
-        asdf plugin-add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 16.0
-        asdf global postgres 16.0
+        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres 15.1
+        asdf global postgres 15.1
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.zshrc
-
-        echo "Postgres installation complete."
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
