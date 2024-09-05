@@ -20,24 +20,29 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
+current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-# possible shells (cat /etc/shells)
-# /bin/bash
-# /bin/csh
-# /bin/dash
-# /bin/ksh
-# /bin/sh
-# /bin/tcsh
-# /bin/zsh
-
-# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
-
-# if [[ $current_shell == "bash" ]]; then
-#     config_file="/Users/$USER/.bashrc"
-# else
-#     current_shell="zsh"
-#     config_file="/Users/$USER/.zshrc"
-# fi
+case "$current_shell" in
+    "bash"|"rbash")
+        config_file="$HOME/.bashrc"
+        ;;
+    "dash"|"sh")
+        config_file="$HOME/.profile"
+        ;;
+    "elvish")
+        config_file="$HOME/.config/elvish/rc.elv"
+        ;; 
+    "fish")
+        config_file="$HOME/.config/fish/config.fish"
+        ;;
+    "zsh")
+        config_file="$HOME/.zshrc"
+        ;;
+    *)
+        echo "Unsupported shell: $current_shell"
+        exit 1
+        ;;
+esac
 
 function already_installed() {
     case $1 in
@@ -45,7 +50,9 @@ function already_installed() {
         which xcode-select >/dev/null
         ;;
     "oh-my-zsh")
-        [ -d ~/.oh-my-zsh ]
+        if [[ "$current_shell" == "zsh" ]]; then
+            [ -d ~/.oh-my-zsh ]
+        fi
         ;;
     "Homebrew")
         which brew >/dev/null 2>&1
@@ -76,8 +83,11 @@ function install() {
     "xcode")
         xcode-select --install
         ;;
+    # maybe install oh-my-zsh only when the current shell is zsh
     "oh-my-zsh")
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        if [[ "$current_shell" == "zsh" ]]; then
+            sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        fi
         ;;
     "Homebrew")
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -86,7 +96,26 @@ function install() {
         # Deps for asdf
         brew install coreutils curl git
 
-        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+        case "$current_shell" in
+            "zsh")
+                brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+                ;;
+            "bash"|"rbash")
+                brew install asdf && echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >> ~/.bashrc
+                ;;
+            "elvish")
+                brew install asdf
+
+                mkdir -p ~/.config/elvish/lib; ln -s (brew --prefix asdf)/libexec/asdf.elv ~/.config/elvish/lib/asdf.elv
+                echo "\n"'use asdf _asdf; var asdf~ = $_asdf:asdf~' >> ~/.config/elvish/rc.elv
+                echo "\n"'set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~' >> ~/.config/elvish/rc.elv
+                ;;
+            "fish")
+                brew install asdf && echo -e "\nsource "(brew --prefix asdf)"/libexec/asdf.fish" >> ~/.config/fish/config.fish
+                ;;
+            *)
+                echo "Unsupported shell: "$current_shell""
+        esac
         ;;
     "Erlang")
         # Deps for erlang
@@ -108,7 +137,7 @@ function install() {
         asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
+        source "$config_file" >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.14
         ;;
@@ -122,7 +151,7 @@ function install() {
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.zshrc >/dev/null 2>&1
+        source "$config_file" >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -265,15 +294,8 @@ while ! is_yn "$answer"; do
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
-    echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
-
-        echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
-
-        echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
-
-        sleep 3
-
-        sudo -S chsh -s '/bin/zsh' "${USER}"
+    
+        echo ""
 
         add_env "$optional"
         ;;
