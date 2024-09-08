@@ -39,19 +39,15 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp installation_command(live_action) do
-    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{capitalize_os_name_first_letter("#{live_action}")}.sh"})\""
+    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{get_os_from_live_action(live_action)}.sh"})\""
   end
 
-  defp source_code_url(os) do
-    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{capitalize_os_name_first_letter("#{os}")}.sh"
+  defp source_code_url(live_action) do
+    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{get_os_from_live_action(live_action)}.sh"
   end
 
-  @spec capitalize_os_name_first_letter(String.t()) :: String.t()
-  def capitalize_os_name_first_letter("linux" = <<first::utf8, rest::binary>>) do
-    String.upcase(<<first::utf8>>) <> rest
-  end
-
-  def capitalize_os_name_first_letter("macOS"), do: "macOS"
-
-  def capitalize_os_name_first_letter(_other), do: "Unsupported OS"
+  @spec get_os_from_live_action(atom()) :: String.t()
+  def get_os_from_live_action(:linux), do: "Linux"
+  def get_os_from_live_action(:macOS), do: "macOS"
+  def get_os_from_live_action(_other), do: "Unsupported OS"
 end

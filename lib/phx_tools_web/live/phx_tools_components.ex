@@ -67,21 +67,10 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           </div>
         </div>
         <p class="text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
-          Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
+          <%= phx_tools_description() %>
         </p>
       </div>
-      <div class="">
-        <p class="text-white font-martian text-center text-xs md:text-sm lg:text-base leading-6 sm:pb-4">
-          Read about website updates here -
-          <a
-            href="https://optimum.ba/blog/exciting-updates-to-phx-tools"
-            target="_blank"
-            class="text-[#24B2FF] underline"
-          >
-            https://optimum.ba/blog/exciting-updates-to-phx-tools
-          </a>
-        </p>
-      </div>
+      <.web_updates />
       <.footer />
     </div>
     """
@@ -120,7 +109,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             <div class="w-full bg-blue-600 flex justify-end">
               <.os_instructions
                 :let={installation_instruction}
-                installation_instructions={render_instructions(@live_action)}
+                installation_instructions={installation_instructions(@live_action)}
                 live_action={@live_action}
                 operating_system={@operating_system}
               >
@@ -141,7 +130,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           <div class="lg:w-[1100px]">
             <div>
               <p class="text-xs px-2 leading-5 text-center text-white font-martian md:mb-5 md:text-sm md:leading-6 lg:text-base">
-                Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
+                <%= phx_tools_description() %>
               </p>
             </div>
             <div
@@ -156,16 +145,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             >
             </div>
 
-            <p class="md:my-5 text-white md:px-12 text-xs md:text-sm lg:text-base font-martian">
-              Read about website updates here -
-              <a
-                href="https://optimum.ba/blog/exciting-updates-to-phx-tools"
-                class="text-[#24B2FF] font-martian text-sm underline"
-                target="_blank"
-              >
-                https://optimum.ba/blog/exciting-updates-to-phx-tools
-              </a>
-            </p>
+            <.web_updates />
           </div>
         </div>
       </div>
@@ -192,7 +172,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="h-full shadow-custom shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
             <h1 class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= Index.capitalize_os_name_first_letter("#{@live_action}") %> installation process
+              <%= Index.get_os_from_live_action(@live_action) %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
               <%= for instruction <- @installation_instructions do %>
@@ -208,33 +188,49 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  attr :class, :string
-  attr :live_action, :atom, required: true
-  attr :operating_system, :string, required: true
-
-  @spec command_select_button(assigns()) :: rendered()
-  def command_select_button(assigns) do
+  defp command_select_button(%{live_action: :linux} = assigns) do
     ~H"""
-    <.link href={if Atom.to_string(@live_action) == "macOS", do: ~p"/linux", else: ~p"/macOS"}>
+    <.link href={~p"/macOS"}>
       <div
-        id={if Atom.to_string(@live_action) == "macOS", do: "Linux", else: "macOS"}
+        id="macOS"
         class={[
           "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
           @class
         ]}
       >
         <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
-          <Icons.os_icon os_to_switch_to={if @live_action == :linux, do: "macOS", else: "Linux"} />
+          <Icons.os_icon os="macOS" />
         </div>
         <h1 class="text-center text-white text-sm md:text-base font-martian">
-          <%= if @live_action == :linux, do: "macOS", else: "Linux" %>
+          macOS
         </h1>
       </div>
     </.link>
     """
   end
 
-  defp render_instructions(:linux) do
+  defp command_select_button(%{live_action: :macOS} = assigns) do
+    ~H"""
+    <.link href={~p"/linux"}>
+      <div
+        id="Linux"
+        class={[
+          "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
+          @class
+        ]}
+      >
+        <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
+          <Icons.os_icon os="Linux" />
+        </div>
+        <h1 class="text-center text-white text-sm md:text-base font-martian">
+          Linux
+        </h1>
+      </div>
+    </.link>
+    """
+  end
+
+  defp installation_instructions(:linux) do
     [
       "Click on the copy icon to copy this command to your clipboard",
       "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
@@ -243,7 +239,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     ]
   end
 
-  defp render_instructions(:macOS) do
+  defp installation_instructions(:macOS) do
     [
       "Click on the copy icon to copy this command to your clipboard",
       "Open Terminal by pressing <b class=\"font-extrabold\">⌘ + SPACE</b> together",
@@ -268,6 +264,25 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <span class="text-white text-sm md:text-base">Source code</span>
       </.link>
     </div>
+    """
+  end
+
+  defp phx_tools_description do
+    "Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server."
+  end
+
+  defp web_updates(assigns) do
+    ~H"""
+    <p class="text-white font-martian text-center text-xs md:text-sm md:px-12 lg:text-base leading-6 sm:pb-4">
+      Read about website updates here -
+      <a
+        href="https://optimum.ba/blog/exciting-updates-to-phx-tools"
+        target="_blank"
+        class="text-[#24B2FF] underline"
+      >
+        https://optimum.ba/blog/exciting-updates-to-phx-tools
+      </a>
+    </p>
     """
   end
 end

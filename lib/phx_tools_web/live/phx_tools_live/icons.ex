@@ -103,7 +103,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Icons do
   end
 
   @spec os_icon(assigns()) :: rendered()
-  def os_icon(%{os_to_switch_to: "macOS"} = assigns) do
+  def os_icon(%{os: "macOS"} = assigns) do
     ~H"""
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_21_868)">
@@ -126,7 +126,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Icons do
   end
 
   @spec os_icon(assigns()) :: rendered()
-  def os_icon(%{os_to_switch_to: "Linux"} = assigns) do
+  def os_icon(%{os: "Linux"} = assigns) do
     ~H"""
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
