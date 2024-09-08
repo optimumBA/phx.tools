@@ -39,15 +39,17 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp installation_command(live_action) do
-    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{get_os_from_live_action(live_action)}.sh"})\""
+    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{get_os_from_live_action("#{live_action}")}.sh"})\""
   end
 
   defp source_code_url(live_action) do
-    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{get_os_from_live_action(live_action)}.sh"
+    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{get_os_from_live_action("#{live_action}")}.sh"
   end
 
-  @spec get_os_from_live_action(atom()) :: String.t()
-  def get_os_from_live_action(:linux), do: "Linux"
-  def get_os_from_live_action(:macOS), do: "macOS"
+  @spec get_os_from_live_action(String.t()) :: String.t()
+  def get_os_from_live_action("linux"), do: "Linux"
+
+  def get_os_from_live_action("macOS"), do: "macOS"
+
   def get_os_from_live_action(_other), do: "Unsupported OS"
 end
