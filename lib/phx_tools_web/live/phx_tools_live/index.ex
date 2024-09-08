@@ -12,6 +12,12 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
      |> assign_os_and_source_code_url(session)}
   end
 
+  defp assign_os_and_source_code_url(socket, %{"operating_system" => "Linux"}) do
+    socket
+    |> assign(:operating_system, "Linux")
+    |> assign(:source_code_url, source_code_url("linux"))
+  end
+
   defp assign_os_and_source_code_url(socket, %{"operating_system" => operating_system}) do
     socket
     |> assign(:operating_system, operating_system)
