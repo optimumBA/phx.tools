@@ -109,12 +109,12 @@ function install() {
         ;;
     "asdf")
         if [[ "$current_shell" == "fish" ]]; then
-                brew install asdf && echo -e "\nsource "(brew --prefix asdf)"/libexec/asdf.fish" >> ~/.config/fish/config.fish
+        brew install asdf && echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >> ~/.config/fish/config.fish
         else
         (
             brew install asdf
             echo
-            echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh'
+            echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\""
         ) >>"$config_file"
         fi
         source "$config_file" >/dev/null 2>&1

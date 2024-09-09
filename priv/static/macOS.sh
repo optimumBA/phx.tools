@@ -46,7 +46,7 @@ esac
 
 function already_installed() {
     case $1 in
-    "xcode")
+    "Xcode Command Line Tools")
         which xcode-select >/dev/null
         ;;
     "oh-my-zsh")
@@ -80,7 +80,7 @@ function already_installed() {
 
 function install() {
     case $1 in
-    "xcode")
+    "Xcode Command Line Tools")
         xcode-select --install
         ;;
     # maybe install oh-my-zsh only when the current shell is zsh
@@ -106,12 +106,12 @@ function install() {
             "elvish")
                 brew install asdf
 
-                mkdir -p ~/.config/elvish/lib; ln -s (brew --prefix asdf)/libexec/asdf.elv ~/.config/elvish/lib/asdf.elv
+                mkdir -p ~/.config/elvish/lib; ln -s $(brew --prefix asdf)/libexec/asdf.elv ~/.config/elvish/lib/asdf.elv
                 echo "\n"'use asdf _asdf; var asdf~ = $_asdf:asdf~' >> ~/.config/elvish/rc.elv
                 echo "\n"'set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~' >> ~/.config/elvish/rc.elv
                 ;;
             "fish")
-                brew install asdf && echo -e "\nsource "(brew --prefix asdf)"/libexec/asdf.fish" >> ~/.config/fish/config.fish
+                brew install asdf && echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >> ~/.config/fish/config.fish
                 ;;
             *)
                 echo "Unsupported shell: "$current_shell""
