@@ -50,8 +50,11 @@ function already_installed() {
     "wget")
         dpkg -l | grep -q wget
         ;;
+    "Homebrew")
+        which brew >/dev/null 2>&1
+        ;;
     "asdf")
-        which asdf >/dev/null 2>&1
+        brew list | grep -q asdf
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -79,19 +82,26 @@ function install() {
     "wget")
         sudo apt-get install -y wget
         ;;
+    "Homebrew")
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>"$config_file"
+        (
+            echo
+            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+        ) >>"$config_file"
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        ;;
     "asdf")
-        if [ ! -d "$HOME/.asdf" ]; then
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
-fi
+        brew install asdf
         case "$current_shell" in
         "bash"|"rbash")
-            . "$HOME/.asdf/asdf.sh"
+            echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >> ~/.bashrc
             ;;
         "fish")
-            . ~/.asdf/asdf.fish
+            echo -e "\nsource "(brew --prefix asdf)"/libexec/asdf.fish" >> ~/.config/fish/config.fish
             ;;
         "zsh")
-            . "$HOME/.asdf/asdf.sh"
+            echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
             ;;
         *)
             echo "Unsupported shell: $current_shell"
@@ -103,15 +113,15 @@ fi
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0.1
-        asdf global erlang 27.0.1
-        asdf reshim erlang 27.0.1
+        asdf install erlang 27.0
+        asdf global erlang 27.0
+        asdf reshim erlang 27.0
         ;;
     "Elixir")
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.2-otp-27
-        asdf global elixir 1.17.2-otp-27
-        asdf reshim elixir 1.17.2-otp-27
+        asdf install elixir 1.17.1-otp-27
+        asdf global elixir 1.17.1-otp-27
+        asdf reshim elixir 1.17.1-otp-27
         ;;
     "Phoenix")
         source "$config_file" >/dev/null 2>&1
@@ -123,8 +133,8 @@ fi
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 16.0
-        asdf global postgres 16.0
+        asdf install postgres 15.1
+        asdf global postgres 15.1
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
@@ -141,7 +151,7 @@ function maybe_install() {
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "Erlang" ]]; then
+        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
@@ -158,6 +168,10 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "wget"
+
+    echo -e "${white}"
+    sleep 2
+    maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 3
@@ -232,11 +246,12 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) asdf"
-echo "3) Erlang"
-echo "4) Elixir"
-echo "5) Phoenix"
-echo "6) PostgreSQL"
+echo "2) Homebrew"
+echo "3) asdf"
+echo "4) Erlang"
+echo "5) Elixir"
+echo "6) Phoenix"
+echo "7) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
