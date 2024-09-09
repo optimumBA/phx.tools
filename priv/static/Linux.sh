@@ -20,6 +20,27 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
+current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+
+case "$current_shell" in
+    "bash"|"rbash")
+        config_file="$HOME/.bashrc"
+        ;;
+    "fish")
+        config_file="$HOME/.config/fish/config.fish"
+        ;;
+    "dash")
+        config_file="$HOME/.profile"
+        ;;
+    "zsh")
+        config_file="$HOME/.zshrc"
+        ;;
+    *)
+        echo "Unsupported shell: $current_shell"
+        exit 1
+        ;;
+esac
+
 
 function already_installed() {
     case $1 in
@@ -35,11 +56,8 @@ function already_installed() {
     "wget")
         dpkg -l | grep -q wget
         ;;
-    "Homebrew")
-        which brew >/dev/null 2>&1
-        ;;
     "asdf")
-        brew list | grep -q asdf
+        which asdf >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -73,22 +91,25 @@ function install() {
     "wget")
         sudo apt-get install -y wget
         ;;
-    "Homebrew")
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
-        (
-            echo
-            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-        ) >>~/.zshrc
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        ;;
     "asdf")
-        brew install asdf
-        (
-            echo
-            echo '. $(brew --prefix asdf)/libexec/asdf.sh'
-        ) >>~/.zshrc
-        source ~/.zshrc >/dev/null 2>&1
+        if [ ! -d "$HOME/.asdf" ]; then
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
+fi
+        case "$current_shell" in
+        "bash"|"rbash")
+            . "$HOME/.asdf/asdf.sh"
+            ;;
+        "fish")
+            . ~/.asdf/asdf.fish
+            ;;
+        "zsh")
+            . "$HOME/.asdf/asdf.sh"
+            ;;
+        *)
+            echo "Unsupported shell: $current_shell"
+            ;;
+        esac
+        source "$config_file" >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -132,7 +153,7 @@ function maybe_install() {
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
+        if [[ $1 == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
@@ -158,10 +179,6 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "wget"
-
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 3
@@ -237,12 +254,11 @@ echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
 echo "2) Zsh"
-echo "3) Homebrew"
-echo "4) asdf"
-echo "5) Erlang"
-echo "6) Elixir"
-echo "7) Phoenix"
-echo "8) PostgreSQL"
+echo "3) asdf"
+echo "4) Erlang"
+echo "5) Elixir"
+echo "6) Phoenix"
+echo "7) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
