@@ -47,12 +47,6 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
-    "Zsh")
-        dpkg -l | grep -q zsh
-        ;;
-    "oh-my-zsh")
-        [ -d ~/.oh-my-zsh ]
-        ;;
     "wget")
         dpkg -l | grep -q wget
         ;;
@@ -81,14 +75,6 @@ function install() {
     case $1 in
     "Git")
         sudo apt-get install -y git
-        ;;
-    "Zsh")
-        sudo apt-get install -y zsh
-        ;;
-    "oh-my-zsh")
-        if [ "$current_shell" = "zsh" ]; then
-            sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-        fi
         ;;
     "wget")
         sudo apt-get install -y wget
@@ -128,7 +114,7 @@ fi
         asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
+        source "$config_file" >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.0-rc.3        
         ;;
@@ -142,7 +128,7 @@ fi
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.zshrc >/dev/null 2>&1
+        source "$config_file" >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -168,15 +154,6 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "Git"
-
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Zsh"
-
-    echo -e "${white}"
-    sleep 2
-    maybe_install "oh-my-zsh"
 
     echo -e "${white}"
     sleep 2
@@ -255,12 +232,11 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) Zsh"
-echo "3) asdf"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+echo "2) asdf"
+echo "3) Erlang"
+echo "4) Elixir"
+echo "5) Phoenix"
+echo "6) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
