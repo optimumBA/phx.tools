@@ -205,6 +205,9 @@ function add_env() {
     echo -e "${cyan}${bold}Please restart the terminal and type in the following command:"
     echo -e "${cyan}${bold}mix phx.new"
     echo -e "${white}"
+
+    echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> "$config_file"
+    source "$config_file"
 }
 
 phx_tools="
