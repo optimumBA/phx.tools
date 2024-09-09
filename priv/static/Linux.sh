@@ -182,9 +182,9 @@ function add_env() {
     sleep 2
     maybe_install "wget"
 
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "Homebrew"
+    echo -e "${white}"
+    sleep 2
+    maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 3
