@@ -86,7 +86,9 @@ function install() {
         sudo apt-get install -y zsh
         ;;
     "oh-my-zsh")
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        if [ "$current_shell" = "zsh" ]; then
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        fi
         ;;
     "wget")
         sudo apt-get install -y wget
@@ -128,7 +130,7 @@ fi
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.14
+        mix archive.install --force hex phx_new 1.7.0-rc.3        
         ;;
     "PostgreSQL")
         sudo apt-get update
@@ -205,9 +207,6 @@ function add_env() {
     echo -e "${cyan}${bold}Please restart the terminal and type in the following command:"
     echo -e "${cyan}${bold}mix phx.new"
     echo -e "${white}"
-
-    echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> "$config_file"
-    source "$config_file"
 }
 
 phx_tools="
@@ -292,16 +291,6 @@ while ! is_yn "$answer"; do
     [yY] | [yY][eE][sS])
 
         echo ""
-
-        echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
-
-        echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
-
-        echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
-
-        sleep 3
-
-        sudo -S chsh -s '/bin/zsh' "${USER}"
 
         add_env "$optional"
         ;;
