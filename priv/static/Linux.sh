@@ -53,18 +53,6 @@ function already_installed() {
     "PostgreSQL")
         which pg_ctl >/dev/null 2>&1
         ;;
-    "Chrome")
-        dpkg -l | grep -q google-chrome-stable
-        ;;
-    "Node.js")
-        which node >/dev/null 2>&1
-        ;;
-    "ChromeDriver")
-        npm list -g | grep -q chromedriver
-        ;;
-    "Docker")
-        which docker >/dev/null 2>&1
-        ;;
     *)
         echo "Invalid name argument on checking"
         ;;
@@ -106,61 +94,32 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0
-        asdf global erlang 27.0
-        asdf reshim erlang 27.0
+        asdf install erlang 27.0.1
+        asdf global erlang 27.0.1
+        asdf reshim erlang 27.0.1
         ;;
     "Elixir")
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.1-otp-27
-        asdf global elixir 1.17.1-otp-27
-        asdf reshim elixir 1.17.1-otp-27
+        asdf install elixir 1.17.2-otp-27
+        asdf global elixir 1.17.2-otp-27
+        asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3
+        mix archive.install --force hex phx_new 1.7.14
         ;;
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
+        asdf install postgres 16.0
+        asdf global postgres 16.0
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
         source ~/.zshrc >/dev/null 2>&1
-        ;;
-    "Chrome")
-        sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo apt install -y ./google-chrome-stable_current_amd64.deb
-        ;;
-    "Node.js")
-        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-        asdf install nodejs 20.14.0
-        asdf global nodejs 20.14.0
-        asdf reshim nodejs 20.14.0
-        ;;
-    "ChromeDriver")
-        source ~/.zshrc >/dev/null 2>&1
-        npm install -g chromedriver
-        ;;
-    "Docker")
-        sudo apt-get update
-        sudo apt-get install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
-        sudo mkdir -p /etc/apt/keyrings
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-        echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-        sudo apt-get update
-        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
         ;;
     *)
         echo "Invalid name argument on install"
@@ -223,24 +182,6 @@ function add_env() {
     echo -e "${white}"
     sleep 1.5
     maybe_install "PostgreSQL"
-
-    if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        echo -e "${white}"
-        sleep 3
-        maybe_install "Chrome"
-        echo -e "${white}"
-
-        sleep 1.5
-        maybe_install "Node.js"
-        echo -e "${white}"
-
-        sleep 2
-        maybe_install "ChromeDriver"
-        echo -e "${white}"
-
-        maybe_install "Docker"
-        echo -e "${white}"
-    fi
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
@@ -330,28 +271,6 @@ while ! is_yn "$answer"; do
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
-        echo -e "${bblue}${bold}We can also install some optional tools:"
-
-        echo -e "${cyan}${bold}"
-
-        echo "1) Chrome"
-        echo "2) Node.js"
-        echo "3) ChromeDriver"
-        echo "4) Docker"
-
-        echo -e "${white}"
-        echo -e "${white} ${bold}"
-
-        optional=""
-
-        while ! is_yn "$optional"; do
-            read -p "Do you want us to install those as well? (y/n) " optional
-
-            if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
-                echo "Please enter y or n"
-                echo ""
-            fi
-        done
 
         echo ""
 
