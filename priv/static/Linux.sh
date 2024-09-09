@@ -74,7 +74,7 @@ function already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which pg_ctl >/dev/null 2>&1
+        which psql >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on checking"
@@ -142,13 +142,7 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
-        asdf reshim postgres
-
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source "$config_file" >/dev/null 2>&1
+        RUNLEVEL=1 sudo apt-get -y install postgresql
         ;;
     *)
         echo "Invalid name argument on install"
