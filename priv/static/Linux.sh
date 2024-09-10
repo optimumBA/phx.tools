@@ -158,21 +158,21 @@ function add_env() {
     sleep 2
     maybe_install "wget"
 
-    echo -e "${white}"
-    sleep 3
-    maybe_install "asdf"
+    # echo -e "${white}"
+    # sleep 3
+    # maybe_install "asdf"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Elixir"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
     echo -e "${white}"
     sleep 1.5
@@ -271,6 +271,10 @@ while ! is_yn "$answer"; do
         sleep 3
 
         sudo -S chsh -s "/bin/${current_shell}" "${USER}"
+
+        echo "CURRENT SHELL:"
+
+        echo "${current_shell}"
 
         add_env "$optional"
         ;;
