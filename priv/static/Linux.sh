@@ -46,11 +46,11 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
-    "wget")
-        dpkg -l | grep -q wget
-        ;;
     "Zsh")
         which zsh >/dev/null 2>&1
+        ;;
+    "wget")
+        dpkg -l | grep -q wget
         ;;
     "asdf")
         which asdf >/dev/null 2>&1
@@ -78,12 +78,11 @@ function install() {
     "Git")
         sudo apt-get install -y git
         ;;
-    "wget")
-        sudo apt-get install -y wget
-        ;;
     "Zsh")
         sudo apt-get install -y zsh
-        touch ~/.zshrc
+        ;;
+    "wget")
+        sudo apt-get install -y wget
         ;;
     "asdf")
         if [ ! -d "$HOME/.asdf" ]; then
@@ -136,6 +135,8 @@ function install() {
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        echo 'export PATH="/usr/lib/postgresql/$(ls /usr/lib/postgresql | sort -V | tail -n 1)/bin:$PATH"' >>~/.zshrc
+        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >>~/.zshrc
         source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
@@ -163,14 +164,14 @@ function add_env() {
     sleep 2
     maybe_install "Git"
 
-    echo -e "${white}"
-    sleep 2
-    maybe_install "wget"
-
     echo ""
     echo -e "${white}"
     sleep 2
     maybe_install "Zsh"
+
+    echo -e "${white}"
+    sleep 2
+    maybe_install "wget"
 
     echo -e "${white}"
     sleep 3
@@ -245,11 +246,12 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) asdf"
-echo "3) Erlang"
-echo "4) Elixir"
-echo "5) Phoenix"
-echo "6) PostgreSQL"
+echo "2) Zsh"
+echo "3) asdf"
+echo "4) Erlang"
+echo "5) Elixir"
+echo "6) Phoenix"
+echo "7) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
