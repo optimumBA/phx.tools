@@ -83,6 +83,7 @@ function install() {
         ;;
     "Zsh")
         sudo apt-get install -y zsh
+        touch ~/.zshrc
         ;;
     "asdf")
         if [ ! -d "$HOME/.asdf" ]; then
