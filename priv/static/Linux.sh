@@ -20,27 +20,26 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
-current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-case "$current_shell" in
-    "bash"|"rbash")
-    config_file="$HOME/.zshrc"
-        ;;
-    "fish")
-        config_file="$HOME/.config/fish/config.fish"
-        ;;
-    "dash")
-        config_file="$HOME/.profile"
-        ;;
-    "zsh")
-        config_file="$HOME/.zshrc"
-        ;;
-    *)
-        echo "Unsupported shell: $current_shell"
-        exit 1
-        ;;
-esac
-
+# case "$current_shell" in
+# "bash" | "rbash")
+#     config_file="$HOME/.zshrc"
+#     ;;
+# "fish")
+#     config_file="$HOME/.config/fish/config.fish"
+#     ;;
+# "dash")
+#     config_file="$HOME/.profile"
+#     ;;
+# "zsh")
+#     config_file="$HOME/.zshrc"
+#     ;;
+# *)
+#     echo "Unsupported shell: $current_shell"
+#     exit 1
+#     ;;
+# esac
 
 function already_installed() {
     case $1 in
@@ -81,23 +80,24 @@ function install() {
         ;;
     "asdf")
         if [ ! -d "$HOME/.asdf" ]; then
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
-fi
-        case "$current_shell" in
-        "bash"|"rbash")
+            git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
             . "$HOME/.asdf/asdf.sh"
-            ;;
-        "fish")
-            . ~/.asdf/asdf.fish
-            ;;
-        "zsh")
-            . "$HOME/.asdf/asdf.sh"
-            ;;
-        *)
-            echo "Unsupported shell: $current_shell"
-            ;;
-        esac
-        source "$config_file" >/dev/null 2>&1
+        fi
+        # case "$current_shell" in
+        # "bash" | "rbash")
+        #     . "$HOME/.asdf/asdf.sh"
+        #     ;;
+        # "fish")
+        #     . ~/.asdf/asdf.fish
+        #     ;;
+        # "zsh")
+        #     . "$HOME/.asdf/asdf.sh"
+        #     ;;
+        # *)
+        #     echo "Unsupported shell: $current_shell"
+        #     ;;
+        # esac
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -114,9 +114,9 @@ fi
         asdf reshim elixir 1.17.2-otp-27
         ;;
     "Phoenix")
-        source "$config_file" >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3        
+        mix archive.install --force hex phx_new 1.7.0-rc.3
         ;;
     "PostgreSQL")
         sudo apt-get update
