@@ -270,7 +270,7 @@ while ! is_yn "$answer"; do
 
         sleep 3
 
-        sudo -S chsh -s "/bin/zsh" "${USER}"
+        sudo -S chsh -s '/bin/zsh' "${USER}"
 
         add_env "$optional"
         ;;
