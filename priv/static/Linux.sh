@@ -20,34 +20,31 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
-# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-# case "$current_shell" in
-# "bash" | "rbash")
-#     config_file="$HOME/.zshrc"
-#     ;;
-# "fish")
-#     config_file="$HOME/.config/fish/config.fish"
-#     ;;
-# "dash")
-#     config_file="$HOME/.profile"
-#     ;;
-# "zsh")
-#     config_file="$HOME/.zshrc"
-#     ;;
-# *)
-#     echo "Unsupported shell: $current_shell"
-#     exit 1
-#     ;;
-# esac
+case "$current_shell" in
+"bash" | "rbash")
+    config_file="$HOME/.bashrc"
+    ;;
+"fish")
+    config_file="$HOME/.config/fish/config.fish"
+    ;;
+"dash")
+    config_file="$HOME/.profile"
+    ;;
+"zsh")
+    config_file="$HOME/.zshrc"
+    ;;
+*)
+    echo "Unsupported shell: $current_shell"
+    exit 1
+    ;;
+esac
 
 function already_installed() {
     case $1 in
     "Git")
         which git >/dev/null 2>&1
-        ;;
-    "Zsh")
-        which zsh >/dev/null 2>&1
         ;;
     "wget")
         dpkg -l | grep -q wget
@@ -78,9 +75,6 @@ function install() {
     "Git")
         sudo apt-get install -y git
         ;;
-    "Zsh")
-        sudo apt-get install -y zsh
-        ;;
     "wget")
         sudo apt-get install -y wget
         ;;
@@ -88,23 +82,19 @@ function install() {
         if [ ! -d "$HOME/.asdf" ]; then
             git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
             export ASDF_DIR="$HOME/.asdf"
-            . "$HOME/.asdf/asdf.sh"
         fi
-        # case "$current_shell" in
-        # "bash" | "rbash")
-        #     . "$HOME/.asdf/asdf.sh"
-        #     ;;
-        # "fish")
-        #     . ~/.asdf/asdf.fish
-        #     ;;
-        # "zsh")
-        #     . "$HOME/.asdf/asdf.sh"
-        #     ;;
-        # *)
-        #     echo "Unsupported shell: $current_shell"
-        #     ;;
-        # esac
-        source ~/.zshrc >/dev/null 2>&1
+        case "$current_shell" in
+        "bash" | "rbash" | "zsh")
+            . "$HOME/.asdf/asdf.sh"
+            ;;
+        "fish")
+            . ~/.asdf/asdf.fish
+            ;;
+        *)
+            echo "Unsupported shell: $current_shell"
+            ;;
+        esac
+        source "$config_file" >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -135,9 +125,9 @@ function install() {
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        echo 'export PATH="/usr/lib/postgresql/$(ls /usr/lib/postgresql | sort -V | tail -n 1)/bin:$PATH"' >>~/.zshrc
-        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >>~/.zshrc
-        source ~/.zshrc >/dev/null 2>&1
+        echo 'export PATH="/usr/lib/postgresql/$(ls /usr/lib/postgresql | sort -V | tail -n 1)/bin:$PATH"' >>"$config_file"
+        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >>"$config_file"
+        source "$config_file" >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -163,11 +153,6 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "Git"
-
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Zsh"
 
     echo -e "${white}"
     sleep 2
@@ -285,7 +270,7 @@ while ! is_yn "$answer"; do
 
         sleep 3
 
-        sudo -S chsh -s '/bin/zsh' "${USER}"
+        sudo -S chsh -s "/bin/${current_shell}" "${USER}"
 
         add_env "$optional"
         ;;
