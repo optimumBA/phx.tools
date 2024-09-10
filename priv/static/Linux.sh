@@ -24,7 +24,7 @@ current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
     "bash"|"rbash")
-        config_file="$HOME/.bashrc"
+    config_file="$HOME/.zshrc"
         ;;
     "fish")
         config_file="$HOME/.config/fish/config.fish"
@@ -128,7 +128,7 @@ fi
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.bashrc >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -270,7 +270,7 @@ while ! is_yn "$answer"; do
 
         sleep 3
 
-        sudo -S chsh -s "/bin/$current_shell" "${USER}"
+        sudo -S chsh -s "/bin/zsh" "${USER}"
 
         add_env "$optional"
         ;;
