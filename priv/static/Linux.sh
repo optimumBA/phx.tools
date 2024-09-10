@@ -20,26 +20,26 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
-current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+# current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-case "$current_shell" in
-    "bash"|"rbash")
-        config_file="$HOME/.bashrc"
-        ;;
-    "fish")
-        config_file="$HOME/.config/fish/config.fish"
-        ;;
-    "dash")
-        config_file="$HOME/.profile"
-        ;;
-    "zsh")
-        config_file="$HOME/.zshrc"
-        ;;
-    *)
-        echo "Unsupported shell: $current_shell"
-        exit 1
-        ;;
-esac
+# case "$current_shell" in
+#     "bash"|"rbash")
+#         config_file="$HOME/.bashrc"
+#         ;;
+#     "fish")
+#         config_file="$HOME/.config/fish/config.fish"
+#         ;;
+#     "dash")
+#         config_file="$HOME/.profile"
+#         ;;
+#     "zsh")
+#         config_file="$HOME/.zshrc"
+#         ;;
+#     *)
+#         echo "Unsupported shell: $current_shell"
+#         exit 1
+#         ;;
+# esac
 
 
 function already_installed() {
@@ -47,7 +47,7 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
-     "Zsh")
+    "Zsh")
         dpkg -l | grep -q zsh
         ;;
     "oh-my-zsh")
@@ -128,7 +128,7 @@ function install() {
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3        
+        mix archive.install --force hex phx_new 1.7.0-rc.3
         ;;
     "PostgreSQL")
         sudo apt-get update
