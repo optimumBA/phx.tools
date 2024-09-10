@@ -123,12 +123,12 @@ fi
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 16.0
-        asdf global postgres 16.0
+        asdf install postgres 15.1
+        asdf global postgres 15.1
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source "$config_file" >/dev/null 2>&1
+        source ~/.bashrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
