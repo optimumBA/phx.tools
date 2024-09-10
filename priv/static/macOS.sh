@@ -49,11 +49,6 @@ function already_installed() {
     "Xcode Command Line Tools")
         which xcode-select >/dev/null
         ;;
-    "oh-my-zsh")
-        if [[ "$current_shell" == "zsh" ]]; then
-            [ -d ~/.oh-my-zsh ]
-        fi
-        ;;
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
@@ -82,12 +77,6 @@ function install() {
     case $1 in
     "Xcode Command Line Tools")
         xcode-select --install
-        ;;
-    # maybe install oh-my-zsh only when the current shell is zsh
-    "oh-my-zsh")
-        if [[ "$current_shell" == "zsh" ]]; then
-            sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-        fi
         ;;
     "Homebrew")
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -180,10 +169,6 @@ function add_env() {
 
     echo -e "${white}"
     sleep 2
-    maybe_install "oh-my-zsh"
-
-    echo -e "${white}"
-    sleep 2
     maybe_install "Homebrew"
 
     echo -e "${white}"
@@ -259,13 +244,12 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) oh-my-zsh"
-echo "3) Homebrew"
-echo "4) asdf"
-echo "5) Erlang"
-echo "6) Elixir"
-echo "7) Phoenix"
-echo "8) PostgreSQL"
+echo "2) Homebrew"
+echo "3) asdf"
+echo "4) Erlang"
+echo "5) Elixir"
+echo "6) Phoenix"
+echo "7) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
@@ -296,6 +280,10 @@ while ! is_yn "$answer"; do
     [yY] | [yY][eE][sS])
     
         echo ""
+
+        sleep 3
+
+        sudo -S chsh -s "/bin/$current_shell" "${USER}"
 
         add_env "$optional"
         ;;
