@@ -78,9 +78,13 @@ function install() {
     "wget")
         sudo apt-get install -y wget
         ;;
+    "Zsh")
+        sudo apt-get install -y zsh
+        ;;
     "asdf")
         if [ ! -d "$HOME/.asdf" ]; then
             git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
+            export ASDF_DIR="$HOME/.asdf"
             . "$HOME/.asdf/asdf.sh"
         fi
         # case "$current_shell" in
@@ -158,6 +162,11 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "wget"
+
+    echo ""
+    echo -e "${white}"
+    sleep 2
+    maybe_install "Zsh"
 
     echo -e "${white}"
     sleep 3
