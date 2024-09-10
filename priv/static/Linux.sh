@@ -26,6 +26,9 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
+    "Zsh")
+        which zsh >/dev/null 2>&1
+        ;;
     "wget")
         dpkg -l | grep -q wget
         ;;
@@ -54,6 +57,9 @@ function install() {
     case $1 in
     "Git")
         sudo apt-get install -y git
+        ;;
+    "Zsh")
+        sudo apt-get install -y zsh
         ;;
     "wget")
         sudo apt-get install -y wget
@@ -123,6 +129,11 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "Git"
+
+    echo ""
+    echo -e "${white}"
+    sleep 2
+    maybe_install "Zsh"
 
     echo -e "${white}"
     sleep 2
