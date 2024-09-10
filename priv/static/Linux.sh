@@ -47,6 +47,12 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
+     "Zsh")
+        dpkg -l | grep -q zsh
+        ;;
+    "oh-my-zsh")
+        [ -d ~/.oh-my-zsh ]
+        ;;
     "wget")
         dpkg -l | grep -q wget
         ;;
@@ -79,35 +85,31 @@ function install() {
     "Git")
         sudo apt-get install -y git
         ;;
+    "Zsh")
+        sudo apt-get install -y zsh
+        ;;
+    "oh-my-zsh")
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        ;;
     "wget")
         sudo apt-get install -y wget
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>"$config_file"
+        echo '# Set PATH, MANPATH, etc., for Homebrew.' >>~/.zshrc
         (
             echo
             echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-        ) >>"$config_file"
+        ) >>~/.zshrc
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         ;;
     "asdf")
         brew install asdf
-        case "$current_shell" in
-        "bash"|"rbash")
-            echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >> ~/.bashrc
-            ;;
-        "fish")
-            echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >> ~/.config/fish/config.fish
-            ;;
-        "zsh")
-            echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
-            ;;
-        *)
-            echo "Unsupported shell: $current_shell"
-            ;;
-        esac
-        source "$config_file" >/dev/null 2>&1
+        (
+            echo
+            echo '. $(brew --prefix asdf)/libexec/asdf.sh'
+        ) >>~/.zshrc
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -124,7 +126,7 @@ function install() {
         asdf reshim elixir 1.17.1-otp-27
         ;;
     "Phoenix")
-        source "$config_file" >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new 1.7.0-rc.3        
         ;;
@@ -138,7 +140,7 @@ function install() {
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source "$config_file" >/dev/null 2>&1
+        source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -164,6 +166,15 @@ function add_env() {
     echo -e "${white}"
     sleep 2
     maybe_install "Git"
+
+    echo ""
+    echo -e "${white}"
+    sleep 2
+    maybe_install "Zsh"
+
+    echo -e "${white}"
+    sleep 2
+    maybe_install "oh-my-zsh"
 
     echo -e "${white}"
     sleep 2
@@ -246,12 +257,13 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) Homebrew"
-echo "3) asdf"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+echo "2) Zsh"
+echo "3) Homebrew"
+echo "4) asdf"
+echo "5) Erlang"
+echo "6) Elixir"
+echo "7) Phoenix"
+echo "8) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"
@@ -282,6 +294,16 @@ while ! is_yn "$answer"; do
     [yY] | [yY][eE][sS])
 
         echo ""
+
+        echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
+
+        echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
+
+        echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
+
+        sleep 3
+
+        sudo -S chsh -s '/bin/zsh' "${USER}"
 
         add_env "$optional"
         ;;
