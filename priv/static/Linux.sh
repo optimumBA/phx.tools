@@ -49,6 +49,9 @@ function already_installed() {
     "wget")
         dpkg -l | grep -q wget
         ;;
+    "Zsh")
+        which zsh >/dev/null 2>&1
+        ;;
     "asdf")
         which asdf >/dev/null 2>&1
         ;;
