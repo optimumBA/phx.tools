@@ -93,7 +93,7 @@ function install() {
             export ASDF_DIR="$HOME/.asdf"
             . "$HOME/.asdf/asdf.sh"
         fi
-        source $config_file >/dev/null 2>&1
+        . $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
