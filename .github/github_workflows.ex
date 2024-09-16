@@ -416,7 +416,7 @@ defmodule GithubWorkflows do
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "echo $SHELL && . ~/.profile && . ~/.bashrc && . ~/.zshrc&& make -f test/scripts/Makefile",
+          run: "echo $SHELL && . ~/.profile && . ~/.bashrc && make -f test/scripts/Makefile",
           shell: "sh"
         ],
         [
