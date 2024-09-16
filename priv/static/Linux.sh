@@ -134,6 +134,10 @@ function install() {
         echo 'export PGDATA="$HOME/pgdata"' >> $config_file
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
+
+        # test posgres installation and startup
+        initdb -D ~/pgdata -U postgres
+        pg_ctl start -D ~/pgdata
         ;;
     *)
         echo "Invalid name argument on install"
