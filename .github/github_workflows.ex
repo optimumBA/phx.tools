@@ -410,13 +410,13 @@ defmodule GithubWorkflows do
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           run: "cd test/scripts && expect script.exp #{os}.sh",
-          shell: "bash -leo pipefail {0}"
+          shell: "zsh"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "source ~/.bashrc && make -f test/scripts/Makefile",
-          shell: "bash -leo pipefail {0}"
+          run: "source ~/.zshrc && make -f test/scripts/Makefile",
+          shell: "zsh"
         ],
         [
           name: "Check HTTP status code",
