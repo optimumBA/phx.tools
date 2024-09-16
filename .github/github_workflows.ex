@@ -401,10 +401,7 @@ defmodule GithubWorkflows do
             path: "priv/static/#{os}.sh"
           ]
         ],
-        [
-          name: "Install Zsh",
-          run: "sudo apt-get update && sudo apt-get install -y zsh"
-        ],
+        # TODO: Add matrix strategy for different shells
         [
           name: "Install expect tool",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
@@ -413,12 +410,14 @@ defmodule GithubWorkflows do
         [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "zsh -c 'cd test/scripts && expect script.exp #{os}.sh'"
+          run: "cd test/scripts && expect script.exp #{os}.sh",
+          shell: "/bin/dash"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'"
+          run: "source ~/.profile && make -f test/scripts/Makefile",
+          shell: "/bin/dash"
         ],
         [
           name: "Check HTTP status code",
