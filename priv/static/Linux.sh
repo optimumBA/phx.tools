@@ -26,6 +26,30 @@ erlang_version=27.0.1
 phoenix_version=1.7.14
 postgres_version=15.1
 
+current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+
+case "$current_shell" in
+    "bash"|"rbash")
+        config_file="$HOME/.bashrc"
+        ;;
+    "dash"|"sh")
+        config_file="$HOME/.profile"
+        ;;
+    "elvish")
+        config_file="$HOME/.config/elvish/rc.elv"
+        ;; 
+    "fish")
+        config_file="$HOME/.config/fish/config.fish"
+        ;;
+    "zsh")
+        config_file="$HOME/.zshrc"
+        ;;
+    *)
+        echo "Unsupported shell: $current_shell"
+        exit 1
+        ;;
+esac
+
 function already_installed() {
     case $1 in
     "Git")
@@ -75,7 +99,7 @@ function install() {
             export ASDF_DIR="$HOME/.asdf"
             . "$HOME/.asdf/asdf.sh"
         fi
-        source ~/.zshrc >/dev/null 2>&1
+        source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -92,7 +116,7 @@ function install() {
         asdf reshim elixir $elixir_version
         ;;
     "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
+        source $config_file >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new $phoenix_version
         ;;
@@ -105,10 +129,10 @@ function install() {
         asdf global postgres $postgres_version
         asdf reshim postgres
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.zprofile
-        echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >> ~/.zshrc
-        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> ~/.zshrc
-        source ~/.zshrc >/dev/null 2>&1
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
+        echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >> $config_file
+        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> $config_file
+        source $config_file >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -255,8 +279,6 @@ while ! is_yn "$answer"; do
         echo ""
 
         sleep 3
-
-        sudo -S chsh -s '/bin/zsh' "${USER}"
 
         add_env "$optional"
         ;;

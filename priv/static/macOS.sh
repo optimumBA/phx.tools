@@ -145,7 +145,7 @@ function install() {
         asdf global postgres $postgres_version
         asdf reshim postgres
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.zprofile
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         source "$config_file" >/dev/null 2>&1
         ;;
     *)
@@ -288,8 +288,6 @@ while ! is_yn "$answer"; do
         echo ""
 
         sleep 3
-
-        sudo -S chsh -s "/bin/$current_shell" "${USER}"
 
         add_env "$optional"
         ;;
