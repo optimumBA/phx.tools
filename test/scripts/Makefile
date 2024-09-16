@@ -1,9 +1,15 @@
 serve:
+	serve:
+	@echo "Current PATH: $$PATH"
+	@echo "Contents of .bashrc:"
+	@cat ~/.bashrc
+	@echo "Checking asdf installation:"
+	which asdf || echo "asdf not found in PATH"
+	@echo "Sourcing .bashrc..."
 	. ~/.bashrc
+	@echo "PATH after sourcing .bashrc: $$PATH"
 	which asdf
-	asdf list
-	# . ~/.bashrc
-	echo $(HOME)
+	asdf --version
 	initdb -D ~/pgdata -U postgres
 	pg_ctl start -D ~/pgdata
 	mix phx.new --no-install phx_tools_test

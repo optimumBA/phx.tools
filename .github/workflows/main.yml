@@ -26,11 +26,16 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
+      - name: Debug environment
+        run: 'echo "PATH: $PATH"\necho "Contents of .bashrc:"\ncat ~/.bashrc\necho "Sourcing .bashrc..."\nsource ~/.bashrc\necho "PATH after sourcing .bashrc: $PATH"\nwhich asdf || echo "asdf not found in PATH"'
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         env:
           BASH_ENV: ~/.bashrc
-        run: source ~/.bashrc && make -f test/scripts/Makefile
+        run: |
+          source ~/.bashrc
+          make -f test/scripts/Makefile
+        shell: bash --login {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2

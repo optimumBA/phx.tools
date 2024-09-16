@@ -89,12 +89,23 @@ function install() {
         ;;
     "asdf")
         if [ ! -d "$HOME/.asdf" ]; then
+            echo "Cloning asdf repository..."
             git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
             export ASDF_DIR="$HOME/.asdf"
-            . "$HOME/.asdf/asdf.sh"
-            echo "installing asdf!!!"
+            echo "Adding asdf to PATH..."
+            echo '. "$HOME/.asdf/asdf.sh"' >>~/.bashrc
+            echo '. "$HOME/.asdf/completions/asdf.bash"' >>~/.bashrc
+            echo "Sourcing .bashrc..."
+            source ~/.bashrc
+            echo "asdf installation complete!"
+        else
+            echo "asdf directory already exists."
         fi
-        . $config_file >/dev/null 2>&1
+        echo "Current PATH: $PATH"
+        echo "Contents of .bashrc:"
+        cat ~/.bashrc
+        echo "Checking asdf installation:"
+        which asdf || echo "asdf not found in PATH"
         ;;
     "Erlang")
         sudo apt-get update

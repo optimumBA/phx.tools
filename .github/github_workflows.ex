@@ -412,13 +412,17 @@ defmodule GithubWorkflows do
           run: "cd test/scripts && expect script.exp #{os}.sh"
         ],
         [
+          name: "Debug environment",
+          run: ~S<echo "PATH: $PATH"\necho "Contents of .bashrc:"\ncat ~/.bashrc\necho "Sourcing .bashrc..."\nsource ~/.bashrc\necho "PATH after sourcing .bashrc: $PATH"\nwhich asdf || echo "asdf not found in PATH">
+        ],
+        [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           env: [
             BASH_ENV: "~/.bashrc"
           ],
-          run: "source ~/.bashrc && make -f test/scripts/Makefile",
-          # shell: "bash --login {0}"
+          run: "source ~/.bashrc\nmake -f test/scripts/Makefile",
+          shell: "bash --login {0}"
         ],
         [
           name: "Check HTTP status code",
