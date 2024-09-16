@@ -409,16 +409,13 @@ defmodule GithubWorkflows do
         [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "cd test/scripts && expect script.exp #{os}.sh"
-        ],
-        [
-          name: "Debug environment",
-          run: ~S(echo "PATH: $PATH"\necho "Contents of .bashrc:" && cat ~/.bashrc && echo "Sourcing .bashrc..."\nsource ~/.bashrc && echo "PATH after sourcing .bashrc: $PATH"\nwhich asdf || echo "asdf not found in PATH"\necho "ASDF_DIR: $ASDF_DIR")
+          run: "cd test/scripts && expect script.exp #{os}.sh",
+          shell: "bash -leo pipefail {0}"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: ~S(source ~/.bashrc\nexport PATH="$HOME/.asdf/bin:$PATH"\n. "$HOME/.asdf/asdf.sh"\nwhich asdf || echo 'asdf not found in PATH'\nmake -f test/scripts/Makefile),
+          run: "source ~/.bashrc && make -f test/scripts/Makefile",
           shell: "bash -leo pipefail {0}"
         ],
         [

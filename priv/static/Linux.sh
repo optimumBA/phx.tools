@@ -88,23 +88,26 @@ function install() {
         sudo apt-get install -y wget
         ;;
     "asdf")
-        if [ ! -d "$HOME/.asdf" ]; then
-            echo "Cloning asdf repository..."
-            git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
-        fi
-        export ASDF_DIR="$HOME/.asdf"
-        export PATH="$ASDF_DIR/bin:$PATH"
-        . "$HOME/.asdf/asdf.sh"
-        echo 'export ASDF_DIR="$HOME/.asdf"' >>~/.bashrc
-        echo 'export PATH="$ASDF_DIR/bin:$PATH"' >>~/.bashrc
-        echo '. "$HOME/.asdf/asdf.sh"' >>~/.bashrc
-        echo '. "$HOME/.asdf/completions/asdf.bash"' >>~/.bashrc
-        echo "asdf installation complete!"
-        echo "Current PATH: $PATH"
-        echo "Contents of .bashrc:"
-        cat ~/.bashrc
-        echo "Checking asdf installation:"
-        which asdf || echo "asdf not found in PATH"
+        git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
+
+        case $current_shell in
+        "bash" | "rbash")
+            echo ". $HOME/.asdf/asdf.sh" >>~/.bashrc
+            echo ". $HOME/.asdf/completions/asdf.bash" >>~/.bashrc
+            ;;
+        "elvish")
+            echo ". $HOME/.asdf/asdf.elv" >>~/.config/elvish/rc.elv
+            ;;
+        "fish")
+            echo ". $HOME/.asdf/asdf.fish" >>~/.config/fish/config.fish
+            mkdir -p ~/.config/fish/completions
+            ln -s ~/.asdf/completions/asdf.fish ~/.config/fish/completions
+            ;;
+        *)
+            echo "Unsupported shell: $current_shell"
+            exit 1
+            ;;
+        esac
         ;;
     "Erlang")
         sudo apt-get update

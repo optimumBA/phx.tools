@@ -29,25 +29,25 @@ postgres_version=15.1
 current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
-    "bash"|"rbash")
-        config_file="$HOME/.bashrc"
-        ;;
-    "dash"|"sh")
-        config_file="$HOME/.profile"
-        ;;
-    "elvish")
-        config_file="$HOME/.config/elvish/rc.elv"
-        ;; 
-    "fish")
-        config_file="$HOME/.config/fish/config.fish"
-        ;;
-    "zsh")
-        config_file="$HOME/.zshrc"
-        ;;
-    *)
-        echo "Unsupported shell: $current_shell"
-        exit 1
-        ;;
+"bash" | "rbash")
+    config_file="$HOME/.bashrc"
+    ;;
+"dash" | "sh")
+    config_file="$HOME/.profile"
+    ;;
+"elvish")
+    config_file="$HOME/.config/elvish/rc.elv"
+    ;;
+"fish")
+    config_file="$HOME/.config/fish/config.fish"
+    ;;
+"zsh")
+    config_file="$HOME/.zshrc"
+    ;;
+*)
+    echo "Unsupported shell: $current_shell"
+    exit 1
+    ;;
 esac
 
 function already_installed() {
@@ -92,24 +92,27 @@ function install() {
         brew install coreutils curl git
 
         case "$current_shell" in
-            "zsh")
-                brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
-                ;;
-            "bash"|"rbash")
-                brew install asdf && echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >> ~/.bashrc
-                ;;
-            "elvish")
-                brew install asdf
+        "zsh")
+            brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
+            ;;
+        "bash" | "rbash")
+            brew install asdf && echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >>~/.bashrc
+            ;;
+        "elvish")
+            brew install asdf
 
-                mkdir -p ~/.config/elvish/lib; ln -s $(brew --prefix asdf)/libexec/asdf.elv ~/.config/elvish/lib/asdf.elv
-                echo "\n"'use asdf _asdf; var asdf~ = $_asdf:asdf~' >> ~/.config/elvish/rc.elv
-                echo "\n"'set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~' >> ~/.config/elvish/rc.elv
-                ;;
-            "fish")
-                brew install asdf && echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >> ~/.config/fish/config.fish
-                ;;
-            *)
-                echo "Unsupported shell: "$current_shell""
+            mkdir -p ~/.config/elvish/lib
+            ln -s $(brew --prefix asdf)/libexec/asdf.elv ~/.config/elvish/lib/asdf.elv
+            echo "\n"'use asdf _asdf; var asdf~ = $_asdf:asdf~' >>~/.config/elvish/rc.elv
+            echo "\n"'set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~' >>~/.config/elvish/rc.elv
+            ;;
+        "fish")
+            brew install asdf && echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >>~/.config/fish/config.fish
+            ;;
+        *)
+            echo "Unsupported shell: "$current_shell""
+            exit 1
+            ;;
         esac
         ;;
     "Erlang")
@@ -284,7 +287,7 @@ while ! is_yn "$answer"; do
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
-    
+
         echo ""
 
         sleep 3
