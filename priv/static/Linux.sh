@@ -55,9 +55,6 @@ function already_installed() {
     "Git")
         which git >/dev/null 2>&1
         ;;
-    "Zsh")
-        which zsh >/dev/null 2>&1
-        ;;
     "wget")
         dpkg -l | grep -q wget
         ;;
@@ -86,9 +83,6 @@ function install() {
     case $1 in
     "Git")
         sudo apt-get install -y git
-        ;;
-    "Zsh")
-        sudo apt-get install -y zsh
         ;;
     "wget")
         sudo apt-get install -y wget
@@ -135,9 +129,6 @@ function install() {
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
 
-        # test posgres installation and startup
-        initdb -D ~/pgdata -U postgres
-        pg_ctl start -D ~/pgdata
         ;;
     *)
         echo "Invalid name argument on install"
@@ -159,35 +150,30 @@ function maybe_install() {
 }
 
 function add_env() {
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Git"
+    # echo ""
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "Git"
 
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Zsh"
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "wget"
 
-    echo -e "${white}"
-    sleep 2
-    maybe_install "wget"
+    # echo -e "${white}"
+    # sleep 3
+    # maybe_install "asdf"
 
-    echo -e "${white}"
-    sleep 3
-    maybe_install "asdf"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Elixir"
-
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
     echo -e "${white}"
     sleep 1.5
@@ -246,12 +232,11 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) Zsh"
-echo "3) asdf"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+echo "2) asdf"
+echo "3) Erlang"
+echo "4) Elixir"
+echo "5) Phoenix"
+echo "6) PostgreSQL"
 
 echo ""
 echo -e "${white} ${bold}"

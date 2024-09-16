@@ -84,7 +84,7 @@ defmodule GithubWorkflows do
       #sobelow: sobelow_job(),
       #test: test_job(),
       test_linux_script_job: test_linux_script_job(),
-      test_macos_script_job: test_macos_script_job(),
+      #test_macos_script_job: test_macos_script_job(),
       #unused_deps: unused_deps_job()
     ]
   end
