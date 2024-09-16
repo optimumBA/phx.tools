@@ -31,12 +31,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp Linux.sh
-        shell: zsh
+        run: zsh -c 'cd test/scripts && expect script.exp Linux.sh'
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: source ~/.zshrc && make -f test/scripts/Makefile
-        shell: zsh
+        run: zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2

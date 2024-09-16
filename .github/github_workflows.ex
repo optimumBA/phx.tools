@@ -74,18 +74,18 @@ defmodule GithubWorkflows do
 
   defp elixir_ci_jobs do
     [
-      #compile: compile_job(),
-      #credo: credo_job(),
-      #deps_audit: deps_audit_job(),
-      #dialyzer: dialyzer_job(),
-      #format: format_job(),
-      #hex_audit: hex_audit_job(),
-      #prettier: prettier_job(),
-      #sobelow: sobelow_job(),
-      #test: test_job(),
-      test_linux_script_job: test_linux_script_job(),
-      #test_macos_script_job: test_macos_script_job(),
-      #unused_deps: unused_deps_job()
+      # compile: compile_job(),
+      # credo: credo_job(),
+      # deps_audit: deps_audit_job(),
+      # dialyzer: dialyzer_job(),
+      # format: format_job(),
+      # hex_audit: hex_audit_job(),
+      # prettier: prettier_job(),
+      # sobelow: sobelow_job(),
+      # test: test_job(),
+      test_linux_script_job: test_linux_script_job()
+      # test_macos_script_job: test_macos_script_job(),
+      # unused_deps: unused_deps_job()
     ]
   end
 
@@ -413,14 +413,12 @@ defmodule GithubWorkflows do
         [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "cd test/scripts && expect script.exp #{os}.sh",
-          shell: "zsh"
+          run: "zsh -c 'cd test/scripts && expect script.exp #{os}.sh'"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "source ~/.zshrc && make -f test/scripts/Makefile",
-          shell: "zsh"
+          run: "zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'"
         ],
         [
           name: "Check HTTP status code",
