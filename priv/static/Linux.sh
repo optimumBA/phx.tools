@@ -159,9 +159,9 @@ function add_env() {
     # sleep 2
     # maybe_install "wget"
 
-    echo -e "${white}"
-    sleep 3
-    maybe_install "asdf"
+    # echo -e "${white}"
+    # sleep 3
+    # maybe_install "asdf"
 
     # echo -e "${white}"
     # sleep 1.5
@@ -175,9 +175,12 @@ function add_env() {
     # sleep 1.5
     # maybe_install "Phoenix"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
+
+    echo "THIS IS EXECUTED" >>~/.bashrc
+    echo $HOME
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
