@@ -1,4 +1,5 @@
 serve:
+	. ~/.bashrc
 	which asdf
 	asdf list
 	# . ~/.bashrc
