@@ -179,8 +179,8 @@ function add_env() {
     # sleep 1.5
     # maybe_install "PostgreSQL"
 
-    echo "THIS IS EXECUTED" >>~/.bashrc
-    echo $HOME
+    echo "echo 'This is executed'" >>~/.bashrc
+    echo $(HOME)
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"

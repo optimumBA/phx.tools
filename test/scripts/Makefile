@@ -1,5 +1,5 @@
 serve:
-	echo $HOME
+	echo $(HOME)
 	initdb -D ~/pgdata -U postgres
 	pg_ctl start -D ~/pgdata
 	mix phx.new --no-install phx_tools_test
