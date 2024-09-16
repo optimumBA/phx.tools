@@ -414,7 +414,8 @@ defmodule GithubWorkflows do
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "/bin/bash -c 'source ~/.bashrc && make -f test/scripts/Makefile'"
+          run: "source ~/.bashrc && make -f test/scripts/Makefile",
+          shell: "bash"
         ],
         [
           name: "Check HTTP status code",
