@@ -100,9 +100,9 @@ function install() {
         asdf global postgres 15.1
         asdf reshim postgres
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        echo 'export PATH="/usr/lib/postgresql/$(ls /usr/lib/postgresql | sort -V | tail -n 1)/bin:$PATH"' >>~/.zshrc
-        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >>~/.zshrc
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.zprofile
+        echo 'export PATH="$HOME/.asdf/installs/postgres/15.1/bin:$PATH"' >> ~/.zshrc
+        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> ~/.zshrc
         source ~/.zshrc >/dev/null 2>&1
         ;;
     *)
