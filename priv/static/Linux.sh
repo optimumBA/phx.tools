@@ -50,6 +50,9 @@ case "$current_shell" in
     ;;
 esac
 
+echo "Current shell: $current_shell"
+echo "Config file: $config_file"
+
 function already_installed() {
     case $1 in
     "Git")
