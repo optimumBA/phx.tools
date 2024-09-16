@@ -1,5 +1,7 @@
 serve:
-	. ~/.bashrc
+	which asdf
+	asdf list
+	# . ~/.bashrc
 	echo $(HOME)
 	initdb -D ~/pgdata -U postgres
 	pg_ctl start -D ~/pgdata

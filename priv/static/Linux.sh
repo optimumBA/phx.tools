@@ -29,25 +29,25 @@ postgres_version=15.1
 current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
-    "bash"|"rbash")
-        config_file="$HOME/.bashrc"
-        ;;
-    "dash"|"sh")
-        config_file="$HOME/.profile"
-        ;;
-    "elvish")
-        config_file="$HOME/.config/elvish/rc.elv"
-        ;; 
-    "fish")
-        config_file="$HOME/.config/fish/config.fish"
-        ;;
-    "zsh")
-        config_file="$HOME/.zshrc"
-        ;;
-    *)
-        echo "Unsupported shell: $current_shell"
-        exit 1
-        ;;
+"bash" | "rbash")
+    config_file="$HOME/.bashrc"
+    ;;
+"dash" | "sh")
+    config_file="$HOME/.profile"
+    ;;
+"elvish")
+    config_file="$HOME/.config/elvish/rc.elv"
+    ;;
+"fish")
+    config_file="$HOME/.config/fish/config.fish"
+    ;;
+"zsh")
+    config_file="$HOME/.zshrc"
+    ;;
+*)
+    echo "Unsupported shell: $current_shell"
+    exit 1
+    ;;
 esac
 
 function already_installed() {
@@ -92,6 +92,7 @@ function install() {
             git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
             export ASDF_DIR="$HOME/.asdf"
             . "$HOME/.asdf/asdf.sh"
+            echo "installing asdf!!!"
         fi
         . $config_file >/dev/null 2>&1
         ;;
@@ -123,9 +124,9 @@ function install() {
         asdf global postgres $postgres_version
         asdf reshim postgres
 
-        echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >> $config_file
-        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> $config_file
-        echo 'export PGDATA="$HOME/pgdata"' >> $config_file
+        echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >>$config_file
+        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >>$config_file
+        echo 'export PGDATA="$HOME/pgdata"' >>$config_file
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
 
@@ -159,9 +160,9 @@ function add_env() {
     # sleep 2
     # maybe_install "wget"
 
-    # echo -e "${white}"
-    # sleep 3
-    # maybe_install "asdf"
+    echo -e "${white}"
+    sleep 3
+    maybe_install "asdf"
 
     # echo -e "${white}"
     # sleep 1.5
