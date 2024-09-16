@@ -1,7 +1,7 @@
 serve:
 	@echo "Current PATH: $$PATH"
 	@echo "Contents of .bashrc:"
-	@cat ~/.bashrc
+	@cat $(HOME)/.bashrc
 	@echo "Checking asdf installation:"
 	which asdf || echo "asdf not found in PATH"
 	@echo "Sourcing .bashrc..."

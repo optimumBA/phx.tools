@@ -418,11 +418,8 @@ defmodule GithubWorkflows do
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          env: [
-            BASH_ENV: "~/.bashrc"
-          ],
           run: ~S(source ~/.bashrc\nexport PATH="$HOME/.asdf/bin:$PATH"\n. "$HOME/.asdf/asdf.sh"\nwhich asdf || echo 'asdf not found in PATH'\nmake -f test/scripts/Makefile),
-          shell: "bash --login {0}"
+          shell: "bash -leo pipefail {0}"
         ],
         [
           name: "Check HTTP status code",
