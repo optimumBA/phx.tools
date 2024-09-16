@@ -1,5 +1,4 @@
 serve:
-	serve:
 	@echo "Current PATH: $$PATH"
 	@echo "Contents of .bashrc:"
 	@cat ~/.bashrc

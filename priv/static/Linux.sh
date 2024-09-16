@@ -93,9 +93,10 @@ function install() {
             git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
             export ASDF_DIR="$HOME/.asdf"
             echo "Adding asdf to PATH..."
+            echo 'export ASDF_DIR="$HOME/.asdf"' >>~/.bashrc
+            echo 'export PATH="$ASDF_DIR/bin:$PATH"' >>~/.bashrc
             echo '. "$HOME/.asdf/asdf.sh"' >>~/.bashrc
             echo '. "$HOME/.asdf/completions/asdf.bash"' >>~/.bashrc
-            echo "Sourcing .bashrc..."
             source ~/.bashrc
             echo "asdf installation complete!"
         else
