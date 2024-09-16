@@ -1,4 +1,5 @@
 serve:
+	source ~/.bashrc
 	echo $(HOME)
 	initdb -D ~/pgdata -U postgres
 	pg_ctl start -D ~/pgdata

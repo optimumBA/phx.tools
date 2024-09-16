@@ -180,7 +180,7 @@ function add_env() {
     # maybe_install "PostgreSQL"
 
     echo "echo 'This is executed'" >>~/.bashrc
-    echo $(HOME)
+    echo $HOME
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
