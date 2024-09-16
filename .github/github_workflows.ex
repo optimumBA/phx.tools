@@ -386,6 +386,11 @@ defmodule GithubWorkflows do
 
   defp test_shell_script_job(os, runs_on, expect_install_command) do
     [
+      defaults: [
+        run: [
+          shell: "bash"
+        ]
+      ],
       name: "Test #{os} script",
       "runs-on": runs_on,
       env: [TZ: "America/New_York"],
