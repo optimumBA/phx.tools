@@ -413,7 +413,7 @@ defmodule GithubWorkflows do
         ],
         [
           name: "Debug environment",
-          run: ~S<echo "PATH: $PATH"\necho "Contents of .bashrc:"\ncat ~/.bashrc\necho "Sourcing .bashrc..."\nsource ~/.bashrc\necho "PATH after sourcing .bashrc: $PATH"\nwhich asdf || echo "asdf not found in PATH">
+          run: ~S(echo "PATH: $PATH"\necho "Contents of .bashrc:" && cat ~/.bashrc && echo "Sourcing .bashrc..."\nsource ~/.bashrc && echo "PATH after sourcing .bashrc: $PATH"\nwhich asdf || echo "asdf not found in PATH"\necho "ASDF_DIR: $ASDF_DIR")
         ],
         [
           name: "Generate an app and start the server",
@@ -421,7 +421,7 @@ defmodule GithubWorkflows do
           env: [
             BASH_ENV: "~/.bashrc"
           ],
-          run: "source ~/.bashrc\nmake -f test/scripts/Makefile",
+          run: ~S(source ~/.bashrc\nexport PATH="$HOME/.asdf/bin:$PATH"\n. "$HOME/.asdf/asdf.sh"\nwhich asdf || echo 'asdf not found in PATH'\nmake -f test/scripts/Makefile),
           shell: "bash --login {0}"
         ],
         [

@@ -91,17 +91,15 @@ function install() {
         if [ ! -d "$HOME/.asdf" ]; then
             echo "Cloning asdf repository..."
             git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
-            export ASDF_DIR="$HOME/.asdf"
-            echo "Adding asdf to PATH..."
-            echo 'export ASDF_DIR="$HOME/.asdf"' >>~/.bashrc
-            echo 'export PATH="$ASDF_DIR/bin:$PATH"' >>~/.bashrc
-            echo '. "$HOME/.asdf/asdf.sh"' >>~/.bashrc
-            echo '. "$HOME/.asdf/completions/asdf.bash"' >>~/.bashrc
-            source ~/.bashrc
-            echo "asdf installation complete!"
-        else
-            echo "asdf directory already exists."
         fi
+        export ASDF_DIR="$HOME/.asdf"
+        export PATH="$ASDF_DIR/bin:$PATH"
+        . "$HOME/.asdf/asdf.sh"
+        echo 'export ASDF_DIR="$HOME/.asdf"' >>~/.bashrc
+        echo 'export PATH="$ASDF_DIR/bin:$PATH"' >>~/.bashrc
+        echo '. "$HOME/.asdf/asdf.sh"' >>~/.bashrc
+        echo '. "$HOME/.asdf/completions/asdf.bash"' >>~/.bashrc
+        echo "asdf installation complete!"
         echo "Current PATH: $PATH"
         echo "Contents of .bashrc:"
         cat ~/.bashrc
