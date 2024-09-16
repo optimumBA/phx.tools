@@ -129,9 +129,9 @@ function install() {
         asdf global postgres $postgres_version
         asdf reshim postgres
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >> $config_file
         echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> $config_file
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
         ;;
     *)
