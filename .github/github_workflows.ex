@@ -386,11 +386,6 @@ defmodule GithubWorkflows do
 
   defp test_shell_script_job(os, runs_on, expect_install_command) do
     [
-      defaults: [
-        run: [
-          shell: "bash"
-        ]
-      ],
       name: "Test #{os} script",
       "runs-on": runs_on,
       env: [TZ: "America/New_York"],
@@ -417,13 +412,13 @@ defmodule GithubWorkflows do
           run: "cd test/scripts && expect script.exp #{os}.sh"
         ],
         [
-          name: "Setup upterm session",
-          uses: "lhotari/action-upterm@v1"
-        ],
-        [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: ". ~/.bashrc && make -f test/scripts/Makefile",
+          env: [
+            BASH_ENV: "~/.bashrc"
+          ],
+          run: "source ~/.bashrc && make -f test/scripts/Makefile",
+          # shell: "bash --login {0}"
         ],
         [
           name: "Check HTTP status code",

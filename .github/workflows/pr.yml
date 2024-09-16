@@ -11,9 +11,6 @@ on:
 
 jobs:
   test_linux_script_job:
-    defaults:
-      run:
-        shell: bash
     name: Test Linux script
     runs-on: ubuntu-latest
     env:
@@ -33,11 +30,11 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: . ~/.bashrc && make -f test/scripts/Makefile
+        env:
+          BASH_ENV: ~/.bashrc
+        run: source ~/.bashrc && make -f test/scripts/Makefile
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
