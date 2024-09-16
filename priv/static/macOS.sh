@@ -20,6 +20,12 @@ bblue='\033[1;34m'
 white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
+
+elixir_version=1.17.2-otp-27
+erlang_version=27.0.1
+phoenix_version=1.7.14
+postgres_version=15.1
+
 current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
@@ -112,34 +118,34 @@ function install() {
 
         export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0.1
-        asdf global erlang 27.0.1
-        asdf reshim erlang 27.0.1
+        asdf install erlang $erlang_version
+        asdf global erlang $erlang_version
+        asdf reshim erlang $erlang_version
         ;;
     "Elixir")
         # Deps for elixir
         brew install unzip
 
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.2-otp-27
-        asdf global elixir 1.17.2-otp-27
-        asdf reshim elixir 1.17.2-otp-27
+        asdf install elixir $elixir_version
+        asdf global elixir $elixir_version
+        asdf reshim elixir $elixir_version
         ;;
     "Phoenix")
         source "$config_file" >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.14
+        mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
         # Dependencies for PSQL
         brew install gcc readline zlib curl ossp-uuid
 
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
+        asdf install postgres $postgres_version
+        asdf global postgres $postgres_version
         asdf reshim postgres
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
+        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.zprofile
         source "$config_file" >/dev/null 2>&1
         ;;
     *)

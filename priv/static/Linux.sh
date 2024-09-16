@@ -21,6 +21,11 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
+elixir_version=1.17.2-otp-27
+erlang_version=27.0.1
+phoenix_version=1.7.14
+postgres_version=15.1
+
 function already_installed() {
     case $1 in
     "Git")
@@ -76,32 +81,32 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0.1
-        asdf global erlang 27.0.1
-        asdf reshim erlang 27.0.1
+        asdf install erlang $erlang_version
+        asdf global erlang $erlang_version
+        asdf reshim erlang $erlang_version
         ;;
     "Elixir")
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.2-otp-27
-        asdf global elixir 1.17.2-otp-27
-        asdf reshim elixir 1.17.2-otp-27
+        asdf install elixir $elixir_version
+        asdf global elixir $elixir_version
+        asdf reshim elixir $elixir_version
         ;;
     "Phoenix")
         source ~/.zshrc >/dev/null 2>&1
         mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3
+        mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
         asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
+        asdf install postgres $postgres_version
+        asdf global postgres $postgres_version
         asdf reshim postgres
 
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.zprofile
-        echo 'export PATH="$HOME/.asdf/installs/postgres/15.1/bin:$PATH"' >> ~/.zshrc
+        echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >> ~/.zshrc
         echo 'export PATH="$HOME/.asdf/shims:$PATH"' >> ~/.zshrc
         source ~/.zshrc >/dev/null 2>&1
         ;;
