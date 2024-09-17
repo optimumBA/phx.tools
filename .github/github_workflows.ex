@@ -28,7 +28,7 @@ defmodule GithubWorkflows do
           ]
         ],
         jobs:
-          elixir_ci_jobs() ++
+          ci_jobs() ++
             [
               deploy_production_app: deploy_production_app_job()
             ]

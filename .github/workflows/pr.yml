@@ -242,18 +242,28 @@ jobs:
           MIX_ENV: test
         run: mix test --cover --warnings-as-errors
   test_linux_script_job:
-    name: Test Linux script
+    name: Test Linux script with ${{ matrix.shell }} shell
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shell:
+          - bash
+          - fish
+          - zsh
     env:
       TZ: America/New_York
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install shell
+        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.shell }}
+      - name: Set default shell
+        run: sudo chsh -s $(which ${{ matrix.shell }}) $USER
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
+          key: ${{ runner.os }}-${{ matrix.shell }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
           path: priv/static/Linux.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -261,11 +271,11 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-        shell: /bin/bash -l {0}
+        shell: ${{ matrix.shell }} -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: /bin/bash -l {0}
+        shell: ${{ matrix.shell }} -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -275,18 +285,28 @@ jobs:
           retry_wait_seconds: 5
           timeout_seconds: 1
   test_macos_script_job:
-    name: Test macOS script
+    name: Test macOS script with ${{ matrix.shell }} shell
     runs-on: macos-latest
+    strategy:
+      matrix:
+        shell:
+          - bash
+          - fish
+          - zsh
     env:
       TZ: America/New_York
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install shell
+        run: brew install ${{ matrix.shell }}
+      - name: Set default shell
+        run: sudo chsh -s $(which ${{ matrix.shell }}) $USER
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          key: ${{ runner.os }}-${{ matrix.shell }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
           path: priv/static/macOS.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -294,11 +314,11 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp macOS.sh
-        shell: /bin/bash -l {0}
+        shell: ${{ matrix.shell }} -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: /bin/bash -l {0}
+        shell: ${{ matrix.shell }} -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
