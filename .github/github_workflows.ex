@@ -9,6 +9,7 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
+  @shells ["bash", "fish", "zsh"]
 
   def get do
     %{
@@ -83,10 +84,8 @@ defmodule GithubWorkflows do
       prettier: prettier_job(),
       sobelow: sobelow_job(),
       test: test_job(),
-      test_linux_script_job: test_linux_script_job(),
-      test_macos_script_job: test_macos_script_job(),
       unused_deps: unused_deps_job()
-    ]
+    ] ++ test_scripts_jobs()
   end
 
   defp compile_job do
@@ -372,81 +371,92 @@ defmodule GithubWorkflows do
     )
   end
 
-  defp test_shell_script_job(os, runs_on, shell_install_command, expect_install_command) do
+  defp test_scripts_jobs do
+    Enum.reduce(@shells, [], fn shell, jobs ->
+      jobs ++
+        [{:"test_linux_#{shell}", test_linux_script_job(shell)}] ++
+        [{:"test_macos_#{shell}", test_macos_script_job(shell)}]
+    end)
+  end
+
+  defp test_shell_script_job(os, runs_on, shell, shell_install_command, expect_install_command) do
     [
-      name: "Test #{os} script with ${{ matrix.shell }} shell",
+      name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
-      strategy: [
-        matrix: [
-          shell: ["bash", "fish", "zsh"]
-        ]
-      ],
       env: [TZ: "America/New_York"],
-      steps: [
-        checkout_step(),
+      steps:
         [
-          name: "Install shell",
-          run: shell_install_command
-        ],
-        [
-          name: "Set default shell",
-          run: "sudo chsh -s $(which ${{ matrix.shell }}) $USER"
-        ],
-        [
-          name: "Restore script result cache",
-          uses: "actions/cache@v3",
-          id: "result_cache",
-          with: [
-            key:
-              "${{ runner.os }}-${{ matrix.shell }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
-            path: "priv/static/#{os}.sh"
+          checkout_step()
+        ] ++
+          if(shell == "bash",
+            do: [],
+            else: [
+              [
+                name: "Install shell",
+                run: shell_install_command
+              ]
+            ]
+          ) ++
+          [
+            [
+              name: "Restore script result cache",
+              uses: "actions/cache@v3",
+              id: "result_cache",
+              with: [
+                key:
+                  "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
+                path: "priv/static/#{os}.sh"
+              ]
+            ],
+            [
+              name: "Install expect tool",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: expect_install_command
+            ],
+            [
+              name: "Test the script",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: "cd test/scripts && expect script.exp #{os}.sh",
+              shell: shell
+            ],
+            [
+              name: "Generate an app and start the server",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: "make -f test/scripts/Makefile serve",
+              shell: shell
+            ],
+            [
+              name: "Check HTTP status code",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              uses: "nick-fields/retry@v2",
+              with: [
+                command:
+                  "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh",
+                max_attempts: 7,
+                retry_wait_seconds: 5,
+                timeout_seconds: 1
+              ]
+            ]
           ]
-        ],
-        [
-          name: "Install expect tool",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: expect_install_command
-        ],
-        [
-          name: "Test the script",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "${{ matrix.shell }} -l -c 'cd test/scripts && expect script.exp #{os}.sh'"
-        ],
-        [
-          name: "Generate an app and start the server",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "${{ matrix.shell }} -l -c 'make -f test/scripts/Makefile serve'"
-        ],
-        [
-          name: "Check HTTP status code",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          uses: "nick-fields/retry@v2",
-          with: [
-            command:
-              "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh",
-            max_attempts: 7,
-            retry_wait_seconds: 5,
-            timeout_seconds: 1
-          ]
-        ]
-      ]
     ]
   end
 
-  defp test_linux_script_job do
+  defp test_linux_script_job(shell) do
     test_shell_script_job(
       "Linux",
       "ubuntu-latest",
-      "sudo apt-get update && sudo apt-get install -y ${{ matrix.shell }}",
+      shell,
+      "sudo apt-get update && sudo apt-get install -y #{shell}",
       "sudo apt-get update && sudo apt-get install -y expect"
     )
   end
 
-  defp test_macos_script_job do
+  defp test_macos_script_job(shell) do
     test_shell_script_job(
       "macOS",
       "macos-latest",
-      "brew install ${{ matrix.shell }}",
+      shell,
+      "brew install #{shell}",
       "brew install expect"
     )
   end
