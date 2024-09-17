@@ -1,6 +1,6 @@
 #! /bin/bash
 
-SHELL := /bin/bash
+SHELL := /bin/bash -l
 
 .ONESHELL:
 .SHELLFLAGS := -eu -o pipefail -c
@@ -8,12 +8,10 @@ SHELL := /bin/bash
 serve:
 	@echo "Current shell: $$SHELL"
 	@echo "Current PATH: $$PATH"
-	@echo "Contents of ~/.bashrc:"
-	@cat ~/.bashrc
+	@echo "Contents of ~/.bash_profile:"
+	@cat ~/.bash_profile || echo "File not found"
 	@echo "asdf version:"
 	asdf --version || echo "asdf command not available"
-	source ~/.bashrc
-	echo "PATH: $$PATH"
 	@echo "Which asdf:"
 	which asdf || echo "asdf not found in PATH"
 	@echo "Elixir version:"

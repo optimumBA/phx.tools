@@ -97,6 +97,10 @@ function install() {
         "bash" | "rbash")
             echo '. "$HOME/.asdf/asdf.sh"' >>"$config_file"
             echo '. "$HOME/.asdf/completions/asdf.bash"' >>"$config_file"
+            echo "export PATH=\"$HOME/.asdf/bin:$HOME/.asdf/shims:$PATH\"" >>"$HOME/.bash_profile"
+            echo "source \"$HOME/.asdf/asdf.sh\"" >>"$HOME/.bash_profile"
+            echo "source \"$HOME/.asdf/completions/asdf.bash\"" >>"$HOME/.bash_profile"
+            echo "Environment setup added to $HOME/.bash_profile"
             ;;
         "elvish")
             echo ". $HOME/.asdf/asdf.elv" >>~/.config/elvish/rc.elv
@@ -295,9 +299,7 @@ while ! is_yn "$answer"; do
 
         # sleep 3
 
-        sudo -S chsh -s '/bin/bash' "${USER}"
-
-        add_env "$optional"
+        add_env
         ;;
     [nN] | [nN][oO])
         echo "Thank you for your time"
