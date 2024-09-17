@@ -80,14 +80,7 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        case $current_shell in
-        "bash")
-            echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
-            ;;
-        "zsh")
-            echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
-            ;;
-        esac
+        echo 'eval "$(mise activate $current_shell)"' >>$config_file
         mise activate $current_shell
         ;;
     "Erlang")
@@ -147,17 +140,17 @@ function add_env() {
     sleep 1.5
     maybe_install "mise"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
     echo -e "${white}"
     sleep 1.5
     maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
     # echo -e "${white}"
     # sleep 1.5
