@@ -50,9 +50,6 @@ case "$current_shell" in
     ;;
 esac
 
-echo "Current shell: $current_shell"
-echo "Config file: $config_file"
-
 function already_installed() {
     case $1 in
     "Git")
@@ -167,34 +164,34 @@ function maybe_install() {
 }
 
 function add_env() {
-    # echo ""
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "Git"
-
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "wget"
+    echo ""
+    echo -e "${white}"
+    sleep 2
+    maybe_install "Git"
 
     echo -e "${white}"
-    # sleep 3
+    sleep 2
+    maybe_install "wget"
+
+    echo -e "${white}"
+    sleep 3
     maybe_install "asdf"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Erlang"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Elixir"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Elixir"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Phoenix"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "PostgreSQL"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "PostgreSQL"
 
     echo "echo 'This is executed'" >>~/.bashrc
     echo $HOME
@@ -242,13 +239,13 @@ echo -e "$by"
 
 echo -e "$optimum"
 
-# sleep 3
+sleep 3
 
 echo ""
 
 echo -e "${bblue}${bold}Welcome to the phx.tools shell script for Linux-based OS."
 
-# sleep 3
+sleep 3
 
 echo ""
 
@@ -266,7 +263,7 @@ echo "6) PostgreSQL"
 echo ""
 echo -e "${white} ${bold}"
 
-# sleep 1
+sleep 1
 
 # only true if user answer y/n
 is_yn() {
@@ -293,7 +290,7 @@ while ! is_yn "$answer"; do
 
         echo ""
 
-        # sleep 3
+        sleep 3
 
         add_env
         ;;

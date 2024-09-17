@@ -30,7 +30,7 @@ current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
 "bash" | "rbash")
-    config_file="$HOME/.bashrc"
+    config_file="$HOME/.bash_profile"
     ;;
 "dash" | "sh")
     config_file="$HOME/.profile"
@@ -85,7 +85,7 @@ function install() {
         xcode-select --install
         ;;
     "Homebrew")
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
     "asdf")
         # Deps for asdf
@@ -292,7 +292,7 @@ while ! is_yn "$answer"; do
 
         sleep 3
 
-        add_env "$optional"
+        add_env
         ;;
     [nN] | [nN][oO])
         echo "Thank you for your time"

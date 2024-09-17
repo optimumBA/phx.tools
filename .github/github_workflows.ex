@@ -74,18 +74,18 @@ defmodule GithubWorkflows do
 
   defp elixir_ci_jobs do
     [
-      # compile: compile_job(),
-      # credo: credo_job(),
-      # deps_audit: deps_audit_job(),
-      # dialyzer: dialyzer_job(),
-      # format: format_job(),
-      # hex_audit: hex_audit_job(),
-      # prettier: prettier_job(),
-      # sobelow: sobelow_job(),
-      # test: test_job(),
-      test_linux_script_job: test_linux_script_job()
-      # test_macos_script_job: test_macos_script_job(),
-      # unused_deps: unused_deps_job()
+      compile: compile_job(),
+      credo: credo_job(),
+      deps_audit: deps_audit_job(),
+      dialyzer: dialyzer_job(),
+      format: format_job(),
+      hex_audit: hex_audit_job(),
+      prettier: prettier_job(),
+      sobelow: sobelow_job(),
+      test: test_job(),
+      test_linux_script_job: test_linux_script_job(),
+      test_macos_script_job: test_macos_script_job(),
+      unused_deps: unused_deps_job()
     ]
   end
 
