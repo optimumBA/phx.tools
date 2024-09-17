@@ -9,8 +9,7 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
-  # @shells ["bash", "zsh"]
-  @shells ["bash"]
+  @shells ["bash", "zsh"]
 
   def get do
     %{
@@ -433,10 +432,9 @@ defmodule GithubWorkflows do
               run: expect_install_command
             ],
             [
-              # Avoid mise conflicts
-              name: "Remove .tool-versions file",
+              name: "Remove mise files",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "rm .tool-versions"
+              run: "rm .env mise.toml .tool-versions"
             ],
             [
               name: "Test the script",
