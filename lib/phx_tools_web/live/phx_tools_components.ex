@@ -135,11 +135,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </div>
             <div
               class="mx-auto"
-              data-asciicast={
-                if @live_action == :macOS,
-                  do: "bJMOlPe5F4mFLY0Rl6fiJSOp3",
-                  else: "XhDpRstBJ4df2gfiRfp0awDPO"
-              }
+              data-asciicast={ascii_cast_id(@live_action)}
               id={"asciinema-#{Utils.random_id()}"}
               phx-hook="AsciinemaHook"
             >
@@ -154,14 +150,11 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  attr :installation_instructions, :list
-  attr :live_action, :atom
-  attr :operating_system, :string
+  defp ascii_cast_id(:macos), do: "bJMOlPe5F4mFLY0Rl6fiJSOp3"
 
-  slot :inner_block, required: true
+  defp ascii_cast_id(:linux), do: "XhDpRstBJ4df2gfiRfp0awDPO"
 
-  @spec os_instructions(assigns()) :: rendered()
-  def os_instructions(assigns) do
+  defp os_instructions(assigns) do
     ~H"""
     <div
       id="installation-instructions"
@@ -190,7 +183,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   defp command_select_button(%{live_action: :linux} = assigns) do
     ~H"""
-    <.link href={~p"/macOS"}>
+    <.link href={~p"/macos"}>
       <div
         id="macOS"
         class={[
@@ -209,7 +202,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  defp command_select_button(%{live_action: :macOS} = assigns) do
+  defp command_select_button(%{live_action: :macos} = assigns) do
     ~H"""
     <.link href={~p"/linux"}>
       <div
@@ -239,7 +232,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     ]
   end
 
-  defp installation_instructions(:macOS) do
+  defp installation_instructions(:macos) do
     [
       "Click on the copy icon to copy this command to your clipboard",
       "Open Terminal by pressing <b class=\"font-extrabold\">⌘ + SPACE</b> together",
@@ -249,10 +242,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     ]
   end
 
-  attr :source_code_url, :string, required: true
-
-  @spec source_code_button(assigns()) :: rendered()
-  def source_code_button(assigns) do
+  defp source_code_button(assigns) do
     ~H"""
     <div class="border-2 border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
       <.link

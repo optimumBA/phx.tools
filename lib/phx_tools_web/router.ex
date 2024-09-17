@@ -21,7 +21,7 @@ defmodule PhxToolsWeb.Router do
       session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
       live "/", PhxToolsLive.Index, :index
       live "/linux", PhxToolsLive.Index, :linux
-      live "/macOS", PhxToolsLive.Index, :macOS
+      live "/macos", PhxToolsLive.Index, :macos
     end
   end
 

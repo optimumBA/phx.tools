@@ -32,7 +32,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp apply_action(socket, :index) do
     case socket.assigns.operating_system do
       "Linux" -> {:noreply, assign(socket, :live_action, :linux)}
-      "macOS" -> {:noreply, assign(socket, :live_action, :macOS)}
+      "macOS" -> {:noreply, assign(socket, :live_action, :macos)}
       _other -> {:noreply, socket}
     end
   end
@@ -55,7 +55,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   @spec get_os_from_live_action(String.t()) :: String.t()
   def get_os_from_live_action("linux"), do: "Linux"
 
-  def get_os_from_live_action("macOS"), do: "macOS"
+  def get_os_from_live_action("macos"), do: "macOS"
 
   def get_os_from_live_action(_other), do: "Unsupported OS"
 end
