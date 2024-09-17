@@ -34,7 +34,7 @@ jobs:
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
+        run: source ~/.bashrc && make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -71,7 +71,7 @@ jobs:
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
+        run: source ~/.config/fish/config.fish && make -f test/scripts/Makefile serve
         shell: /bin/fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -108,7 +108,7 @@ jobs:
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
+        run: source ~/.zshrc && make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'

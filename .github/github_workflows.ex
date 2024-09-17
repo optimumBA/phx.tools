@@ -375,12 +375,26 @@ defmodule GithubWorkflows do
     Enum.reduce(@shells, [], fn shell, jobs ->
       jobs ++
         [{:"test_linux_#{shell}", test_linux_script_job(shell)}]
-        # ++
-        # [{:"test_macos_#{shell}", test_macos_script_job(shell)}]
+
+      # ++
+      # [{:"test_macos_#{shell}", test_macos_script_job(shell)}]
     end)
   end
 
-  defp test_shell_script_job(os, runs_on, shell, shell_install_command, expect_install_command) do
+  defp test_shell_script_job(opts) do
+    os = Keyword.fetch!(opts, :os)
+    runs_on = Keyword.fetch!(opts, :runs_on)
+    shell = Keyword.fetch!(opts, :shell)
+    shell_install_command = Keyword.fetch!(opts, :shell_install_command)
+    expect_install_command = Keyword.fetch!(opts, :expect_install_command)
+
+    config_file =
+      case shell do
+        "bash" -> "~/.bashrc"
+        "fish" -> "~/.config/fish/config.fish"
+        "zsh" -> "~/.zshrc"
+      end
+
     [
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
@@ -427,7 +441,7 @@ defmodule GithubWorkflows do
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "make -f test/scripts/Makefile serve",
+              run: "source #{config_file} && make -f test/scripts/Makefile serve",
               shell: "/bin/#{shell} -l {0}"
             ],
             [
@@ -448,21 +462,21 @@ defmodule GithubWorkflows do
 
   defp test_linux_script_job(shell) do
     test_shell_script_job(
-      "Linux",
-      "ubuntu-latest",
-      shell,
-      "sudo apt-get update && sudo apt-get install -y #{shell}",
-      "sudo apt-get update && sudo apt-get install -y expect"
+      expect_install_command: "sudo apt-get update && sudo apt-get install -y expect",
+      os: "Linux",
+      runs_on: "ubuntu-latest",
+      shell: shell,
+      shell_install_command: "sudo apt-get update && sudo apt-get install -y #{shell}"
     )
   end
 
   defp test_macos_script_job(shell) do
     test_shell_script_job(
-      "macOS",
-      "macos-latest",
-      shell,
-      "brew install #{shell}",
-      "brew install expect"
+      expect_install_command: "brew install expect",
+      os: "macOS",
+      runs_on: "macos-latest",
+      shell: shell,
+      shell_install_command: "brew install #{shell}"
     )
   end
 
