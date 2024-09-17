@@ -81,6 +81,7 @@ function install() {
     "mise")
         curl https://mise.run | sh
         mise activate $current_shell --shims
+        echo "Debug PATH: $PATH"
         ;;
     "Erlang")
         sudo apt-get update
