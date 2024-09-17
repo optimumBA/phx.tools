@@ -103,6 +103,13 @@ function install() {
             mkdir -p ~/.config/fish/completions
             ln -s ~/.asdf/completions/asdf.fish ~/.config/fish/completions
             ;;
+        "zsh")
+            echo ". $HOME/.asdf/asdf.sh" >>~/.zshrc
+            echo "# append completions to fpath" >>~/.zshrc
+            echo "fpath=(${ASDF_DIR}/completions $fpath)" >>~/.zshrc
+            echo "# initialise completions with ZSH's compinit" >>~/.zshrc
+            echo "autoload -Uz compinit && compinit" >>~/.zshrc
+            ;;
         *)
             echo "Unsupported shell: $current_shell"
             exit 1
