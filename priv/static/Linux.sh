@@ -139,33 +139,29 @@ function maybe_install() {
 }
 
 function add_env() {
-    # echo ""
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "Git"
-
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "wget"
+    echo "Debug: Starting add_env function"
 
     echo -e "${white}"
     sleep 3
+    echo "Debug: About to install mise"
     maybe_install "mise"
+    echo "Debug: Finished mise installation"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    echo "Debug: Current PATH: $PATH"
+    echo "Debug: Mise location: $(which mise 2>/dev/null || echo 'not found')"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Elixir"
+    # Source the updated configuration
+    echo "Debug: Sourcing config file: $config_file"
+    source $config_file
+    cat $config_file
+    echo "Debug: Finished sourcing config file"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    echo "Debug: Updated PATH: $PATH"
+    echo "Debug: Mise location after sourcing: $(which mise 2>/dev/null || echo 'not found')"
 
     echo -e "${white}"
     sleep 1.5
+    echo "Debug: About to check postgres"
     echo "Checking postgres"
     maybe_install "PostgreSQL"
 
@@ -271,3 +267,5 @@ while ! is_yn "$answer"; do
         ;;
     esac
 done
+
+echo "Debug: Script completed"
