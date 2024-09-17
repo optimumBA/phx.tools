@@ -85,7 +85,9 @@ function install() {
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
-        echo 'KERL_CONFIGURE_OPTIONS="--without-javac" --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
+        if [ ! -f ~/.kerlrc ]; then
+            echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >~/.kerlrc
+        fi
         mise use -g erlang@$erlang_version
         mise reshim
         ;;
