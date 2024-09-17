@@ -1,9 +1,4 @@
-#! /bin/bash
-
-SHELL ?= /bin/bash
-
 .ONESHELL:
-.SHELLFLAGS := -eu -o pipefail -c
 
 serve:
 	initdb -D ~/pgdata -U postgres
