@@ -13,6 +13,7 @@ serve:
 	@echo "asdf version:"
 	source ~/.bashrc && asdf --version || echo "asdf command not available"
 	source ~/.bashrc
+	echo "PATH: $$PATH"
 	which asdf
 	asdf --version
 	@echo "Elixir version:"
