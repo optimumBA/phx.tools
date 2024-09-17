@@ -83,7 +83,7 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(~/.local/bin/mise activate $current_shell)"' >>$config_file
+        echo 'eval "$(~/.local/bin/mise activate '"$current_shell"')"' >>$config_file
         cat $config_file
         source $config_file >/dev/null 2>&1
         ;;
