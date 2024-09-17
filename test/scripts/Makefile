@@ -1,3 +1,5 @@
+#! /bin/bash
+
 SHELL := /bin/bash
 
 .ONESHELL:
@@ -10,6 +12,9 @@ serve:
 	@cat ~/.bashrc
 	@echo "asdf version:"
 	source ~/.bashrc && asdf --version || echo "asdf command not available"
+	source ~/.bashrc
+	which asdf
+	asdf --version
 	@echo "Elixir version:"
 	source ~/.bashrc && elixir --version || echo "Elixir not installed"
 	@echo "Erlang version:"
