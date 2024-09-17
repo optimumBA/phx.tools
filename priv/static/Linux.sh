@@ -137,30 +137,30 @@ function maybe_install() {
 }
 
 function add_env() {
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Git"
+    # echo ""
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "Git"
 
-    echo -e "${white}"
-    sleep 2
-    maybe_install "wget"
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "wget"
 
     echo -e "${white}"
     sleep 3
     maybe_install "mise"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Elixir"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
     echo -e "${white}"
     sleep 1.5
