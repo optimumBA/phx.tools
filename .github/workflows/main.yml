@@ -32,9 +32,6 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: source ~/.bashrc && SHELL=/bin/bash make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        if: always()
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -72,9 +69,6 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: . ~/.config/fish/config.fish && SHELL=/bin/fish make -f test/scripts/Makefile serve
         shell: /bin/fish -l {0}
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        if: always()
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -112,9 +106,6 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: source ~/.zshrc && SHELL=/bin/zsh make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        if: always()
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2

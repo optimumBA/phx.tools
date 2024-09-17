@@ -457,11 +457,6 @@ defmodule GithubWorkflows do
               shell: "/bin/#{shell} -l {0}"
             ],
             [
-              name: "Setup upterm session",
-              uses: "lhotari/action-upterm@v1",
-              if: "always()"
-            ],
-            [
               name: "Check HTTP status code",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               uses: "nick-fields/retry@v2",
