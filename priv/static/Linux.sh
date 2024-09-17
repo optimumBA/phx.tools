@@ -198,6 +198,11 @@ function add_env() {
 
     echo "echo 'This is executed'" >>~/.bashrc
     echo $HOME
+    echo "Sourcing $config_file"
+    source $config_file
+    echo "Final PATH: $PATH"
+    echo "Which asdf: $(which asdf)"
+    echo "asdf --version: $(asdf --version)"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
