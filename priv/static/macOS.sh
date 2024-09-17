@@ -32,9 +32,6 @@ case $current_shell in
 "bash" | "rbash")
     config_file="$HOME/.bashrc"
     ;;
-"fish")
-    config_file="$HOME/.config/fish/config.fish"
-    ;;
 "zsh")
     config_file="$HOME/.zshrc"
     ;;
@@ -86,9 +83,6 @@ function install() {
         case $current_shell in
         "bash")
             echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
-            ;;
-        "fish")
-            echo '~/.local/bin/mise activate fish | source' >>$config_file
             ;;
         "zsh")
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
@@ -163,9 +157,9 @@ function add_env() {
     sleep 1.5
     maybe_install "Phoenix"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"

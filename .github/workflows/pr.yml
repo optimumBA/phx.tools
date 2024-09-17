@@ -44,11 +44,11 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-  test_linux_fish:
-    name: Test Linux script with fish shell
-    runs-on: ubuntu-latest
+  test_macos_bash:
+    name: Test macOS script with bash shell
+    runs-on: macos-latest
     env:
-      SHELL: /bin/fish
+      SHELL: /bin/bash
       TZ: America/New_York
     steps:
       - name: Checkout
@@ -57,22 +57,19 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
-          path: priv/static/Linux.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y fish
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          path: priv/static/macOS.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y expect
+        run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts; and expect script.exp Linux.sh
-        shell: /bin/fish -l {0}
+        run: cd test/scripts && expect script.exp macOS.sh
+        shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: . ~/.config/fish/config.fish && SHELL=/bin/fish make -f test/scripts/Makefile serve
-        shell: /bin/fish -l {0}
+        run: source ~/.bashrc && SHELL=/bin/bash make -f test/scripts/Makefile serve
+        shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -118,12 +115,50 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+  test_macos_zsh:
+    name: Test macOS script with zsh shell
+    runs-on: macos-latest
+    env:
+      SHELL: /bin/zsh
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore script result cache
+        uses: actions/cache@v3
+        id: result_cache
+        with:
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          path: priv/static/macOS.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install zsh
+      - name: Install expect tool
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install expect
+      - name: Test the script
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: cd test/scripts && expect script.exp macOS.sh
+        shell: /bin/zsh -l {0}
+      - name: Generate an app and start the server
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: source ~/.zshrc && SHELL=/bin/zsh make -f test/scripts/Makefile serve
+        shell: /bin/zsh -l {0}
+      - name: Check HTTP status code
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: nick-fields/retry@v2
+        with:
+          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
+          max_attempts: 7
+          retry_wait_seconds: 5
+          timeout_seconds: 1
   deploy_preview_app:
     name: Deploy preview app
     needs:
       - test_linux_bash
-      - test_linux_fish
+      - test_macos_bash
       - test_linux_zsh
+      - test_macos_zsh
     runs-on: ubuntu-latest
     permissions: write-all
     concurrency:
