@@ -80,7 +80,9 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        mise activate $current_shell --shims
+        mise activate --shims
+        echo "Debug PATH: $PATH"
+        echo 'export PATH="$HOME/.local/share/mise/shims:$PATH"' >>$config_file
         echo "Debug PATH: $PATH"
         ;;
     "Erlang")
