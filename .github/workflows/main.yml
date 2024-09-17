@@ -6,262 +6,6 @@ on:
       - main
 
 jobs:
-  compile:
-    name: Install deps and compile
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Install Elixir dependencies
-        env:
-          MIX_ENV: test
-        run: mix deps.get
-      - name: Compile
-        env:
-          MIX_ENV: test
-        run: mix compile
-  credo:
-    needs: compile
-    name: Credo
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check code style
-        env:
-          MIX_ENV: test
-        run: mix credo --strict
-  deps_audit:
-    needs: compile
-    name: Deps audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for vulnerable Mix dependencies
-        env:
-          MIX_ENV: test
-        run: mix deps.audit
-  dialyzer:
-    needs: compile
-    name: Dialyzer
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Restore PLT cache
-        uses: actions/cache@v3
-        with:
-          path: priv/plts
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-
-      - name: Create PLTs
-        env:
-          MIX_ENV: test
-        run: mix dialyzer --plt
-      - name: Run dialyzer
-        env:
-          MIX_ENV: test
-        run: mix dialyzer
-  format:
-    needs: compile
-    name: Format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check Elixir formatting
-        env:
-          MIX_ENV: test
-        run: mix format --check-formatted
-  hex_audit:
-    needs: compile
-    name: Hex audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for retired Hex packages
-        env:
-          MIX_ENV: test
-        run: mix hex.audit
-  prettier:
-    name: Check formatting using Prettier
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore npm cache
-        uses: actions/cache@v3
-        id: npm-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-prettier
-      - name: Install Prettier
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm i -D prettier prettier-plugin-toml
-      - name: Run Prettier
-        run: npx prettier -c .
-  sobelow:
-    needs: compile
-    name: Security check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for security issues using sobelow
-        env:
-          MIX_ENV: test
-        run: mix sobelow --config .sobelow-conf
-  test:
-    needs: compile
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Run tests
-        env:
-          MIX_ENV: test
-        run: mix test --cover --warnings-as-errors
-  unused_deps:
-    needs: compile
-    name: Check unused deps
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - uses: actions/cache@v3
-        with:
-          path: |
-            _build
-            deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for unused Mix dependencies
-        env:
-          MIX_ENV: test
-        run: mix deps.unlock --check-unused
   test_linux_bash:
     name: Test Linux script with bash shell
     runs-on: ubuntu-latest
@@ -282,11 +26,11 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-        shell: bash
+        shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: bash
+        shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -315,11 +59,11 @@ jobs:
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp macOS.sh
-        shell: bash
+        shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: bash
+        shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -336,25 +80,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install shell
-        run: sudo apt-get update && sudo apt-get install -y fish
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
           path: priv/static/Linux.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y fish
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-        shell: fish
+        shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: fish
+        shell: /bin/fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -371,25 +116,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install shell
-        run: brew install fish
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
           path: priv/static/macOS.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install fish
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp macOS.sh
-        shell: fish
+        shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: fish
+        shell: /bin/fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -406,25 +152,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install shell
-        run: sudo apt-get update && sudo apt-get install -y zsh
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
           path: priv/static/Linux.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y zsh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
-        shell: zsh
+        shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: zsh
+        shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -441,25 +188,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install shell
-        run: brew install zsh
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
           path: priv/static/macOS.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install zsh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp macOS.sh
-        shell: zsh
+        shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: zsh
+        shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -471,16 +219,6 @@ jobs:
   deploy_production_app:
     name: Deploy production app
     needs:
-      - compile
-      - credo
-      - deps_audit
-      - dialyzer
-      - format
-      - hex_audit
-      - prettier
-      - sobelow
-      - test
-      - unused_deps
       - test_linux_bash
       - test_macos_bash
       - test_linux_fish

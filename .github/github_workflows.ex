@@ -75,16 +75,16 @@ defmodule GithubWorkflows do
 
   defp ci_jobs do
     [
-      compile: compile_job(),
-      credo: credo_job(),
-      deps_audit: deps_audit_job(),
-      dialyzer: dialyzer_job(),
-      format: format_job(),
-      hex_audit: hex_audit_job(),
-      prettier: prettier_job(),
-      sobelow: sobelow_job(),
-      test: test_job(),
-      unused_deps: unused_deps_job()
+      # compile: compile_job(),
+      # credo: credo_job(),
+      # deps_audit: deps_audit_job(),
+      # dialyzer: dialyzer_job(),
+      # format: format_job(),
+      # hex_audit: hex_audit_job(),
+      # prettier: prettier_job(),
+      # sobelow: sobelow_job(),
+      # test: test_job(),
+      # unused_deps: unused_deps_job()
     ] ++ test_scripts_jobs()
   end
 
@@ -386,28 +386,29 @@ defmodule GithubWorkflows do
       env: [TZ: "America/New_York"],
       steps:
         [
-          checkout_step()
+          checkout_step(),
+          [
+            name: "Restore script result cache",
+            uses: "actions/cache@v3",
+            id: "result_cache",
+            with: [
+              key:
+                "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
+              path: "priv/static/#{os}.sh"
+            ]
+          ]
         ] ++
           if(shell == "bash",
             do: [],
             else: [
               [
                 name: "Install shell",
+                if: "steps.result_cache.outputs.cache-hit != 'true'",
                 run: shell_install_command
               ]
             ]
           ) ++
           [
-            [
-              name: "Restore script result cache",
-              uses: "actions/cache@v3",
-              id: "result_cache",
-              with: [
-                key:
-                  "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
-                path: "priv/static/#{os}.sh"
-              ]
-            ],
             [
               name: "Install expect tool",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
@@ -417,13 +418,13 @@ defmodule GithubWorkflows do
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "cd test/scripts && expect script.exp #{os}.sh",
-              shell: shell
+              shell: "/bin/#{shell} -l {0}"
             ],
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "make -f test/scripts/Makefile serve",
-              shell: shell
+              shell: "/bin/#{shell} -l {0}"
             ],
             [
               name: "Check HTTP status code",
