@@ -81,7 +81,7 @@ function install() {
     "mise")
         curl https://mise.run | sh
         echo "eval \"\$(mise activate $current_shell)\"" >>$config_file
-        mise activate $current_shell
+        eval "$(mise activate $current_shell)"
         ;;
     "Erlang")
         sudo apt-get update

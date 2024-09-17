@@ -80,8 +80,8 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo "eval \"\$(mise activate $current_shell)\"" >>$config_file
-        mise activate $current_shell
+        echo 'eval "\$(mise activate '$current_shell')"' >>$config_file
+        eval "$(mise activate $current_shell)"
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
