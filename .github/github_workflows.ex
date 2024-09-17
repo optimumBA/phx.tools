@@ -417,7 +417,7 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "/bin/#{shell} -c '(cd test/scripts) && expect script.exp #{os}.sh'",
+              run: "/bin/#{shell} -c 'cd test/scripts && expect script.exp #{os}.sh'",
               shell: "/bin/#{shell} -l {0}"
             ],
             [
