@@ -95,8 +95,8 @@ function install() {
 
         case $current_shell in
         "bash" | "rbash")
-            echo ". $HOME/.asdf/asdf.sh" >>~/.bashrc
-            echo ". $HOME/.asdf/completions/asdf.bash" >>~/.bashrc
+            echo '. "$HOME/.asdf/asdf.sh"' >>"$config_file"
+            echo '. "$HOME/.asdf/completions/asdf.bash"' >>"$config_file"
             ;;
         "elvish")
             echo ". $HOME/.asdf/asdf.elv" >>~/.config/elvish/rc.elv
