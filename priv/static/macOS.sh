@@ -107,7 +107,6 @@ function install() {
         mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
-        source $config_file >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new $phoenix_version
         ;;
@@ -115,7 +114,9 @@ function install() {
         brew install gcc readline zlib curl ossp-uuid
         mise install postgres@$postgres_version
         mise use -g postgres@$postgres_version
-        source $config_file >/dev/null 2>&1
+        postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
+        export PATH="$postgres_bin_path:$PATH"
+        echo "export PATH=\"$postgres_bin_path:\$PATH\"" >>$config_file
         ;;
     *)
         echo "Invalid name argument on install"
@@ -137,34 +138,34 @@ function maybe_install() {
 }
 
 function add_env() {
-    # echo ""
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "Xcode Command Line Tools"
-
-    # echo -e "${white}"
-    # sleep 2
-    # maybe_install "Homebrew"
+    echo ""
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Xcode Command Line Tools"
 
     echo -e "${white}"
-    sleep 3
+    sleep 1.5
+    maybe_install "Homebrew"
+
+    echo -e "${white}"
+    sleep 1.5
     maybe_install "mise"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Erlang"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Elixir"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Elixir"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Phoenix"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "PostgreSQL"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"

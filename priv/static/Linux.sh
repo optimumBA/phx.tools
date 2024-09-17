@@ -108,7 +108,6 @@ function install() {
         mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
-        source $config_file >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new $phoenix_version
         ;;
@@ -117,6 +116,9 @@ function install() {
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
         mise install postgres@$postgres_version
         mise use -g postgres@$postgres_version
+        postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
+        export PATH="$postgres_bin_path:$PATH"
+        echo "export PATH=\"$postgres_bin_path:\$PATH\"" >>$config_file
         ;;
     *)
         echo "Invalid name argument on install"
@@ -138,24 +140,33 @@ function maybe_install() {
 }
 
 function add_env() {
-    echo "Debug: Starting add_env function"
-
-    echo -e "${white}"
-    sleep 3
-    echo "Debug: About to install mise"
-    maybe_install "mise"
-    echo "Debug: Finished mise installation"
-
-    echo "Debug: Current PATH: $PATH"
-    echo "Debug: Mise location: $(which mise 2>/dev/null || echo 'not found')"
-
-    echo "Debug: Updated PATH: $PATH"
-    echo "Debug: Mise location after sourcing: $(which mise 2>/dev/null || echo 'not found')"
 
     echo -e "${white}"
     sleep 1.5
-    echo "Debug: About to check postgres"
-    echo "Checking postgres"
+    maybe_install "Git"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "wget"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "mise"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Erlang"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Elixir"
+
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Phoenix"
+
+    echo -e "${white}"
+    sleep 1.5
     maybe_install "PostgreSQL"
 
     echo -e "${white}"
@@ -260,5 +271,3 @@ while ! is_yn "$answer"; do
         ;;
     esac
 done
-
-echo "Debug: Script completed"

@@ -9,8 +9,7 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
-  # @shells ["bash", "fish", "zsh"]
-  @shells ["zsh"]
+  @shells ["bash", "fish", "zsh"]
 
   def get do
     %{
