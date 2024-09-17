@@ -92,9 +92,6 @@ function install() {
         brew install coreutils curl git
 
         case "$current_shell" in
-        "zsh")
-            brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
-            ;;
         "bash" | "rbash")
             brew install asdf && echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >>~/.bashrc
             ;;
@@ -108,6 +105,9 @@ function install() {
             ;;
         "fish")
             brew install asdf && echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >>~/.config/fish/config.fish
+            ;;
+        "zsh")
+            brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
             ;;
         *)
             echo "Unsupported shell: "$current_shell""

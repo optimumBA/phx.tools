@@ -144,9 +144,6 @@ function install() {
         asdf global postgres $postgres_version
         asdf reshim postgres
 
-        echo 'export PATH="$HOME/.asdf/installs/postgres/$postgres_version/bin:$PATH"' >>$config_file
-        echo 'export PATH="$HOME/.asdf/shims:$PATH"' >>$config_file
-        echo 'export PGDATA="$HOME/pgdata"' >>$config_file
         echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
 
@@ -199,14 +196,6 @@ function add_env() {
     echo -e "${white}"
     sleep 1.5
     maybe_install "PostgreSQL"
-
-    echo "echo 'This is executed'" >>~/.bashrc
-    echo $HOME
-    echo "Sourcing $config_file"
-    source $config_file
-    echo "Final PATH: $PATH"
-    echo "Which asdf: $(which asdf)"
-    echo "asdf --version: $(asdf --version)"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
