@@ -30,7 +30,7 @@ current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case "$current_shell" in
 "bash" | "rbash")
-    config_file="$HOME/.bashrc"
+    config_file="$HOME/.bash_profile"
     ;;
 "dash" | "sh")
     config_file="$HOME/.profile"
