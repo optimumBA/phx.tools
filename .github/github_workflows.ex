@@ -414,6 +414,10 @@ defmodule GithubWorkflows do
           shell: "sh"
         ],
         [
+          name: "Setup upterm session",
+          uses: "lhotari/action-upterm@v1"
+        ],
+        [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           run: "echo $SHELL && . ~/.profile && . ~/.bashrc && make -f test/scripts/Makefile",
