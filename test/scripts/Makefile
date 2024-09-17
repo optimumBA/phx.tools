@@ -1,10 +1,3 @@
-#! /bin/bash
-
-SHELL := /bin/bash
-
-.ONESHELL:
-.SHELLFLAGS := -eu -o pipefail -c
-
 serve:
 	@echo "Current shell: $$SHELL"
 	@echo "Current PATH: $$PATH"
