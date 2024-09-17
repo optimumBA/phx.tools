@@ -410,14 +410,12 @@ defmodule GithubWorkflows do
         [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "cd test/scripts && expect script.exp #{os}.sh",
-          shell: "${{ matrix.shell }} -l {0}"
+          run: "${{ matrix.shell }} -l -c 'cd test/scripts && expect script.exp #{os}.sh'"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "make -f test/scripts/Makefile serve",
-          shell: "${{ matrix.shell }} -l {0}"
+          run: "${{ matrix.shell }} -l -c 'make -f test/scripts/Makefile serve'"
         ],
         [
           name: "Check HTTP status code",
