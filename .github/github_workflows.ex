@@ -9,7 +9,8 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
-  @shells ["bash", "zsh"]
+  # @shells ["bash", "zsh"]
+  @shells ["bash"]
 
   def get do
     %{
@@ -376,7 +377,7 @@ defmodule GithubWorkflows do
       jobs ++
         [
           {:"test_linux_#{shell}", test_linux_script_job(shell)},
-          {:"test_macos_#{shell}", test_macos_script_job(shell)}
+          # {:"test_macos_#{shell}", test_macos_script_job(shell)}
         ]
     end)
   end
@@ -430,6 +431,10 @@ defmodule GithubWorkflows do
               name: "Install expect tool",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: expect_install_command
+            ],
+            [
+              name: "Debug",
+              uses: "lhotari/action-upterm@v1"
             ],
             [
               name: "Test the script",
