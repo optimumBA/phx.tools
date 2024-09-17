@@ -68,6 +68,11 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
                landing_live,
                "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh']"
              )
+
+      refute has_element?(
+               landing_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Unsupported%20OS.sh']"
+             )
     end
 
     test "has correct source code URL for macOS", %{conn: conn} do
@@ -79,6 +84,11 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       assert has_element?(
                landing_live,
                "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh']"
+             )
+
+      refute has_element?(
+               landing_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Unsupported%20OS.sh']"
              )
     end
   end
