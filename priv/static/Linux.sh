@@ -28,15 +28,9 @@ postgres_version=15.1
 
 current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-case "$current_shell" in
+case $current_shell in
 "bash" | "rbash")
     config_file="$HOME/.bash_profile"
-    ;;
-"dash" | "sh")
-    config_file="$HOME/.profile"
-    ;;
-"elvish")
-    config_file="$HOME/.config/elvish/rc.elv"
     ;;
 "fish")
     config_file="$HOME/.config/fish/config.fish"
@@ -58,8 +52,8 @@ function already_installed() {
     "wget")
         dpkg -l | grep -q wget
         ;;
-    "asdf")
-        which asdf >/dev/null 2>&1
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -87,50 +81,18 @@ function install() {
     "wget")
         sudo apt-get install -y wget
         ;;
-    "asdf")
-        git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
-
-        case $current_shell in
-        "bash" | "rbash")
-            echo '. "$HOME/.asdf/asdf.sh"' >>"$config_file"
-            echo '. "$HOME/.asdf/completions/asdf.bash"' >>"$config_file"
-            ;;
-        "elvish")
-            echo ". $HOME/.asdf/asdf.elv" >>"$config_file"
-            ;;
-        "fish")
-            echo ". $HOME/.asdf/asdf.fish" >>"$config_file"
-            mkdir -p ~/.config/fish/completions
-            ln -s ~/.asdf/completions/asdf.fish ~/.config/fish/completions
-            ;;
-        "zsh")
-            echo ". $HOME/.asdf/asdf.sh" >>"$config_file"
-            echo "# append completions to fpath" >>"$config_file"
-            echo "fpath=(${ASDF_DIR}/completions $fpath)" >>"$config_file"
-            echo "# initialise completions with ZSH's compinit" >>"$config_file"
-            echo "autoload -Uz compinit && compinit" >>"$config_file"
-            ;;
-        *)
-            echo "Unsupported shell: $current_shell"
-            exit 1
-            ;;
-        esac
-
+    "mise")
+        curl https://mise.run | sh
+        mise activate $current_shell
         source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang $erlang_version
-        asdf global erlang $erlang_version
-        asdf reshim erlang $erlang_version
+        mise use -g erlang@$erlang_version
         ;;
     "Elixir")
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir $elixir_version
-        asdf global elixir $elixir_version
-        asdf reshim elixir $elixir_version
+        mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
         source $config_file >/dev/null 2>&1
@@ -141,12 +103,9 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres $postgres_version
-        asdf global postgres $postgres_version
-        asdf reshim postgres
+        mise use -g postgres@$postgres_version
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
+        echo 'pg_ctl() { "$HOME/.local/share/mise/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
 
         ;;
@@ -181,7 +140,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 3
-    maybe_install "asdf"
+    maybe_install "mise"
 
     echo -e "${white}"
     sleep 1.5
@@ -252,7 +211,7 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) asdf"
+echo "2) mise"
 echo "3) Erlang"
 echo "4) Elixir"
 echo "5) Phoenix"

@@ -28,7 +28,7 @@ postgres_version=15.1
 
 current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
-case "$current_shell" in
+case $current_shell in
 "bash" | "rbash")
     config_file="$HOME/.bash_profile"
     ;;
@@ -58,8 +58,8 @@ function already_installed() {
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
-    "asdf")
-        brew list | grep -q asdf
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
@@ -87,69 +87,32 @@ function install() {
     "Homebrew")
         $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
-    "asdf")
-        # Deps for asdf
-        brew install coreutils curl git
-
-        case "$current_shell" in
-        "bash" | "rbash")
-            brew install asdf && echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >>~/.bashrc
-            ;;
-        "elvish")
-            brew install asdf
-
-            mkdir -p ~/.config/elvish/lib
-            ln -s $(brew --prefix asdf)/libexec/asdf.elv ~/.config/elvish/lib/asdf.elv
-            echo "\n"'use asdf _asdf; var asdf~ = $_asdf:asdf~' >>~/.config/elvish/rc.elv
-            echo "\n"'set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~' >>~/.config/elvish/rc.elv
-            ;;
-        "fish")
-            brew install asdf && echo -e "\nsource $(brew --prefix asdf)/libexec/asdf.fish" >>~/.config/fish/config.fish
-            ;;
-        "zsh")
-            brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
-            ;;
-        *)
-            echo "Unsupported shell: "$current_shell""
-            exit 1
-            ;;
-        esac
+    "mise")
+        curl https://mise.run | sh
+        mise activate $current_shell
+        source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
-        # Deps for erlang
-        brew install autoconf openssl@1.1 wxwidgets libxslt fop
-
-        export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang $erlang_version
-        asdf global erlang $erlang_version
-        asdf reshim erlang $erlang_version
+        sudo apt-get update
+        sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
+        mise use -g erlang@$erlang_version
         ;;
     "Elixir")
-        # Deps for elixir
-        brew install unzip
-
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir $elixir_version
-        asdf global elixir $elixir_version
-        asdf reshim elixir $elixir_version
+        mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
-        source "$config_file" >/dev/null 2>&1
+        source $config_file >/dev/null 2>&1
         mix local.hex --force
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
-        # Dependencies for PSQL
-        brew install gcc readline zlib curl ossp-uuid
+        sudo apt-get update
+        sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
 
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres $postgres_version
-        asdf global postgres $postgres_version
-        asdf reshim postgres
+        mise use -g postgres@$postgres_version
 
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>$config_file
-        source "$config_file" >/dev/null 2>&1
+        echo 'pg_ctl() { "$HOME/.local/share/mise/shims/pg_ctl" "$@"; }' >>$config_file
+        source $config_file >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on install"
@@ -182,7 +145,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 3
-    maybe_install "asdf"
+    maybe_install "mise"
 
     echo -e "${white}"
     sleep 1.5
@@ -254,7 +217,7 @@ echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
 echo "2) Homebrew"
-echo "3) asdf"
+echo "3) mise"
 echo "4) Erlang"
 echo "5) Elixir"
 echo "6) Phoenix"
