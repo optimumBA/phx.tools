@@ -88,9 +88,11 @@ function install() {
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >>~/.kerlrc
         mise use -g erlang@$erlang_version
+        mise reshim
         ;;
     "Elixir")
         mise use -g elixir@$elixir_version
+        mise reshim
         ;;
     "Phoenix")
         mix local.hex --force
@@ -103,6 +105,7 @@ function install() {
         postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
         export PATH="$postgres_bin_path:$PATH"
         echo "export PATH=\"$postgres_bin_path:\$PATH\"" >>$config_file
+        mise reshim
         ;;
     *)
         echo "Invalid name argument on install"

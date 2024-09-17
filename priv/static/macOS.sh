@@ -87,9 +87,11 @@ function install() {
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
         echo 'KERL_CONFIGURE_OPTIONS="--without-javac" --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
         mise use -g erlang@$erlang_version
+        mise reshim
         ;;
     "Elixir")
         mise use -g elixir@$elixir_version
+        mise reshim
         ;;
     "Phoenix")
         mix local.hex --force
@@ -101,6 +103,7 @@ function install() {
         postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
         export PATH="$postgres_bin_path:$PATH"
         echo "export PATH=\"$postgres_bin_path:\$PATH\"" >>$config_file
+        mise reshim
         ;;
     *)
         echo "Invalid name argument on install"
