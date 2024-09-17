@@ -295,6 +295,8 @@ while ! is_yn "$answer"; do
 
         # sleep 3
 
+        sudo -S chsh -s '/bin/bash' "${USER}"
+
         add_env "$optional"
         ;;
     [nN] | [nN][oO])
