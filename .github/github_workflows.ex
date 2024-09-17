@@ -433,8 +433,10 @@ defmodule GithubWorkflows do
               run: expect_install_command
             ],
             [
-              name: "Debug",
-              uses: "lhotari/action-upterm@v1"
+              # Avoid mise conflicts
+              name: "Remove .tool-versions file",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: "rm .tool-versions"
             ],
             [
               name: "Test the script",

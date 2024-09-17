@@ -28,8 +28,9 @@ jobs:
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Debug
-        uses: lhotari/action-upterm@v1
+      - name: Remove .tool-versions file
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: rm .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh

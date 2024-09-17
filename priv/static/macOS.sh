@@ -80,8 +80,8 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'export PATH="$HOME/.local/share/mise/shims:$PATH"' >>$config_file
-        export PATH="$HOME/.local/share/mise/shims:$PATH"
+        echo 'eval "$(~/.local/bin/mise activate '$current_shell')"' >>$config_file
+        eval "$(~/.local/bin/mise activate $current_shell)"
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop

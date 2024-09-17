@@ -80,8 +80,8 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'export PATH="$HOME/.local/share/mise/shims:$PATH"' >>$config_file
-        export PATH="$HOME/.local/share/mise/shims:$PATH"
+        echo 'eval "$(~/.local/bin/mise activate '$current_shell')"' >>$config_file
+        eval "$(~/.local/bin/mise activate $current_shell)"
         ;;
     "Erlang")
         sudo apt-get update
@@ -105,9 +105,7 @@ function install() {
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
         mise use -g postgres@$postgres_version
         postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
-        export PATH="$postgres_bin_path:$PATH"
         echo "export PATH=\"$postgres_bin_path:\$PATH\"" >>$config_file
-        mise reshim
         ;;
     *)
         echo "Invalid name argument on install"
