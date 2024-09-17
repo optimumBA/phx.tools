@@ -24,23 +24,21 @@ erlang_version=27.0.1
 phoenix_version=1.7.14
 postgres_version=15.1
 
-current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
-
-case $current_shell in
-"bash" | "rbash")
+if [ -n "$BASH_VERSION" ]; then
+    current_shell="bash"
     config_file="$HOME/.bashrc"
-    ;;
-"fish")
-    config_file="$HOME/.config/fish/config.fish"
-    ;;
-"zsh")
+elif [ -n "$ZSH_VERSION" ]; then
+    current_shell="zsh"
     config_file="$HOME/.zshrc"
-    ;;
-*)
-    echo "Unsupported shell: $current_shell"
+elif [ -n "$FISH_VERSION" ]; then
+    current_shell="fish"
+    config_file="$HOME/.config/fish/config.fish"
+else
+    echo "Unsupported shell"
     exit 1
-    ;;
-esac
+fi
+
+echo "Debug: current_shell is $current_shell"
 
 function already_installed() {
     case $1 in

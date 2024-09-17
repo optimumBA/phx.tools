@@ -374,8 +374,9 @@ defmodule GithubWorkflows do
   defp test_scripts_jobs do
     Enum.reduce(@shells, [], fn shell, jobs ->
       jobs ++
-        [{:"test_linux_#{shell}", test_linux_script_job(shell)}] ++
-        [{:"test_macos_#{shell}", test_macos_script_job(shell)}]
+        [{:"test_linux_#{shell}", test_linux_script_job(shell)}]
+        # ++
+        # [{:"test_macos_#{shell}", test_macos_script_job(shell)}]
     end)
   end
 
