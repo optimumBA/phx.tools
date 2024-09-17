@@ -415,7 +415,7 @@ defmodule GithubWorkflows do
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "make -f test/scripts/Makefile"
+          run: "make -f test/scripts/Makefile serve"
         ],
         [
           name: "Check HTTP status code",
