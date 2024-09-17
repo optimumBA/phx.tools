@@ -96,25 +96,27 @@ function install() {
             echo '. "$HOME/.asdf/completions/asdf.bash"' >>"$config_file"
             ;;
         "elvish")
-            echo ". $HOME/.asdf/asdf.elv" >>~/.config/elvish/rc.elv
+            echo ". $HOME/.asdf/asdf.elv" >>"$config_file"
             ;;
         "fish")
-            echo ". $HOME/.asdf/asdf.fish" >>~/.config/fish/config.fish
+            echo ". $HOME/.asdf/asdf.fish" >>"$config_file"
             mkdir -p ~/.config/fish/completions
             ln -s ~/.asdf/completions/asdf.fish ~/.config/fish/completions
             ;;
         "zsh")
-            echo ". $HOME/.asdf/asdf.sh" >>~/.zshrc
-            echo "# append completions to fpath" >>~/.zshrc
-            echo "fpath=(${ASDF_DIR}/completions $fpath)" >>~/.zshrc
-            echo "# initialise completions with ZSH's compinit" >>~/.zshrc
-            echo "autoload -Uz compinit && compinit" >>~/.zshrc
+            echo ". $HOME/.asdf/asdf.sh" >>"$config_file"
+            echo "# append completions to fpath" >>"$config_file"
+            echo "fpath=(${ASDF_DIR}/completions $fpath)" >>"$config_file"
+            echo "# initialise completions with ZSH's compinit" >>"$config_file"
+            echo "autoload -Uz compinit && compinit" >>"$config_file"
             ;;
         *)
             echo "Unsupported shell: $current_shell"
             exit 1
             ;;
         esac
+
+        source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
