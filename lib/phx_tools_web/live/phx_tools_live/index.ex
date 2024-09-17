@@ -12,16 +12,10 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
      |> assign_os_and_source_code_url(session)}
   end
 
-  defp assign_os_and_source_code_url(socket, %{"operating_system" => "Linux"}) do
-    socket
-    |> assign(:operating_system, "Linux")
-    |> assign(:source_code_url, source_code_url("linux"))
-  end
-
   defp assign_os_and_source_code_url(socket, %{"operating_system" => operating_system}) do
     socket
     |> assign(:operating_system, operating_system)
-    |> assign(:source_code_url, source_code_url(operating_system))
+    |> assign(:source_code_url, source_code_url_from_os_or_live_action(operating_system))
   end
 
   @impl Phoenix.LiveView
@@ -41,21 +35,23 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     {:noreply,
      socket
      |> assign(seo_attributes: %{url: Endpoint.url() <> "/#{action}"})
-     |> assign(:source_code_url, source_code_url(action))}
+     |> assign(:source_code_url, source_code_url_from_os_or_live_action(action))}
   end
 
   defp installation_command(live_action) do
-    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{get_os_from_live_action("#{live_action}")}.sh"})\""
+    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{get_operating_system("#{live_action}")}.sh"})\""
   end
 
-  defp source_code_url(live_action) do
-    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{get_os_from_live_action("#{live_action}")}.sh"
+  defp source_code_url_from_os_or_live_action(os_or_live_action) do
+    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{get_operating_system("#{os_or_live_action}")}.sh"
   end
 
-  @spec get_os_from_live_action(String.t()) :: String.t()
-  def get_os_from_live_action("linux"), do: "Linux"
+  @spec get_operating_system(String.t()) :: String.t()
+  def get_operating_system(live_action_or_os) when live_action_or_os in ["linux", "Linux"],
+    do: "Linux"
 
-  def get_os_from_live_action("macos"), do: "macOS"
+  def get_operating_system(live_action_or_os) when live_action_or_os in ["macos", "macOS"],
+    do: "macOS"
 
-  def get_os_from_live_action(_other), do: "Unsupported OS"
+  def get_operating_system(_other), do: "Unsupported OS"
 end
