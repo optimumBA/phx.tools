@@ -10,6 +10,7 @@ jobs:
     name: Test Linux script with bash shell
     runs-on: ubuntu-latest
     env:
+      SHELL: /bin/bash
       TZ: America/New_York
     steps:
       - name: Checkout
@@ -43,6 +44,7 @@ jobs:
     name: Test Linux script with fish shell
     runs-on: ubuntu-latest
     env:
+      SHELL: /bin/fish
       TZ: America/New_York
     steps:
       - name: Checkout
@@ -79,6 +81,7 @@ jobs:
     name: Test Linux script with zsh shell
     runs-on: ubuntu-latest
     env:
+      SHELL: /bin/zsh
       TZ: America/New_York
     steps:
       - name: Checkout

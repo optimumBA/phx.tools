@@ -384,7 +384,10 @@ defmodule GithubWorkflows do
     [
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
-      env: [TZ: "America/New_York"],
+      env: [
+        SHELL: "/bin/#{shell}",
+        TZ: "America/New_York"
+      ],
       steps:
         [
           checkout_step(),
