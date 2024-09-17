@@ -408,46 +408,14 @@ defmodule GithubWorkflows do
           run: expect_install_command
         ],
         [
-          name: "Set up aliases",
-          run: """
-          echo 'shopt -s expand_aliases' > /tmp/aliases
-          echo 'alias lll="ls -l"' >> /tmp/aliases
-          """
-        ],
-        [
-          name: "Use aliases in step 1",
-          shell: "bash",
-          run: """
-          source /tmp/aliases
-          lll
-          """
-        ],
-        [
-          name: "Use aliases in step 2",
-          shell: "bash",
-          run: """
-          source /tmp/aliases
-          lll
-          """
-        ],
-        # [
-        #   name: "Use default ~/.bashrc",
-        #   run: """
-        #   rm ~/.bashrc
-        #   cp /etc/skel/.bashrc ~/
-        #   """
-        # ],
-        [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "cd test/scripts && expect script.exp #{os}.sh",
-          shell: "bash -l {0}"
+          run: "cd test/scripts && expect script.exp #{os}.sh"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "make -f test/scripts/Makefile",
-          shell: "bash -l {0}"
+          run: "make -f test/scripts/Makefile"
         ],
         [
           name: "Check HTTP status code",
