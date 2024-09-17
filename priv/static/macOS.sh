@@ -93,8 +93,8 @@ function install() {
         source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
-        sudo apt-get update
-        sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
+        brew install autoconf openssl@1.1 wxwidgets libxslt fop
+        echo 'KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
         mise use -g erlang@$erlang_version
         ;;
     "Elixir")
@@ -106,12 +106,8 @@ function install() {
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
-        sudo apt-get update
-        sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
-
+        brew install gcc readline zlib curl ossp-uuid
         mise use -g postgres@$postgres_version
-
-        echo 'pg_ctl() { "$HOME/.local/share/mise/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
         ;;
     *)

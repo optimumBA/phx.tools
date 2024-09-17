@@ -83,12 +83,13 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        mise activate $current_shell
+        echo 'eval "$(mise activate $current_shell)"' >>$config_file
         source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
+        echo 'KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
         mise use -g erlang@$erlang_version
         ;;
     "Elixir")
@@ -102,10 +103,7 @@ function install() {
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
-
         mise use -g postgres@$postgres_version
-
-        echo 'pg_ctl() { "$HOME/.local/share/mise/shims/pg_ctl" "$@"; }' >>$config_file
         source $config_file >/dev/null 2>&1
 
         ;;
