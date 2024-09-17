@@ -80,7 +80,7 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(mise activate $current_shell)"' >>$config_file
+        echo "eval \"\$(mise activate $current_shell)\"" >>$config_file
         mise activate $current_shell
         ;;
     "Erlang")
