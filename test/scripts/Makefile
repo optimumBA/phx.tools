@@ -1,11 +1,12 @@
-SHELL ?= /bin/sh
+SHELL := $(shell echo $$SHELL)
 
 .ONESHELL:
 .SHELLFLAGS := -eu -c
 
 serve:
-	initdb -D ~/pgdata -U postgres
-	pg_ctl start -D ~/pgdata
-	mix phx.new --no-install phx_tools_test
-	cd phx_tools_test && mix local.rebar --force && mix setup
-	cd phx_tools_test && elixir --erl '-detached' -S mix phx.server
+	$(SHELL) -c '\
+	initdb -D ~/pgdata -U postgres && \
+	pg_ctl start -D ~/pgdata && \
+	mix phx.new --no-install phx_tools_test && \
+	cd phx_tools_test && mix local.rebar --force && mix setup && \
+	cd phx_tools_test && elixir --erl "-detached" -S mix phx.server'
