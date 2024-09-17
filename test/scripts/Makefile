@@ -1,5 +1,7 @@
 SHELL := /bin/zsh
+
 .ONESHELL:
+.SHELLFLAGS := -euo pipefail -c
 
 serve:
 	initdb -D ~/pgdata -U postgres

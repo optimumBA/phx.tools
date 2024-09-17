@@ -9,7 +9,8 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
-  @shells ["bash", "fish", "zsh"]
+  # @shells ["bash", "fish", "zsh"]
+  @shells ["zsh"]
 
   def get do
     %{
@@ -443,6 +444,11 @@ defmodule GithubWorkflows do
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "source #{config_file} && make -f test/scripts/Makefile serve",
               shell: "/bin/#{shell} -l {0}"
+            ],
+            [
+              name: "Setup upterm session",
+              uses: "lhotari/action-upterm@v1",
+              if: "always()"
             ],
             [
               name: "Check HTTP status code",
