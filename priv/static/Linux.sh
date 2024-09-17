@@ -86,15 +86,17 @@ function install() {
         case $current_shell in
         "bash")
             echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
+            mise activate bash
             ;;
         "fish")
             echo '~/.local/bin/mise activate fish | source' >>$config_file
+            mise activate fish
             ;;
         "zsh")
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
+            mise activate zsh
             ;;
         esac
-        source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
@@ -149,12 +151,6 @@ function add_env() {
 
     echo "Debug: Current PATH: $PATH"
     echo "Debug: Mise location: $(which mise 2>/dev/null || echo 'not found')"
-
-    # Source the updated configuration
-    echo "Debug: Sourcing config file: $config_file"
-    source $config_file
-    cat $config_file
-    echo "Debug: Finished sourcing config file"
 
     echo "Debug: Updated PATH: $PATH"
     echo "Debug: Mise location after sourcing: $(which mise 2>/dev/null || echo 'not found')"
