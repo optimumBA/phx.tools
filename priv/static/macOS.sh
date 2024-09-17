@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Make sure important variables exist if not already defined
 #
@@ -26,7 +26,7 @@ erlang_version=27.0.1
 phoenix_version=1.7.14
 postgres_version=15.1
 
-current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
+current_shell=$(basename "$SHELL")
 
 case $current_shell in
 "bash" | "rbash")

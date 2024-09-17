@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Make sure important variables exist if not already defined
 #
@@ -26,7 +26,6 @@ erlang_version=27.0.1
 phoenix_version=1.7.14
 postgres_version=15.1
 
-echo "Debug: SHELL is $SHELL"
 current_shell=$(basename "$SHELL")
 
 case $current_shell in
@@ -44,8 +43,6 @@ case $current_shell in
     exit 1
     ;;
 esac
-
-echo "Debug: config_file is $config_file"
 
 function already_installed() {
     case $1 in
