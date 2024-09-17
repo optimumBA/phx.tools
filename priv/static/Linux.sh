@@ -113,12 +113,11 @@ function install() {
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
+        echo "Debug installing postgres"
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
         mise install postgres@$postgres_version
         mise use -g postgres@$postgres_version
-        source $config_file >/dev/null 2>&1
-
         ;;
     *)
         echo "Invalid name argument on install"
@@ -167,6 +166,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 1.5
+    echo "Checking postgres"
     maybe_install "PostgreSQL"
 
     echo -e "${white}"
