@@ -1,5 +1,3 @@
-#! /bin/bash
-
 # Make sure important variables exist if not already defined
 #
 # $USER is defined by login(1) which is not always executed (e.g. containers)
@@ -30,13 +28,7 @@ current_shell=$(echo $SHELL | awk -F '/' '{print $NF}')
 
 case $current_shell in
 "bash" | "rbash")
-    config_file="$HOME/.bash_profile"
-    ;;
-"dash" | "sh")
-    config_file="$HOME/.profile"
-    ;;
-"elvish")
-    config_file="$HOME/.config/elvish/rc.elv"
+    config_file="$HOME/.bashrc"
     ;;
 "fish")
     config_file="$HOME/.config/fish/config.fish"

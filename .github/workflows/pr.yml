@@ -29,11 +29,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/bash -c 'cd test/scripts && expect script.exp Linux.sh'
+        run: cd test/scripts && expect script.exp Linux.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/bash -c 'make -f test/scripts/Makefile serve'
+        run: make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -62,11 +62,11 @@ jobs:
         run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/bash -c 'cd test/scripts && expect script.exp macOS.sh'
+        run: cd test/scripts && expect script.exp macOS.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/bash -c 'make -f test/scripts/Makefile serve'
+        run: make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -98,11 +98,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/fish -c 'cd test/scripts && expect script.exp Linux.sh'
+        run: cd test/scripts && expect script.exp Linux.sh
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/fish -c 'make -f test/scripts/Makefile serve'
+        run: make -f test/scripts/Makefile serve
         shell: /bin/fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -134,11 +134,11 @@ jobs:
         run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/fish -c 'cd test/scripts && expect script.exp macOS.sh'
+        run: cd test/scripts && expect script.exp macOS.sh
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/fish -c 'make -f test/scripts/Makefile serve'
+        run: make -f test/scripts/Makefile serve
         shell: /bin/fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -170,11 +170,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/zsh -c 'cd test/scripts && expect script.exp Linux.sh'
+        run: cd test/scripts && expect script.exp Linux.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/zsh -c 'make -f test/scripts/Makefile serve'
+        run: make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -206,11 +206,11 @@ jobs:
         run: brew install expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/zsh -c 'cd test/scripts && expect script.exp macOS.sh'
+        run: cd test/scripts && expect script.exp macOS.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/zsh -c 'make -f test/scripts/Makefile serve'
+        run: make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
