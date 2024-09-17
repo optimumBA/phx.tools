@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Make sure important variables exist if not already defined
 #
 # $USER is defined by login(1) which is not always executed (e.g. containers)
