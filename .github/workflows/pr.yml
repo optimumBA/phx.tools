@@ -29,14 +29,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp Linux.sh
-        shell: sh
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
+        run: /bin/bash -c 'cd test/scripts && expect script.exp Linux.sh'
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: echo $SHELL && . ~/.profile && . ~/.bashrc && make -f test/scripts/Makefile
-        shell: sh
+        run: /bin/bash -c 'source ~/.bashrc && make -f test/scripts/Makefile'
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
