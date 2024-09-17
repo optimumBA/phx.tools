@@ -39,11 +39,20 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp installation_command(live_action) do
-    "/bin/bash -c \"$(curl -fsSL #{Endpoint.url() <> "/#{get_operating_system("#{live_action}")}.sh"})\""
+    "/bin/bash -c \"$(curl -fsSL #{get_script_url(live_action)})\""
   end
 
   defp source_code_url_from_os_or_live_action(os_or_live_action) do
-    "https://github.com/optimumBA/phx.tools/blob/main/priv/static/#{get_operating_system("#{os_or_live_action}")}.sh"
+    ~S(https://github.com/optimumBA/phx.tools/blob/main/priv/static/) <>
+      get_script_filename(os_or_live_action)
+  end
+
+  defp get_script_url(live_action_or_os) do
+    "#{Endpoint.url()}/#{get_script_filename(live_action_or_os)}"
+  end
+
+  defp get_script_filename(live_action_or_os) do
+    "#{get_operating_system(to_string(live_action_or_os))}.sh"
   end
 
   @spec get_operating_system(String.t()) :: String.t()

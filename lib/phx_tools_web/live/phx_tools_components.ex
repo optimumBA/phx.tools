@@ -57,12 +57,12 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
           </p>
           <div class="flex-col items-center text-sm sm:flex font-martian sm:pb-8 md:block md:text-center">
-            <a href="https://phx.tools/macOS" class="text-[#24B2FF] underline">
-              https://phx.tools/macOS
+            <a href="https://phx.tools/macos" class="text-[#24B2FF] underline">
+              https://phx.tools/macos
             </a>
             <span class="px-2">or</span>
             <a href="http://phx.tools/linux" class="text-[#24B2FF] underline">
-              http://phx.tools/linux"
+              http://phx.tools/linux
             </a>
           </div>
         </div>
