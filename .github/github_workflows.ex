@@ -47,7 +47,7 @@ defmodule GithubWorkflows do
           ]
         ],
         jobs:
-          elixir_ci_jobs() ++
+          ci_jobs() ++
             [
               deploy_preview_app: deploy_preview_app_job()
             ]
@@ -72,7 +72,7 @@ defmodule GithubWorkflows do
     ]
   end
 
-  defp elixir_ci_jobs do
+  defp ci_jobs do
     [
       compile: compile_job(),
       credo: credo_job(),
@@ -162,7 +162,7 @@ defmodule GithubWorkflows do
   defp deploy_job(env, opts) do
     [
       name: "Deploy #{env} app",
-      needs: Enum.map(elixir_ci_jobs(), &elem(&1, 0)),
+      needs: Enum.map(ci_jobs(), &elem(&1, 0)),
       "runs-on": "ubuntu-latest"
     ] ++ opts
   end
@@ -372,36 +372,36 @@ defmodule GithubWorkflows do
     )
   end
 
-  defp test_linux_script_job do
-    test_shell_script_job(
-      "Linux",
-      "ubuntu-latest",
-      "sudo apt-get update && sudo apt-get install -y expect"
-    )
-  end
-
-  defp test_macos_script_job do
-    test_shell_script_job("macOS", "macos-latest", "brew install expect")
-  end
-
-  defp test_shell_script_job(os, runs_on, expect_install_command) do
+  defp test_shell_script_job(os, runs_on, shell_install_command, expect_install_command) do
     [
-      name: "Test #{os} script",
+      name: "Test #{os} script with ${{ matrix.shell }} shell",
       "runs-on": runs_on,
+      strategy: [
+        matrix: [
+          shell: ["bash", "fish", "zsh"]
+        ]
+      ],
       env: [TZ: "America/New_York"],
       steps: [
         checkout_step(),
+        [
+          name: "Install shell",
+          run: shell_install_command
+        ],
+        [
+          name: "Set default shell",
+          run: "sudo chsh -s $(which ${{ matrix.shell }}) $USER"
+        ],
         [
           name: "Restore script result cache",
           uses: "actions/cache@v3",
           id: "result_cache",
           with: [
             key:
-              "${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
+              "${{ runner.os }}-${{ matrix.shell }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
             path: "priv/static/#{os}.sh"
           ]
         ],
-        # TODO: Add matrix strategy for different shells
         [
           name: "Install expect tool",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
@@ -411,13 +411,13 @@ defmodule GithubWorkflows do
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           run: "cd test/scripts && expect script.exp #{os}.sh",
-          shell: "/bin/bash -l {0}"
+          shell: "${{ matrix.shell }} -l {0}"
         ],
         [
           name: "Generate an app and start the server",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           run: "make -f test/scripts/Makefile serve",
-          shell: "/bin/bash -l {0}"
+          shell: "${{ matrix.shell }} -l {0}"
         ],
         [
           name: "Check HTTP status code",
@@ -433,6 +433,24 @@ defmodule GithubWorkflows do
         ]
       ]
     ]
+  end
+
+  defp test_linux_script_job do
+    test_shell_script_job(
+      "Linux",
+      "ubuntu-latest",
+      "sudo apt-get update && sudo apt-get install -y ${{ matrix.shell }}",
+      "sudo apt-get update && sudo apt-get install -y expect"
+    )
+  end
+
+  defp test_macos_script_job do
+    test_shell_script_job(
+      "macOS",
+      "macos-latest",
+      "brew install ${{ matrix.shell }}",
+      "brew install expect"
+    )
   end
 
   defp unused_deps_job do
