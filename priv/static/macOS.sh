@@ -89,7 +89,8 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(mise activate $current_shell)"' >>$config_file
+        echo 'eval "$(~/.local/bin/mise activate $current_shell)"' >>$config_file
+        cat $config_file
         source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
@@ -130,34 +131,34 @@ function maybe_install() {
 }
 
 function add_env() {
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "xcode"
+    # echo ""
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "xcode"
 
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Homebrew"
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 3
     maybe_install "mise"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Elixir"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"

@@ -83,13 +83,14 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(mise activate $current_shell)"' >>$config_file
+        echo 'eval "$(~/.local/bin/mise activate $current_shell)"' >>$config_file
+        cat $config_file
         source $config_file >/dev/null 2>&1
         ;;
     "Erlang")
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
-        echo 'KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
+        echo 'KERL_CONFIGURE_OPTIONS="--without-javac' >>~/.kerlrc
         mise use -g erlang@$erlang_version
         ;;
     "Elixir")
@@ -127,34 +128,34 @@ function maybe_install() {
 }
 
 function add_env() {
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "Git"
+    # echo ""
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "Git"
 
-    echo -e "${white}"
-    sleep 2
-    maybe_install "wget"
+    # echo -e "${white}"
+    # sleep 2
+    # maybe_install "wget"
 
     echo -e "${white}"
     sleep 3
     maybe_install "mise"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Elixir"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
