@@ -1,3 +1,5 @@
+#! /bin/bash
+
 SHELL := /bin/bash
 
 .ONESHELL:
