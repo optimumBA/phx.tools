@@ -47,10 +47,39 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       assert has_element?(landing_live, "#Linux")
     end
 
-    test "if there is no operating system confirm message is not displayed", %{conn: conn} do
-      {:ok, _landing_live, html} = live(conn, "/")
+    test "is accessed with unsupported OS", %{conn: conn} do
+      updated_conn = put_req_header(conn, "user-agent", "Unsupported OS")
+      {:ok, unsupported_os_live, html} = live(updated_conn, "/")
 
       assert html =~ "Unsupported Operating System Detected"
+      assert has_element?(unsupported_os_live, "a[href='https://phx.tools/macos']")
+
+      assert render(unsupported_os_live) =~
+               "It looks like you&#39;re using an operating system that Phx.tools doesn&#39;t currently support."
+    end
+
+    test "has correct source code URL for Linux OS", %{conn: conn} do
+      updated_conn = put_req_header(conn, "user-agent", "Linux")
+      {:ok, landing_live, html} = live(updated_conn, "/")
+
+      assert html =~ "The Complete Development Environment for Elixir and Phoenix"
+
+      assert has_element?(
+               landing_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh']"
+             )
+    end
+
+    test "has correct source code URL for macOS", %{conn: conn} do
+      updated_conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
+      {:ok, landing_live, html} = live(updated_conn, "/")
+
+      assert html =~ "The Complete Development Environment for Elixir and Phoenix"
+
+      assert has_element?(
+               landing_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh']"
+             )
     end
   end
 
@@ -62,16 +91,26 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       assert render(linux_live) =~ "Linux installation process"
       assert has_element?(linux_live, "#tool-installation")
       assert has_element?(linux_live, "#copy")
+
+      assert has_element?(
+               linux_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh']"
+             )
     end
   end
 
   describe "/macos" do
     test "user visits macOS instructions page", %{conn: conn} do
-      {:ok, linux_live, html} = live(conn, "/macos")
+      {:ok, macos_live, html} = live(conn, "/macos")
 
       assert html =~ "macOS installation process"
-      assert has_element?(linux_live, "#tool-installation")
-      assert has_element?(linux_live, "#copy")
+      assert has_element?(macos_live, "#tool-installation")
+      assert has_element?(macos_live, "#copy")
+
+      assert has_element?(
+               macos_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh']"
+             )
     end
   end
 
