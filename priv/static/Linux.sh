@@ -86,17 +86,15 @@ function install() {
         case $current_shell in
         "bash")
             echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
-            mise activate bash
             ;;
         "fish")
             echo '~/.local/bin/mise activate fish | source' >>$config_file
-            mise activate fish
             ;;
         "zsh")
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
-            mise activate zsh
             ;;
         esac
+        mise activate $current_shell
         ;;
     "Erlang")
         sudo apt-get update
@@ -115,7 +113,6 @@ function install() {
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
-        echo "Debug installing postgres"
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
         mise install postgres@$postgres_version

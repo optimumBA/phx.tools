@@ -94,7 +94,7 @@ function install() {
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
             ;;
         esac
-        source $config_file >/dev/null 2>&1
+        mise activate $current_shell
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
@@ -140,7 +140,7 @@ function add_env() {
     # echo ""
     # echo -e "${white}"
     # sleep 2
-    # maybe_install "xcode"
+    # maybe_install "Xcode Command Line Tools"
 
     # echo -e "${white}"
     # sleep 2
