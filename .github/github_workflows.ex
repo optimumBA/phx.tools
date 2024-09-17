@@ -408,6 +408,29 @@ defmodule GithubWorkflows do
           run: expect_install_command
         ],
         [
+          name: "Set up aliases",
+          run: """
+          echo 'shopt -s expand_aliases' > /tmp/aliases
+          echo 'alias lll="ls -l"' >> /tmp/aliases
+          """
+        ],
+        [
+          name: "Use aliases in step 1",
+          shell: "bash",
+          run: """
+          source /tmp/aliases
+          lll
+          """
+        ],
+        [
+          name: "Use aliases in step 2",
+          shell: "bash",
+          run: """
+          source /tmp/aliases
+          lll
+          """
+        ],
+        [
           name: "Test the script",
           if: "steps.result_cache.outputs.cache-hit != 'true'",
           run: "cd test/scripts && expect script.exp #{os}.sh",
