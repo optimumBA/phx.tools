@@ -97,10 +97,6 @@ function install() {
         "bash" | "rbash")
             echo '. "$HOME/.asdf/asdf.sh"' >>"$config_file"
             echo '. "$HOME/.asdf/completions/asdf.bash"' >>"$config_file"
-            echo "export PATH=\"$HOME/.asdf/bin:$HOME/.asdf/shims:$PATH\"" >>"$HOME/.bash_profile"
-            echo "source \"$HOME/.asdf/asdf.sh\"" >>"$HOME/.bash_profile"
-            echo "source \"$HOME/.asdf/completions/asdf.bash\"" >>"$HOME/.bash_profile"
-            echo "Environment setup added to $HOME/.bash_profile"
             ;;
         "elvish")
             echo ". $HOME/.asdf/asdf.elv" >>~/.config/elvish/rc.elv
