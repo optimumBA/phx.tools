@@ -99,9 +99,11 @@ function install() {
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
         echo 'KERL_CONFIGURE_OPTIONS="--without-javac" --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
+        mise install erlang@$erlang_version
         mise use -g erlang@$erlang_version
         ;;
     "Elixir")
+        mise install elixir@$elixir_version
         mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
@@ -111,6 +113,7 @@ function install() {
         ;;
     "PostgreSQL")
         brew install gcc readline zlib curl ossp-uuid
+        mise install postgres@$postgres_version
         mise use -g postgres@$postgres_version
         source $config_file >/dev/null 2>&1
         ;;

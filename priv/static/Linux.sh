@@ -100,9 +100,11 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install build-essential autoconf m4 libncurses5-dev libwxgtk3.0-gtk3-dev libwxgtk-webview3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libxml2-utils libncurses-dev openjdk-11-jdk
         echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >>~/.kerlrc
+        mise install erlang@$erlang_version
         mise use -g erlang@$erlang_version
         ;;
     "Elixir")
+        mise install elixir@$elixir_version
         mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
@@ -113,6 +115,7 @@ function install() {
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
+        mise install postgres@$postgres_version
         mise use -g postgres@$postgres_version
         source $config_file >/dev/null 2>&1
 
