@@ -396,6 +396,18 @@ defmodule GithubWorkflows do
         "zsh" -> "~/.zshrc"
       end
 
+    test_command =
+      case shell do
+        "fish" -> "cd test/scripts; and expect script.exp #{os}.sh"
+        _ -> "cd test/scripts && expect script.exp #{os}.sh"
+      end
+
+    run_command =
+      case shell do
+        "fish" -> ". #{config_file} && SHELL=/bin/#{shell} make -f test/scripts/Makefile serve"
+        _ -> "source #{config_file} && SHELL=/bin/#{shell} make -f test/scripts/Makefile serve"
+      end
+
     [
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
@@ -436,13 +448,13 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "cd test/scripts && expect script.exp #{os}.sh",
+              run: test_command,
               shell: "/bin/#{shell} -l {0}"
             ],
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "source #{config_file} && make -f test/scripts/Makefile serve",
+              run: run_command,
               shell: "/bin/#{shell} -l {0}"
             ],
             [

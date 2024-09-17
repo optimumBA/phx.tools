@@ -37,7 +37,7 @@ jobs:
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: source ~/.zshrc && make -f test/scripts/Makefile serve
+        run: source ~/.zshrc && SHELL=/bin/zsh make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
