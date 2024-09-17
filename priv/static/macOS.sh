@@ -80,17 +80,14 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "\$(mise activate '$current_shell')"' >>$config_file
-        eval "$(mise activate $current_shell)"
+        mise activate $current_shell --shims
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
         echo 'KERL_CONFIGURE_OPTIONS="--without-javac" --with-ssl=$(brew --prefix openssl@1.1)"' >>~/.kerlrc
-        mise install erlang@$erlang_version
         mise use -g erlang@$erlang_version
         ;;
     "Elixir")
-        mise install elixir@$elixir_version
         mise use -g elixir@$elixir_version
         ;;
     "Phoenix")
@@ -99,7 +96,6 @@ function install() {
         ;;
     "PostgreSQL")
         brew install gcc readline zlib curl ossp-uuid
-        mise install postgres@$postgres_version
         mise use -g postgres@$postgres_version
         postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
         export PATH="$postgres_bin_path:$PATH"
