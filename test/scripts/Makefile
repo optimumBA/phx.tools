@@ -8,9 +8,9 @@ serve:
 	rm -f .tool-versions
 
 	if [[ "$$SHELL" == *"bash"* ]]; then \
-		eval "$$(mise env -s bash)"; \
+		source ~/.bash_profile; \
 	elif [[ "$$SHELL" == *"zsh"* ]]; then \
-		eval "$$(mise env -s zsh)"; \
+		source ~/.zshrc; \
 	fi
 
 	# initdb -D ~/pgdata -U postgres
