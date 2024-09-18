@@ -1,7 +1,7 @@
 SHELL := $(shell echo $$SHELL)
 
 .ONESHELL:
-.SHELLFLAGS := -eu -c
+.SHELLFLAGS := -eu -o pipefail -c
 
 serve:
 	MISE_DEBUG=1
@@ -12,7 +12,7 @@ serve:
 	echo "Debug: $$PATH"
 	mise doctor
 
-	PATH='~/.local/share/mise/shims:$$PATH'
+	export PATH="$$HOME/.local/share/mise/shims:$$PATH"
 
 	echo "Debug: $$PATH"
 	mise doctor
