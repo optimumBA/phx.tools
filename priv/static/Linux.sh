@@ -107,6 +107,7 @@ function install() {
             ;;
         esac
 
+        cat $config_file
         . "$config_file"
         ;;
     "Phoenix")
