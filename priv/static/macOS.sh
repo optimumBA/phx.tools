@@ -83,10 +83,10 @@ function install() {
         $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
     "mise")
-        brew install mise
-        echo 'eval "$(mise activate '$current_shell')"' >>$config_file
-        eval "$(mise activate $current_shell)"
-        eval "$(mise hook-env)"
+        curl https://mise.run | sh
+        echo "\n\neval \"\$(~/.local/bin/mise activate $current_shell)\"" >>$config_file
+        eval "$(~/.local/bin/mise activate $current_shell)"
+        eval "$(~/.local/bin/mise hook-env)"
 
         echo "--- Debug $config_file ---"
         cat $config_file
