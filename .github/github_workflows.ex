@@ -396,6 +396,7 @@ defmodule GithubWorkflows do
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
       env: [
+        CI: "true",
         SHELL: "/bin/#{shell}",
         TZ: "America/New_York"
       ],
@@ -428,6 +429,10 @@ defmodule GithubWorkflows do
               name: "Install expect tool",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: expect_install_command
+            ],
+            [
+              name: "Remove mise config files",
+              run: "rm -f .mise.toml .tool-versions"
             ],
             [
               name: "Test the script",

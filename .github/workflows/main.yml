@@ -10,6 +10,7 @@ jobs:
     name: Test Linux script with bash shell
     runs-on: ubuntu-latest
     env:
+      CI: true
       SHELL: /bin/bash
       TZ: America/New_York
     steps:
@@ -24,6 +25,8 @@ jobs:
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
@@ -51,6 +54,7 @@ jobs:
     name: Test macOS script with bash shell
     runs-on: macos-latest
     env:
+      CI: true
       SHELL: /bin/bash
       TZ: America/New_York
     steps:
@@ -65,6 +69,8 @@ jobs:
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
@@ -92,6 +98,7 @@ jobs:
     name: Test Linux script with zsh shell
     runs-on: ubuntu-latest
     env:
+      CI: true
       SHELL: /bin/zsh
       TZ: America/New_York
     steps:
@@ -109,6 +116,8 @@ jobs:
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
@@ -136,6 +145,7 @@ jobs:
     name: Test macOS script with zsh shell
     runs-on: macos-latest
     env:
+      CI: true
       SHELL: /bin/zsh
       TZ: America/New_York
     steps:
@@ -153,6 +163,8 @@ jobs:
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
