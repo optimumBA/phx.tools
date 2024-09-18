@@ -1,11 +1,271 @@
 name: PR
 
 on:
-  push:
+  pull_request:
     branches:
-      - mise
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
+  compile:
+    name: Install deps and compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Install Elixir dependencies
+        env:
+          MIX_ENV: test
+        run: mix deps.get
+      - name: Compile
+        env:
+          MIX_ENV: test
+        run: mix compile
+  credo:
+    needs: compile
+    name: Credo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Check code style
+        env:
+          MIX_ENV: test
+        run: mix credo --strict
+  deps_audit:
+    needs: compile
+    name: Deps audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Check for vulnerable Mix dependencies
+        env:
+          MIX_ENV: test
+        run: mix deps.audit
+  dialyzer:
+    needs: compile
+    name: Dialyzer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Restore PLT cache
+        uses: actions/cache@v3
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-
+      - name: Create PLTs
+        env:
+          MIX_ENV: test
+        run: mix dialyzer --plt
+      - name: Run dialyzer
+        env:
+          MIX_ENV: test
+        run: mix dialyzer
+  format:
+    needs: compile
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Check Elixir formatting
+        env:
+          MIX_ENV: test
+        run: mix format --check-formatted
+  hex_audit:
+    needs: compile
+    name: Hex audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Check for retired Hex packages
+        env:
+          MIX_ENV: test
+        run: mix hex.audit
+  prettier:
+    name: Check formatting using Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore npm cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-prettier
+      - name: Install Prettier
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm i -D prettier prettier-plugin-toml
+      - name: Run Prettier
+        run: npx prettier -c .
+  sobelow:
+    needs: compile
+    name: Security check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Check for security issues using sobelow
+        env:
+          MIX_ENV: test
+        run: mix sobelow --config .sobelow-conf
+  test:
+    needs: compile
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Run tests
+        env:
+          MIX_ENV: test
+        run: mix test --cover --warnings-as-errors
+  unused_deps:
+    needs: compile
+    name: Check unused deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-beam
+        name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - uses: actions/cache@v3
+        with:
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
+      - name: Check for unused Mix dependencies
+        env:
+          MIX_ENV: test
+        run: mix deps.unlock --check-unused
   test_linux_bash:
     name: Test Linux script with bash shell
     runs-on: ubuntu-latest
@@ -28,18 +288,11 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          cd test/scripts && expect script.exp Linux.sh
+        run: cd test/scripts && expect script.exp Linux.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          source $HOME/.bashrc
-          source $HOME/.bashrc && make -f test/scripts/Makefile serve
+        run: make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -71,18 +324,11 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          cd test/scripts && expect script.exp macOS.sh
+        run: cd test/scripts && expect script.exp macOS.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          source $HOME/.bashrc
-          source $HOME/.bashrc && make -f test/scripts/Makefile serve
+        run: make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -117,18 +363,11 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          cd test/scripts && expect script.exp Linux.sh
+        run: cd test/scripts && expect script.exp Linux.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          source $HOME/.zshrc
-          source $HOME/.zshrc && make -f test/scripts/Makefile serve
+        run: make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -163,18 +402,11 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          cd test/scripts && expect script.exp macOS.sh
+        run: cd test/scripts && expect script.exp macOS.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          set -x
-          export MISE_VERBOSE=1
-          source $HOME/.zshrc
-          source $HOME/.zshrc && make -f test/scripts/Makefile serve
+        run: make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -187,6 +419,16 @@ jobs:
   deploy_preview_app:
     name: Deploy preview app
     needs:
+      - compile
+      - credo
+      - deps_audit
+      - dialyzer
+      - format
+      - hex_audit
+      - prettier
+      - sobelow
+      - test
+      - unused_deps
       - test_linux_bash
       - test_macos_bash
       - test_linux_zsh

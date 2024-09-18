@@ -42,13 +42,9 @@ defmodule GithubWorkflows do
       [
         name: "PR",
         on: [
-          # pull_request: [
-          #   branches: ["main"],
-          #   types: ["opened", "reopened", "synchronize"]
-          # ]
-          # temporary
-          push: [
-            branches: ["mise"]
+          pull_request: [
+            branches: ["main"],
+            types: ["opened", "reopened", "synchronize"]
           ]
         ],
         jobs:
@@ -79,16 +75,16 @@ defmodule GithubWorkflows do
 
   defp ci_jobs do
     [
-      # compile: compile_job(),
-      # credo: credo_job(),
-      # deps_audit: deps_audit_job(),
-      # dialyzer: dialyzer_job(),
-      # format: format_job(),
-      # hex_audit: hex_audit_job(),
-      # prettier: prettier_job(),
-      # sobelow: sobelow_job(),
-      # test: test_job(),
-      # unused_deps: unused_deps_job()
+      compile: compile_job(),
+      credo: credo_job(),
+      deps_audit: deps_audit_job(),
+      dialyzer: dialyzer_job(),
+      format: format_job(),
+      hex_audit: hex_audit_job(),
+      prettier: prettier_job(),
+      sobelow: sobelow_job(),
+      test: test_job(),
+      unused_deps: unused_deps_job()
     ] ++ test_scripts_jobs()
   end
 
@@ -436,22 +432,13 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: """
-              set -x
-              export MISE_VERBOSE=1
-              cd test/scripts && expect script.exp #{os}.sh
-              """,
+              run: "cd test/scripts && expect script.exp #{os}.sh",
               shell: "/bin/#{shell} -l {0}"
             ],
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: """
-              set -x
-              export MISE_VERBOSE=1
-              source $HOME/.#{shell}rc
-              source $HOME/.#{shell}rc && make -f test/scripts/Makefile serve
-              """,
+              run: "make -f test/scripts/Makefile serve",
               shell: "/bin/#{shell} -l {0}"
             ],
             [
