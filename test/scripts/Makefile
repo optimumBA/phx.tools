@@ -13,9 +13,9 @@ serve:
 		source ~/.zshrc; \
 	fi
 
-	# initdb -D ~/pgdata -U postgres
-	# pg_ctl start -D ~/pgdata
-	mix phx.new --no-install phx_tools_test
+	# ~/.local/bin/mise exec -- initdb -D ~/pgdata -U postgres
+	# ~/.local/bin/mise exec -- pg_ctl start -D ~/pgdata
+	~/.local/bin/mise exec -- mix phx.new --no-install phx_tools_test
 	cd phx_tools_test
-	mix setup
-	elixir --erl '-detached' -S mix phx.server
+	~/.local/bin/mise exec -- mix setup
+	~/.local/bin/mise exec -- elixir --erl '-detached' -S mix phx.server
