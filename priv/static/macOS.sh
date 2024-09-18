@@ -43,9 +43,6 @@ esac
 
 function already_installed() {
     case "$1" in
-    "asdf")
-        which asdf >/dev/null 2>&1
-        ;;
     "Elixir")
         which elixir >/dev/null 2>&1
         ;;
@@ -54,6 +51,9 @@ function already_installed() {
         ;;
     "Homebrew")
         which brew >/dev/null 2>&1
+        ;;
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Phoenix")
         mix phx.new --version >/dev/null 2>&1
@@ -73,26 +73,19 @@ function already_installed() {
 
 function install() {
     case "$1" in
-    "asdf")
-        brew install asdf
-        echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>$config_file
-        . $(brew --prefix asdf)/libexec/asdf.sh
-        ;;
     "Elixir")
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir $elixir_version
-        asdf global elixir $elixir_version
-        asdf reshim
+        mise use -g elixir@$elixir_version
         ;;
     "Erlang")
-        brew install autoconf openssl@1.1 wxwidgets libxslt fop
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang $erlang_version
-        asdf global erlang $erlang_version
-        asdf reshim
+        mise use -g erlang@$erlang_version
         ;;
     "Homebrew")
         $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ;;
+    "mise")
+        brew install mise
+        echo 'eval "$(mise activate '$current_shell')"' >>$config_file
+        eval "$(mise activate $current_shell)"
         ;;
     "Phoenix")
         mix local.hex --force
@@ -100,11 +93,7 @@ function install() {
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
-        brew install gcc readline zlib curl ossp-uuid
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres $postgres_version
-        asdf global postgres $postgres_version
-        asdf reshim
+        mise use -g postgres@$postgres_version
         ;;
     "Xcode Command Line Tools")
         xcode-select --install
@@ -142,7 +131,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 1.5
-    maybe_install "asdf"
+    maybe_install "mise"
 
     echo -e "${white}"
     sleep 1.5
@@ -214,7 +203,7 @@ echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
 echo "2) Homebrew"
-echo "3) asdf"
+echo "3) mise"
 echo "4) Erlang"
 echo "5) Elixir"
 echo "6) Phoenix"

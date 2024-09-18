@@ -15,7 +15,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   create a new Phoenix application, and launch the server...
   """
 
-  @keywords "asdf, elixir, erlang, homebrew, phoenix, postgres, postgresql"
+  @keywords "elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
 
   attr :attributes, :map
 

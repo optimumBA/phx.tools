@@ -43,14 +43,14 @@ esac
 
 function already_installed() {
     case "$1" in
-    "asdf")
-        which asdf >/dev/null 2>&1
-        ;;
     "Elixir")
         which elixir >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
+        ;;
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Phoenix")
         mix phx.new --version >/dev/null 2>&1
@@ -67,24 +67,17 @@ function already_installed() {
 
 function install() {
     case "$1" in
-    "asdf")
-        sudo apt-get update
-        sudo apt-get -y install curl git
-        git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
-        echo '. "$HOME/.asdf/asdf.sh"' >>$config_file
-        . "$HOME/.asdf/asdf.sh"
-        ;;
+
     "Elixir")
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir $elixir_version
-        asdf global elixir $elixir_version
-        asdf reshim
+        mise use -g elixir@$elixir_version
         ;;
     "Erlang")
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang $erlang_version
-        asdf global erlang $erlang_version
-        asdf reshim
+        mise use -g erlang@$erlang_version
+        ;;
+    "mise")
+        curl https://mise.run | sh
+        echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
+        eval "$(~/.local/bin/mise activate bash)"
         ;;
     "Phoenix")
         mix local.hex --force
@@ -94,10 +87,7 @@ function install() {
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres $postgres_version
-        asdf global postgres $postgres_version
-        asdf reshim
+        mise use -g postgres@$postgres_version
         ;;
     *)
         echo "Invalid name argument on install: $1"
@@ -124,7 +114,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 1.5
-    maybe_install "asdf"
+    maybe_install "mise"
 
     echo -e "${white}"
     sleep 1.5
@@ -195,7 +185,7 @@ echo -e "${bblue}${bold}The following will be installed if not available already
 echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
-echo "2) asdf"
+echo "2) mise"
 echo "3) Erlang"
 echo "4) Elixir"
 echo "5) Phoenix"
