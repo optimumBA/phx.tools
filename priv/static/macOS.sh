@@ -116,15 +116,15 @@ function install() {
 }
 
 function maybe_install() {
-    if already_installed $1; then
+    if already_installed "$1"; then
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
+        if [[ "$1" == "Homebrew" || "$1" == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
-        install $1
+        install "$1"
     fi
 }
 

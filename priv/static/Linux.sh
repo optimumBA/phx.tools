@@ -59,7 +59,7 @@ function already_installed() {
         which initdb >/dev/null 2>&1
         ;;
     *)
-        echo "Invalid name argument on checking"
+        echo "Invalid name argument on checking: $1"
         exit 1
         ;;
     esac
@@ -100,21 +100,22 @@ function install() {
         asdf reshim
         ;;
     *)
-        echo "Invalid name argument on install"
+        echo "Invalid name argument on install: $1"
+        exit 1
         ;;
     esac
 }
 
 function maybe_install() {
-    if already_installed $1; then
+    if already_installed "$1"; then
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ $1 == "Erlang" ]]; then
+        if [[ "$1" == "Erlang" ]]; then
             echo "This might take a while."
         fi
         echo ""
-        install $1
+        install "$1"
     fi
 }
 
