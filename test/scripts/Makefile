@@ -14,6 +14,7 @@ serve:
  	fi
 
 	echo "Debug: $$PATH"
+	mise doctor
 
 	# mise exec -- initdb -D ~/pgdata -U postgres
 	# mise exec -v -- pg_ctl start -D ~/pgdata
