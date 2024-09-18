@@ -14,8 +14,8 @@ HOME="${HOME:-$(getent passwd $USER 2>/dev/null | cut -d: -f6)}"
 # macOS does not have getent, but this works even if $HOME is unset
 HOME="${HOME:-$(eval echo ~$USER)}"
 
-bold=$(tput bold)
-normal=$(tput sgr0)
+bold='\033[1m'
+normal='\033[0m'
 red='\033[0;31m'
 blue='\033[0;34m'
 bblue='\033[1;34m'
