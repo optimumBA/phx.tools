@@ -44,19 +44,19 @@ esac
 function already_installed() {
     case "$1" in
     "Elixir")
-        which elixir >/dev/null 2>&1
+        mise which elixir >/dev/null 2>&1
         ;;
     "Erlang")
-        command -v erl >/dev/null 2>&1
+        mise which erl >/dev/null 2>&1
         ;;
     "mise")
         which mise >/dev/null 2>&1
         ;;
     "Phoenix")
-        mix phx.new --version >/dev/null 2>&1
+        mise exec mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which initdb >/dev/null 2>&1
+        mise which initdb >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on checking: $1"
@@ -67,7 +67,6 @@ function already_installed() {
 
 function install() {
     case "$1" in
-
     "Elixir")
         mise use -g elixir@$elixir_version
         ;;
@@ -76,38 +75,21 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-
-        previous_path=$(pwd)
-        cd ~
-
         echo -e "\n\n" >>$config_file
 
         case $current_shell in
         "bash" | "rbash")
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
-            eval "$(~/.local/bin/mise hook-env -s bash)"
             ;;
         "zsh")
             echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
-            eval "$(~/.local/bin/mise hook-env -s zsh)"
-            ;;
-        *)
-            echo "Unsupported shell: $current_shell"
-            exit 1
             ;;
         esac
-
-        echo "--- Debug $config_file ---"
-        cat $config_file
-        echo "--- End debug $config_file ---"
-        echo "PATH: $PATH"
-
-        cd $previous_path
         ;;
     "Phoenix")
-        mix local.hex --force
-        mix local.rebar --force
-        mix archive.install --force hex phx_new $phoenix_version
+        mise exec mix local.hex --force
+        mise exec mix local.rebar --force
+        mise exec mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
         sudo apt-get update
