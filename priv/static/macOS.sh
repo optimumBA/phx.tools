@@ -43,7 +43,7 @@ case "${SHELL:-}" in
     ;;
 esac
 
-function already_installed() {
+already_installed() {
     case "$1" in
     "Elixir")
         which elixir >/dev/null 2>&1
@@ -73,7 +73,7 @@ function already_installed() {
     esac
 }
 
-function install() {
+install() {
     case "$1" in
     "Elixir")
         mise use -g elixir@$elixir_version
@@ -117,7 +117,7 @@ function install() {
     esac
 }
 
-function maybe_install() {
+maybe_install() {
     if already_installed "$1"; then
         echo "$1 is already installed. Skipping..."
     else
@@ -130,7 +130,7 @@ function maybe_install() {
     fi
 }
 
-function add_env() {
+add_env() {
     echo ""
 
     # echo -e "${white}"
