@@ -73,15 +73,14 @@ function install() {
     case "$1" in
     "Elixir")
         mise use -g elixir@$elixir_version
-        ls ~/.local/share/mise/shims
         mise reshim
-        ls ~/.local/share/mise/shims
         ;;
     "Erlang")
         if [ ! -f ~/.kerlrc ]; then
             echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >~/.kerlrc
         fi
         mise use -g erlang@$erlang_version
+        mise reshim
         ;;
     "mise")
         MISE_DEBUG=1 curl https://mise.run | sh
@@ -116,6 +115,7 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
         mise use -g postgres@$postgres_version
+        mise reshim
         ;;
     *)
         echo "Invalid name argument on install: $1"
