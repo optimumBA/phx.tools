@@ -432,14 +432,19 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "cd test/scripts && expect script.exp #{os}.sh",
+              run: """
+              set -x
+              export MISE_VERBOSE=1
+              cd test/scripts && expect script.exp #{os}.sh
+              """,
               shell: "/bin/#{shell} -l {0}"
             ],
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: """
-              eval "$(~/.local/bin/mise activate #{shell})"
+              set -x
+              export MISE_VERBOSE=1
               make -f test/scripts/Makefile serve
               """,
               shell: "/bin/#{shell} -l {0}"
