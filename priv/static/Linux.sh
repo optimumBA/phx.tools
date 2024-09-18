@@ -120,6 +120,8 @@ function maybe_install() {
 }
 
 function add_env() {
+    echo ""
+
     echo -e "${white}"
     sleep 1.5
     maybe_install "asdf"
