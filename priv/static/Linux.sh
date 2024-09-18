@@ -139,9 +139,9 @@ add_env() {
     sleep 1.5
     maybe_install "Phoenix"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "PostgreSQL"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "PostgreSQL"
 
     printf "${white}\n"
     printf "${cyan}${bold}phx.tools setup is complete!\n"

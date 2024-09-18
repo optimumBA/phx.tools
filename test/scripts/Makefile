@@ -5,11 +5,8 @@ current_shell := $(shell basename $(SHELL))
 SHELLFLAGS := -eu -c
 
 serve:
-	# initdb -D ~/pgdata -U postgres
-	# pg_ctl start -D ~/pgdata
-	@echo "Current PATH: $$PATH"
-	@which mise
-	@mise --version
+	mise exec -- initdb -D ~/pgdata -U postgres
+	mise exec -- pg_ctl start -D ~/pgdata
 	mise exec -- mix phx.new --no-install phx_tools_test
 	cd phx_tools_test
 	mise exec -- mix setup
