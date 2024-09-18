@@ -4,6 +4,7 @@ SHELL := $(shell echo $$SHELL)
 .SHELLFLAGS := -eu -c
 
 serve:
+	rm -f .mise.toml
 	rm -f .tool-versions
 
 	@if [[ "$$SHELL" == *"bash"* ]]; then \
