@@ -76,16 +76,33 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        command='"$(~/.local/bin/mise activate '$current_shell')"'
+
+        previous_path=$(pwd)
+        cd ~
+
         echo -e "\n\n" >>$config_file
-        echo 'eval '$command >>$config_file
-        eval "$command"
+
+        case $current_shell in
+        "bash" | "rbash")
+            echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
+            ;;
+        "zsh")
+            echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
+            ;;
+        *)
+            echo "Unsupported shell: $current_shell"
+            exit 1
+            ;;
+        esac
+
         eval "$(~/.local/bin/mise hook-env)"
 
         echo "--- Debug $config_file ---"
         cat $config_file
         echo "--- End debug $config_file ---"
         echo "PATH: $PATH"
+
+        cd $previous_path
         ;;
     "Phoenix")
         mix local.hex --force
