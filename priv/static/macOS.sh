@@ -28,17 +28,17 @@ erlang_version=27.0.1
 phoenix_version=1.7.14
 postgres_version=15.1
 
-current_shell=$(basename "$SHELL")
-
-case "$current_shell" in
-  "bash" | "rbash")
-    config_file="$HOME/.bash_profile"
+case "${SHELL:-}" in
+*/bash)
+    current_shell="bash"
+    config_file="$HOME/.bashrc"
     ;;
-  "zsh")
+*/zsh)
+    current_shell="zsh"
     config_file="$HOME/.zshrc"
     ;;
-  *)
-    echo "Unsupported shell: $current_shell"
+*)
+    echo "Unsupported shell: $SHELL"
     exit 1
     ;;
 esac

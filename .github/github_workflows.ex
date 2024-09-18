@@ -392,12 +392,6 @@ defmodule GithubWorkflows do
     shell_install_command = Keyword.fetch!(opts, :shell_install_command)
     expect_install_command = Keyword.fetch!(opts, :expect_install_command)
 
-    config_file =
-      case shell do
-        "bash" -> "~/.bash_profile"
-        "zsh" -> "~/.zshrc"
-      end
-
     [
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,

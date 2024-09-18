@@ -31,14 +31,14 @@ postgres_version=15.1
 case "${SHELL:-}" in
 */bash)
     current_shell="bash"
-    config_file="$HOME/.bash_profile"
+    config_file="$HOME/.bashrc"
     ;;
 */zsh)
     current_shell="zsh"
     config_file="$HOME/.zshrc"
     ;;
 *)
-    echo "Unsupported shell: $current_shell"
+    echo "Unsupported shell: $SHELL"
     exit 1
     ;;
 esac
@@ -82,11 +82,11 @@ function install() {
         curl https://mise.run | sh
 
         # Add activation command to the user's shell config file
-        printf "\n# Activate mise\n" >>"$config_file"
-        printf 'eval "$(~/.local/bin/mise activate %s)"\n' "$current_shell" >>"$config_file"
+        printf "\n# Activate mise\n" >> "$config_file"
+        printf 'eval "$(~/.local/bin/mise activate %s)"\n' "$current_shell" >> "$config_file"
 
         # Activate mise in the current shell session
-        eval "$(~/.local/bin/mise activate "$current_shell")"
+        eval "$(~/.local/bin/mise activate $current_shell)"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
@@ -240,3 +240,5 @@ while ! is_yn "$answer"; do
         ;;
     esac
 done
+
+echo "Setup complete. Please restart your terminal or run 'source $config_file' to apply changes."
