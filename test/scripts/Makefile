@@ -7,11 +7,16 @@ serve:
 	rm -f .mise.toml
 	rm -f .tool-versions
 
+	echo "Debug: $$PATH"
+	mise doctor
+
 	@if [[ "$$SHELL" == *"bash"* ]]; then \
- 		eval "$$(~/.local/bin/mise hook-env -s bash)"; \
- 	elif [[ "$$SHELL" == *"zsh"* ]]; then \
- 		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
- 	fi
+		eval "$$(~/.local/bin/mise activate bash)"; \
+		eval "$$(~/.local/bin/mise hook-env -s bash)"; \
+	elif [[ "$$SHELL" == *"zsh"* ]]; then \
+		eval "$$(~/.local/bin/mise activate zsh)"; \
+		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
+	fi
 
 	echo "Debug: $$PATH"
 	mise doctor
