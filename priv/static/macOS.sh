@@ -76,14 +76,14 @@ already_installed() {
 install() {
     case "$1" in
     "Elixir")
-        mise use -g elixir@$elixir_version
+        mise use -g -y elixir@$elixir_version
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
         if [ ! -f ~/.kerlrc ]; then
             printf "KERL_CONFIGURE_OPTIONS=\"--with-ssl=$(brew --prefix openssl@1.1) --without-javac\"\n" >~/.kerlrc
         fi
-        mise use -g erlang@$erlang_version
+        mise use -g -y erlang@$erlang_version
         ;;
     "mise")
         curl https://mise.run | sh
@@ -106,7 +106,7 @@ install() {
         ;;
     "PostgreSQL")
         brew install gcc readline zlib curl ossp-uuid
-        mise use -g postgres@$postgres_version
+        mise use -g -y postgres@$postgres_version
         ;;
     "Xcode Command Line Tools")
         xcode-select --install

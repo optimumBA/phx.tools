@@ -70,13 +70,13 @@ already_installed() {
 install() {
     case "$1" in
     "Elixir")
-        mise use -g elixir@$elixir_version
+        mise use -g -y elixir@$elixir_version
         ;;
     "Erlang")
         if [ ! -f ~/.kerlrc ]; then
             printf "KERL_CONFIGURE_OPTIONS=\"--without-javac\"\n" >~/.kerlrc
         fi
-        mise use -g erlang@$erlang_version
+        mise use -g -y erlang@$erlang_version
         ;;
     "mise")
         curl https://mise.run | sh
@@ -100,7 +100,7 @@ install() {
     "PostgreSQL")
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
-        mise use -g postgres@$postgres_version
+        mise use -g -y postgres@$postgres_version
         ;;
     *)
         printf "Invalid name argument on install: %s\n" "$1"
