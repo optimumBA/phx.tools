@@ -11,11 +11,12 @@ serve:
 
 	echo "Debug: $$PATH"
 
-	echo "Debug: $$PATH"
-	mise doctor
 	ls ~/.local/share/mise/shims
 	mise reshim
 	ls ~/.local/share/mise/shims
+
+	echo "Debug: $$PATH"
+
 
 	# initdb -D ~/pgdata -U postgres
 	# pg_ctl start -D ~/pgdata

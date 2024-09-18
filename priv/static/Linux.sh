@@ -76,6 +76,9 @@ function install() {
     case "$1" in
     "Elixir")
         mise use -g elixir@$elixir_version
+        ls ~/.local/share/mise/shims
+        mise reshim
+        ls ~/.local/share/mise/shims
         ;;
     "Erlang")
         if [ ! -f ~/.kerlrc ]; then
