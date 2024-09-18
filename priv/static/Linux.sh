@@ -76,8 +76,9 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
-        eval "$(~/.local/bin/mise activate bash)"
+        echo 'eval "$(~/.local/bin/mise activate $current_shell)"' >>$config_file
+        eval "$(~/.local/bin/mise activate $current_shell)"
+        eval "$(~/.local/bin/mise hook-env)"
         ;;
     "Phoenix")
         mix local.hex --force

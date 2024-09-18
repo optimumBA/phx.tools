@@ -86,6 +86,7 @@ function install() {
         brew install mise
         echo 'eval "$(mise activate '$current_shell')"' >>$config_file
         eval "$(mise activate $current_shell)"
+        eval "$(mise hook-env)"
         ;;
     "Phoenix")
         mix local.hex --force
@@ -93,6 +94,7 @@ function install() {
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
+        brew install gcc readline zlib curl ossp-uuid
         mise use -g postgres@$postgres_version
         ;;
     "Xcode Command Line Tools")
