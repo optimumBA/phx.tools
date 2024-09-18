@@ -30,7 +30,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Remove mise files
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: rm .env mise.toml .tool-versions
+        run: rm .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh
@@ -70,7 +70,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y expect
       - name: Remove mise files
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: rm .env mise.toml .tool-versions
+        run: rm .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp Linux.sh

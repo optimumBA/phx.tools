@@ -434,7 +434,7 @@ defmodule GithubWorkflows do
             [
               name: "Remove mise files",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "rm .env mise.toml .tool-versions"
+              run: "rm .mise.toml .tool-versions"
             ],
             [
               name: "Test the script",
