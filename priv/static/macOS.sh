@@ -77,6 +77,10 @@ function install() {
         mise use -g elixir@$elixir_version
         ;;
     "Erlang")
+        brew install autoconf openssl@1.1 wxwidgets libxslt fop
+        if [ ! -f ~/.kerlrc ]; then
+            echo 'KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --without-javac"' >~/.kerlrc
+        fi
         mise use -g erlang@$erlang_version
         ;;
     "Homebrew")

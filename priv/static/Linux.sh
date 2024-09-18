@@ -71,6 +71,9 @@ function install() {
         mise use -g elixir@$elixir_version
         ;;
     "Erlang")
+        if [ ! -f ~/.kerlrc ]; then
+            echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >~/.kerlrc
+        fi
         mise use -g erlang@$erlang_version
         ;;
     "mise")
