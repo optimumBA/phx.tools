@@ -4,19 +4,20 @@ SHELL := $(shell echo $$SHELL)
 .SHELLFLAGS := -eu -c
 
 serve:
+	MISE_DEBUG=1
+	MISE_TRACE=1
 	rm -f .mise.toml
 	rm -f .tool-versions
 
 	echo "Debug: $$PATH"
 	mise doctor
 
-	@if [[ "$$SHELL" == *"bash"* ]]; then \
-		eval "$$(~/.local/bin/mise activate bash)"; \
-		eval "$$(~/.local/bin/mise hook-env -s bash)"; \
-	elif [[ "$$SHELL" == *"zsh"* ]]; then \
-		eval "$$(~/.local/bin/mise activate zsh)"; \
-		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
-	fi
+	PATH='~/.local/share/mise/shims:$$PATH'
+
+	echo "Debug: $$PATH"
+	mise doctor
+
+	mise reshim
 
 	echo "Debug: $$PATH"
 	mise doctor
