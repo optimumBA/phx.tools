@@ -76,8 +76,9 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo "\n\neval \"\$(~/.local/bin/mise activate $current_shell)\"" >>$config_file
-        eval "$(~/.local/bin/mise activate $current_shell)"
+        command='"$(~/.local/bin/mise activate '$current_shell')"'
+        echo -e "\n\neval$command" >>$config_file
+        eval "$command"
         eval "$(~/.local/bin/mise hook-env)"
 
         echo "--- Debug $config_file ---"
