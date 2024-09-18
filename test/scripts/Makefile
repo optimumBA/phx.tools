@@ -8,13 +8,9 @@ serve:
 	rm -f .tool-versions
 
 	@if [[ "$$SHELL" == *"bash"* ]]; then \
-		echo "bash"
-		eval "$$(~/.local/bin/mise activate bash)"; \
-		eval "$$(~/.local/bin/mise hook-env -s bash)"; \
+		eval "$$(mise env -s bash)" \
 	elif [[ "$$SHELL" == *"zsh"* ]]; then \
-		echo "zsh"
-		eval "$$(~/.local/bin/mise activate zsh)"; \
-		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
+		eval "$$(mise env -s zsh)"; \
 	fi
 
 	# initdb -D ~/pgdata -U postgres
