@@ -8,12 +8,13 @@ serve:
 	rm -f .tool-versions
 
 	# Detect and activate mise
-	if [ "$(basename $$SHELL)" = "bash" ] || [ "$(basename $$SHELL)" = "rbash" ]; then \
+	shell_name=$$(basename $$SHELL); \
+	if [ "$$shell_name" = "bash" ] || [ "$$shell_name" = "rbash" ]; then \
 		eval "$$(~/.local/bin/mise activate bash)"; \
-	elif [ "$(basename $$SHELL)" = "zsh" ]; then \
+	elif [ "$$shell_name" = "zsh" ]; then \
 		eval "$$(~/.local/bin/mise activate zsh)"; \
 	else \
-		echo "Unsupported shell: $$(basename $$SHELL)"; \
+		echo "Unsupported shell: $$shell_name"; \
 		exit 1; \
 	fi
 
