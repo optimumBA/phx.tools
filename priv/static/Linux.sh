@@ -243,5 +243,3 @@ while ! is_yn "$answer"; do
         ;;
     esac
 done
-
-printf "Setup complete. Please restart your terminal or run 'source $config_file' to apply changes.\n"
