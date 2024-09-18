@@ -38,7 +38,7 @@ case "${SHELL:-}" in
     config_file="$HOME/.zshrc"
     ;;
 *)
-    echo "Unsupported shell: $SHELL"
+    printf "Unsupported shell: %s\n" "$SHELL"
     exit 1
     ;;
 esac
@@ -67,7 +67,7 @@ already_installed() {
         which xcode-select >/dev/null 2>&1
         ;;
     *)
-        echo "Invalid name argument on checking: $1"
+        printf "Invalid name argument on checking: %s\n" "$1"
         exit 1
         ;;
     esac
@@ -81,7 +81,7 @@ install() {
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
         if [ ! -f ~/.kerlrc ]; then
-            echo 'KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --without-javac"' >~/.kerlrc
+            printf "KERL_CONFIGURE_OPTIONS=\"--with-ssl=$(brew --prefix openssl@1.1) --without-javac\"\n" >~/.kerlrc
         fi
         mise use -g erlang@$erlang_version
         ;;
@@ -90,13 +90,8 @@ install() {
         ;;
     "mise")
         curl https://mise.run | sh
-
-        # Add activation command to the user's shell config file
-        printf "\n# Activate mise\n" >>"$config_file"
         printf 'eval "$(~/.local/bin/mise activate %s)"\n' "$current_shell" >>"$config_file"
-
-        # Activate mise in the current shell session
-        eval "$(~/.local/bin/mise activate "$current_shell")"
+        . "$HOME/.local/bin/mise" activate "$current_shell"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
@@ -111,7 +106,7 @@ install() {
         xcode-select --install
         ;;
     *)
-        echo "Invalid name argument on install: $1"
+        printf "Invalid name argument on install: %s\n" "$1"
         exit 1
         ;;
     esac
@@ -119,53 +114,53 @@ install() {
 
 maybe_install() {
     if already_installed "$1"; then
-        echo "$1 is already installed. Skipping..."
+        printf "%s is already installed. Skipping...\n" "$1"
     else
-        echo "Installing $1..."
+        printf "Installing %s...\n" "$1"
         if [ "$1" = "Homebrew" ] || [ "$1" = "Erlang" ]; then
-            echo "This might take a while."
+            printf "This might take a while.\n"
         fi
-        echo ""
+        printf "\n"
         install "$1"
     fi
 }
 
 add_env() {
-    echo ""
+    printf "\n"
 
-    # echo -e "${white}"
+    # printf "${white}\n"
     # sleep 1.5
     # maybe_install "Xcode Command Line Tools"
 
-    # echo -e "${white}"
+    # printf "${white}\n"
     # sleep 1.5
     # maybe_install "Homebrew"
 
-    echo -e "${white}"
+    printf "${white}\n"
     sleep 1.5
     maybe_install "mise"
 
-    # echo -e "${white}"
+    # printf "${white}\n"
     # sleep 1.5
     # maybe_install "Erlang"
 
-    echo -e "${white}"
+    printf "${white}\n"
     sleep 1.5
     maybe_install "Elixir"
 
-    # echo -e "${white}"
+    # printf "${white}\n"
     # sleep 1.5
     # maybe_install "Phoenix"
 
-    # echo -e "${white}"
+    # printf "${white}\n"
     # sleep 1.5
     # maybe_install "PostgreSQL"
 
-    echo -e "${white}"
-    echo -e "${cyan}${bold}phx.tools setup is complete!"
-    echo -e "${cyan}${bold}Please restart the terminal and type in the following command:"
-    echo -e "${cyan}${bold}mix phx.new"
-    echo -e "${white}"
+    printf "${white}\n"
+    printf "${cyan}${bold}phx.tools setup is complete!\n"
+    printf "${cyan}${bold}Please restart the terminal and type in the following command:\n"
+    printf "${cyan}${bold}mix phx.new\n"
+    printf "${white}\n"
 }
 
 phx_tools="
@@ -193,36 +188,34 @@ optimum="
     ░╚════╝░╚═╝░░░░░░░░╚═╝░░░╚═╝╚═╝░░░░░╚═╝░╚═════╝░╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝
 "
 
-echo -e "$phx_tools"
-
-echo -e "$by"
-
-echo -e "$optimum"
+printf "%s\n" "$phx_tools"
+printf "%s\n" "$by"
+printf "%s\n" "$optimum"
 
 sleep 3
 
-echo ""
+printf "\n"
 
-echo -e "${bblue}${bold}Welcome to the phx.tools shell script for macOS."
+printf "${bblue}${bold}Welcome to the phx.tools shell script for macOS.\n"
 
 sleep 3
 
-echo ""
+printf "\n"
 
-echo -e "${bblue}${bold}The following will be installed if not available already:"
+printf "${bblue}${bold}The following will be installed if not available already:\n"
 
-echo -e "${cyan}${bold}"
+printf "${cyan}${bold}\n"
 
-echo "1) Build dependencies"
-echo "2) Homebrew"
-echo "3) mise"
-echo "4) Erlang"
-echo "5) Elixir"
-echo "6) Phoenix"
-echo "7) PostgreSQL"
+printf "1) Build dependencies\n"
+printf "2) Homebrew\n"
+printf "3) mise\n"
+printf "4) Erlang\n"
+printf "5) Elixir\n"
+printf "6) Phoenix\n"
+printf "7) PostgreSQL\n"
 
-echo ""
-echo -e "${white} ${bold}"
+printf "\n"
+printf "${white}${bold}\n"
 
 sleep 1
 
@@ -245,20 +238,22 @@ answer=''
 while ! is_yn "$answer"; do
     printf "Do you want to continue? (y/n) "
     read -r answer
-    echo ""
+    printf "\n"
     case "$answer" in
     [yY] | [yY][eE][sS])
-        echo ""
+        printf "\n"
         sleep 3
         add_env
         ;;
     [nN] | [nN][oO])
-        echo "Thank you for your time"
-        echo ""
+        printf "Thank you for your time\n"
+        printf "\n"
         ;;
     *)
-        echo "Please enter y or n"
-        echo ""
+        printf "Please enter y or n\n"
+        printf "\n"
         ;;
     esac
 done
+
+printf "Setup complete. Please restart your terminal or run 'source $config_file' to apply changes.\n"

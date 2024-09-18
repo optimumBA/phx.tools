@@ -18,6 +18,10 @@ serve:
 		exit 1; \
 	fi
 
+	echo $$PATH
+
+
+
 	# Run your commands with mise activated
 	mise exec -- mix phx.new --no-install phx_tools_test
 	cd phx_tools_test
