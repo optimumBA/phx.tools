@@ -86,9 +86,10 @@ install() {
         mise use -g erlang@$erlang_version
         ;;
     "mise")
-        curl https://mise.run | $current_shell
+        curl https://mise.run | sh
         printf "eval \"\$(mise activate $current_shell)\"\n" >>$config_file
         eval "$(mise activate $current_shell)"
+        export PATH="$HOME/.local/bin:$PATH"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force

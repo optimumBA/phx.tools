@@ -79,9 +79,10 @@ install() {
         mise use -g erlang@$erlang_version
         ;;
     "mise")
-        curl https://mise.run | $current_shell
+        curl https://mise.run | sh
         printf "eval \"\$(mise activate $current_shell)\"\n" >>$config_file
         eval "$(mise activate $current_shell)"
+        export PATH="$HOME/.local/bin:$PATH"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
@@ -120,21 +121,21 @@ add_env() {
     sleep 1.5
     maybe_install "mise"
 
-    printf "${white}\n"
-    sleep 1.5
-    maybe_install "Erlang"
+    # printf "${white}\n"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
     printf "${white}\n"
     sleep 1.5
     maybe_install "Elixir"
 
-    printf "${white}\n"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # printf "${white}\n"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
-    printf "${white}\n"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # printf "${white}\n"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
 
     printf "${white}\n"
     printf "${cyan}${bold}phx.tools setup is complete!\n"

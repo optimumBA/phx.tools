@@ -14,6 +14,8 @@ serve: activate-mise
 	@echo "SHELL is $(SHELL)"
 	@echo "Current shell is $(current_shell)"
 	echo "Current PATH: $$PATH" && \
+	export PATH="$HOME/.local/bin:$PATH" && \
+	echo "Current PATH: $$PATH" && \
 	mise which mix && \
 	mise --version && \
 	mise plugin list && \
