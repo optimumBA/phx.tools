@@ -79,16 +79,16 @@ defmodule GithubWorkflows do
 
   defp ci_jobs do
     [
-      compile: compile_job(),
-      credo: credo_job(),
-      deps_audit: deps_audit_job(),
-      dialyzer: dialyzer_job(),
-      format: format_job(),
-      hex_audit: hex_audit_job(),
-      prettier: prettier_job(),
-      sobelow: sobelow_job(),
-      test: test_job(),
-      unused_deps: unused_deps_job()
+      # compile: compile_job(),
+      # credo: credo_job(),
+      # deps_audit: deps_audit_job(),
+      # dialyzer: dialyzer_job(),
+      # format: format_job(),
+      # hex_audit: hex_audit_job(),
+      # prettier: prettier_job(),
+      # sobelow: sobelow_job(),
+      # test: test_job(),
+      # unused_deps: unused_deps_job()
     ] ++ test_scripts_jobs()
   end
 

@@ -87,6 +87,11 @@ function install() {
         echo 'eval "$(mise activate '$current_shell')"' >>$config_file
         eval "$(mise activate $current_shell)"
         eval "$(mise hook-env)"
+
+        echo "--- Debug $config_file ---"
+        cat $config_file
+        echo "--- End debug $config_file ---"
+        echo "PATH: $PATH"
         ;;
     "Phoenix")
         mix local.hex --force
