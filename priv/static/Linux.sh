@@ -41,10 +41,6 @@ case $current_shell in
     ;;
 esac
 
-is_ci() {
-    [ -n "${CI:-}" ]
-}
-
 function already_installed() {
     case "$1" in
     "Elixir")
@@ -88,18 +84,12 @@ function install() {
 
         case $current_shell in
         "bash" | "rbash")
-            if is_ci; then
-                echo "eval \"\$(~/.local/bin/mise activate bash --shims)\"" >>$config_file
-            fi
-
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
+            echo "eval \"\$(~/.local/bin/mise hook-env -s bash)\"" >>$config_file
             ;;
         "zsh")
-            if is_ci; then
-                echo "eval \"\$(~/.local/bin/mise activate zsh --shims)\"" >>$config_file
-            fi
-
             echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
+            echo "eval \"\$(~/.local/bin/mise hook-env -s zsh)\"" >>$config_file
             ;;
         esac
 
