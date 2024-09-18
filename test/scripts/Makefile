@@ -13,8 +13,8 @@ serve:
  		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
  	fi
 
-	# mise exec -- initdb -D ~/pgdata -U postgres
-	# mise exec -- pg_ctl start -D ~/pgdata
+	mise exec -- initdb -D ~/pgdata -U postgres
+	mise exec -- pg_ctl start -D ~/pgdata
 	mise exec -- mix phx.new --no-install phx_tools_test
 	cd phx_tools_test
 	mise exec -- mix setup

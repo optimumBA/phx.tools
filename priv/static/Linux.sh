@@ -89,9 +89,9 @@ function install() {
         esac
         ;;
     "Phoenix")
-        mix local.hex --force
-        mix local.rebar --force
-        mix archive.install --force hex phx_new $phoenix_version
+        mise exec -- mix local.hex --force
+        mise exec -- mix local.rebar --force
+        mise exec -- mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
         sudo apt-get update
@@ -125,21 +125,21 @@ function add_env() {
     sleep 1.5
     maybe_install "mise"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Erlang"
 
     echo -e "${white}"
     sleep 1.5
     maybe_install "Elixir"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "Phoenix"
 
-    # echo -e "${white}"
-    # sleep 1.5
-    # maybe_install "PostgreSQL"
+    echo -e "${white}"
+    sleep 1.5
+    maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
