@@ -396,7 +396,6 @@ defmodule GithubWorkflows do
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
       env: [
-        CI: "true",
         SHELL: "/bin/#{shell}",
         TZ: "America/New_York"
       ],

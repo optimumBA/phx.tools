@@ -96,8 +96,6 @@ install() {
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
             ;;
         esac
-
-        . "$config_file"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
