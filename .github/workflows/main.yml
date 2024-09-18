@@ -30,7 +30,7 @@ jobs:
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: source ~/.bash_profile && SHELL=/bin/bash make -f test/scripts/Makefile serve
+        run: SHELL=/bin/bash make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -64,7 +64,7 @@ jobs:
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: source ~/.bash_profile && SHELL=/bin/bash make -f test/scripts/Makefile serve
+        run: SHELL=/bin/bash make -f test/scripts/Makefile serve
         shell: /bin/bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -101,7 +101,7 @@ jobs:
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: source ~/.zshrc && SHELL=/bin/zsh make -f test/scripts/Makefile serve
+        run: SHELL=/bin/zsh make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -138,7 +138,7 @@ jobs:
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: source ~/.zshrc && SHELL=/bin/zsh make -f test/scripts/Makefile serve
+        run: SHELL=/bin/zsh make -f test/scripts/Makefile serve
         shell: /bin/zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
