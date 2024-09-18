@@ -76,6 +76,7 @@ function install() {
     "asdf")
         brew install asdf
         echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>$config_file
+        . $(brew --prefix asdf)/libexec/asdf.sh
         ;;
     "Elixir")
         asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
