@@ -105,6 +105,8 @@ function install() {
 
         cat $config_file
         source $config_file
+
+        mise doctor
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force

@@ -6,7 +6,9 @@ SHELL := $(shell echo $$SHELL)
 serve:
 	rm -f .mise.toml
 	rm -f .tool-versions
-	PATH="~/.local/share/mise/shims:$$PATH"
+
+	eval "$(mise env -s bash)"
+	# PATH="~/.local/share/mise/shims:$$PATH"
 
 	# initdb -D ~/pgdata -U postgres
 	# pg_ctl start -D ~/pgdata
