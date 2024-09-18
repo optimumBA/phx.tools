@@ -75,16 +75,16 @@ defmodule GithubWorkflows do
 
   defp ci_jobs do
     [
-      # compile: compile_job(),
-      # credo: credo_job(),
-      # deps_audit: deps_audit_job(),
-      # dialyzer: dialyzer_job(),
-      # format: format_job(),
-      # hex_audit: hex_audit_job(),
-      # prettier: prettier_job(),
-      # sobelow: sobelow_job(),
-      # test: test_job(),
-      # unused_deps: unused_deps_job()
+      compile: compile_job(),
+      credo: credo_job(),
+      deps_audit: deps_audit_job(),
+      dialyzer: dialyzer_job(),
+      format: format_job(),
+      hex_audit: hex_audit_job(),
+      prettier: prettier_job(),
+      sobelow: sobelow_job(),
+      test: test_job(),
+      unused_deps: unused_deps_job()
     ] ++ test_scripts_jobs()
   end
 
@@ -376,7 +376,7 @@ defmodule GithubWorkflows do
       jobs ++
         [
           {:"test_linux_#{shell}", test_linux_script_job(shell)},
-          # {:"test_macos_#{shell}", test_macos_script_job(shell)}
+          {:"test_macos_#{shell}", test_macos_script_job(shell)}
         ]
     end)
   end
@@ -432,11 +432,6 @@ defmodule GithubWorkflows do
               run: expect_install_command
             ],
             [
-              name: "Remove mise files",
-              if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "rm .mise.toml .tool-versions"
-            ],
-            [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "cd test/scripts && expect script.exp #{os}.sh",
@@ -446,7 +441,7 @@ defmodule GithubWorkflows do
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run:
-                "/bin/#{shell} -c 'source #{config_file} && SHELL=/bin/#{shell} make -f test/scripts/Makefile serve'",
+                "source #{config_file} && SHELL=/bin/#{shell} make -f test/scripts/Makefile serve",
               shell: "/bin/#{shell} -l {0}"
             ],
             [

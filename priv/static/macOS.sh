@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 
 # Make sure important variables exist if not already defined
 #
@@ -43,20 +43,17 @@ esac
 
 function already_installed() {
     case $1 in
-    "Xcode Command Line Tools")
-        which xcode-select >/dev/null
+    "asdf")
+        which asdf >/dev/null 2>&1
         ;;
-    "Homebrew")
-        which brew >/dev/null 2>&1
-        ;;
-    "mise")
-        which mise >/dev/null 2>&1
+    "Elixir")
+        which elixir >/dev/null 2>&1
         ;;
     "Erlang")
         command -v erl >/dev/null 2>&1
         ;;
-    "Elixir")
-        which elixir >/dev/null 2>&1
+    "Homebrew")
+        which brew >/dev/null 2>&1
         ;;
     "Phoenix")
         mix phx.new --version >/dev/null 2>&1
@@ -64,36 +61,37 @@ function already_installed() {
     "PostgreSQL")
         which pg_ctl >/dev/null 2>&1
         ;;
+    "Xcode Command Line Tools")
+        which xcode-select >/dev/null
+        ;;
     *)
         echo "Invalid name argument on checking"
+        exit 1
         ;;
     esac
 }
 
 function install() {
     case $1 in
-    "Xcode Command Line Tools")
-        xcode-select --install
+    "asdf")
+        brew install asdf
+        echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>$config_file
         ;;
-    "Homebrew")
-        $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        ;;
-    "mise")
-        curl https://mise.run | sh
-        echo 'eval "$(~/.local/bin/mise activate '$current_shell')"' >>$config_file
-        eval "$(~/.local/bin/mise activate $current_shell)"
+    "Elixir")
+        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
+        asdf install elixir $elixir_version
+        asdf global elixir $elixir_version
+        asdf reshim
         ;;
     "Erlang")
         brew install autoconf openssl@1.1 wxwidgets libxslt fop
-        if [ ! -f ~/.kerlrc ]; then
-            echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >~/.kerlrc
-        fi
-        mise use -g erlang@$erlang_version
-        mise reshim
+        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+        asdf install erlang $erlang_version
+        asdf global erlang $erlang_version
+        asdf reshim
         ;;
-    "Elixir")
-        mise use -g elixir@$elixir_version
-        mise reshim
+    "Homebrew")
+        $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
     "Phoenix")
         mix local.hex --force
@@ -101,11 +99,13 @@ function install() {
         ;;
     "PostgreSQL")
         brew install gcc readline zlib curl ossp-uuid
-        mise use -g postgres@$postgres_version
-        postgres_bin_path="$HOME/.local/share/mise/installs/postgres/$postgres_version/bin"
-        export PATH="$postgres_bin_path:$PATH"
-        echo "export PATH=\"$postgres_bin_path:\$PATH\"" >>$config_file
-        mise reshim
+        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
+        asdf install postgres $postgres_version
+        asdf global postgres $postgres_version
+        asdf reshim
+        ;;
+    "Xcode Command Line Tools")
+        xcode-select --install
         ;;
     *)
         echo "Invalid name argument on install"
@@ -138,7 +138,7 @@ function add_env() {
 
     echo -e "${white}"
     sleep 1.5
-    maybe_install "mise"
+    maybe_install "asdf"
 
     echo -e "${white}"
     sleep 1.5
@@ -210,7 +210,7 @@ echo -e "${cyan}${bold}"
 
 echo "1) Build dependencies"
 echo "2) Homebrew"
-echo "3) mise"
+echo "3) asdf"
 echo "4) Erlang"
 echo "5) Elixir"
 echo "6) Phoenix"

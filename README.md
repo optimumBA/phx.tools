@@ -10,7 +10,7 @@ _Required_
 
 - Build dependencies
 - Homebrew (only on macOS)
-- mise
+- asdf
 - Erlang
 - Elixir
 - Phoenix
