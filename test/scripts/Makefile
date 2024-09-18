@@ -17,6 +17,10 @@ serve:
 
 	echo "Debug: $$PATH"
 
+	PATH="~/.local/share/mise/shims:$$PATH"
+
+	echo "Debug: $$PATH"
+
 
 	# initdb -D ~/pgdata -U postgres
 	# pg_ctl start -D ~/pgdata

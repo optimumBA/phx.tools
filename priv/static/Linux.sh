@@ -108,7 +108,7 @@ function install() {
         esac
 
         cat $config_file
-        . "$config_file"
+        source $config_file
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
