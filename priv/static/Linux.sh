@@ -77,6 +77,7 @@ function install() {
         mise use -g erlang@$erlang_version
         ;;
     "mise")
+        curl https://mise.run | sh
         echo -e "\n\n" >>$config_file
 
         case $current_shell in
@@ -88,7 +89,7 @@ function install() {
             ;;
         esac
 
-        source $config_file >/dev/null 2>&1
+        . $config_file >/dev/null 2>&1
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
