@@ -243,15 +243,7 @@ is_yn() {
 answer=''
 
 while ! is_yn "$answer"; do
-    case $current_shell in
-    "bash" | "rbash")
-        read -p "Do you want to continue? (y/n) " answer
-        ;;
-    "zsh")
-        read "answer?Do you want to continue? (y/n) "
-        ;;
-    esac
-
+    read -p "Do you want to continue? (y/n) " answer
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
