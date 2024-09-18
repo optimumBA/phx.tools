@@ -97,7 +97,7 @@ function install() {
             ;;
         esac
 
-        mise doctor
+        source $config_file >/dev/null 2>&1
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force

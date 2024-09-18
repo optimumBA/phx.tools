@@ -7,8 +7,8 @@ serve:
 	rm -f .mise.toml
 	rm -f .tool-versions
 
-	@if [[ "$$SHELL" == *"bash"* ]]; then \
-		eval "$$(mise env -s bash)" \
+	if [[ "$$SHELL" == *"bash"* ]]; then \
+		eval "$$(mise env -s bash)"; \
 	elif [[ "$$SHELL" == *"zsh"* ]]; then \
 		eval "$$(mise env -s zsh)"; \
 	fi
