@@ -2,7 +2,7 @@ SHELL := $(SHELL)
 current_shell := $(shell basename $(SHELL))
 
 .ONESHELL:
-.SHELLFLAGS := -eu -o pipefail -c
+.SHELLFLAGS := -eu -c
 
 serve:
 	@echo "SHELL is $(SHELL)"

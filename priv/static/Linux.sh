@@ -89,15 +89,15 @@ install() {
             exit 1
         fi
         mkdir -p "$HOME/.local/bin"
-        curl -L "https://github.com/jdxcode/mise/releases/latest/download/mise-linux-$mise_arch" -o "$HOME/.local/bin/mise"
+        curl -fsSL "https://github.com/jdxcode/mise/releases/latest/download/mise-linux-$mise_arch" -o "$HOME/.local/bin/mise"
         chmod +x "$HOME/.local/bin/mise"
         printf 'eval "$(%s activate %s)"\n' "$HOME/.local/bin/mise" "$current_shell" >>"$config_file"
-        eval "$("$HOME/.local/bin/mise" activate "$current_shell")"
         # Verify that 'mise' is installed correctly
-        "$HOME/.local/bin/mise" --version || {
+        if ! "$HOME/.local/bin/mise" --version; then
             printf "Failed to execute mise. Exiting.\n"
             exit 1
-        }
+        fi
+        eval "$("$HOME/.local/bin/mise" activate "$current_shell")"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
