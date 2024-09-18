@@ -79,25 +79,48 @@ install() {
         mise use -g erlang@$erlang_version
         ;;
     "mise")
-        arch=$(uname -m)
+        version="${MISE_VERSION:-v2024.9.5}"
+        os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        arch="$(uname -m)"
         if [ "$arch" = "x86_64" ]; then
-            mise_arch="x86_64"
-        elif [ "$arch" = "aarch64" ]; then
-            mise_arch="arm64"
+            arch="x64"
+        elif [ "$arch" = "aarch64" ] || [ "$arch" = "arm64" ]; then
+            arch="arm64"
         else
             printf "Unsupported architecture: %s\n" "$arch"
             exit 1
         fi
-        mkdir -p "$HOME/.local/bin"
-        curl -fsSL "https://github.com/jdxcode/mise/releases/latest/download/mise-linux-$mise_arch" -o "$HOME/.local/bin/mise"
-        chmod +x "$HOME/.local/bin/mise"
-        printf 'eval "$(%s activate %s)"\n' "$HOME/.local/bin/mise" "$current_shell" >>"$config_file"
-        # Verify that 'mise' is installed correctly
-        if ! "$HOME/.local/bin/mise" --version; then
+        if [ "$os" = "linux" ]; then
+            if ldd /bin/ls | grep -q 'musl'; then
+                arch="${arch}-musl"
+            fi
+        fi
+        install_path="$HOME/.local/bin/mise"
+        tarball_url="https://github.com/jdx/mise/releases/download/${version}/mise-${version}-${os}-${arch}.tar.gz"
+
+        # Download mise
+        if command -v curl >/dev/null 2>&1; then
+            curl -#fLo "$install_path" "$tarball_url"
+        elif command -v wget >/dev/null 2>&1; then
+            wget -qO "$install_path" "$tarball_url"
+        else
+            printf "Error: curl or wget is required to download mise\n"
+            exit 1
+        fi
+
+        chmod +x "$install_path"
+
+        # Activate mise
+        printf 'eval "$(%s activate %s)"\n' "$install_path" "$current_shell" >>"$config_file"
+        eval "$("$install_path" activate "$current_shell")"
+
+        # Verify installation
+        if ! "$install_path" --version; then
             printf "Failed to execute mise. Exiting.\n"
             exit 1
         fi
-        eval "$("$HOME/.local/bin/mise" activate "$current_shell")"
+
+        printf "mise installed successfully. Please restart your shell or run 'source %s' to use mise.\n" "$config_file"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
@@ -136,21 +159,21 @@ add_env() {
     sleep 1.5
     maybe_install "mise"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Erlang"
 
     printf "${white}\n"
     sleep 1.5
     maybe_install "Elixir"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Phoenix"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "PostgreSQL"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "PostgreSQL"
 
     printf "${white}\n"
     printf "${cyan}${bold}phx.tools setup is complete!\n"
