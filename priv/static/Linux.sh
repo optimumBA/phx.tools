@@ -80,9 +80,17 @@ install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        printf "eval \"\$(mise activate $current_shell)\"\n" >>$config_file
-        eval "$(mise activate $current_shell)"
-        export PATH="$HOME/.local/bin:$PATH"
+
+        case $current_shell in
+        "bash")
+            echo 'eval "$(mise activate bash)"' >>$config_file
+            ;;
+        "zsh")
+            echo 'eval "$(mise activate zsh)"' >>$config_file
+            ;;
+        esac
+
+        . "$config_file"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
