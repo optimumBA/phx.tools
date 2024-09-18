@@ -126,29 +126,29 @@ maybe_install() {
 add_env() {
     printf "\n"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "Xcode Command Line Tools"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Xcode Command Line Tools"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "Homebrew"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Homebrew"
 
     printf "${white}\n"
     sleep 1.5
     maybe_install "mise"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "Erlang"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Erlang"
 
     printf "${white}\n"
     sleep 1.5
     maybe_install "Elixir"
 
-    # printf "${white}\n"
-    # sleep 1.5
-    # maybe_install "Phoenix"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Phoenix"
 
     # printf "${white}\n"
     # sleep 1.5
