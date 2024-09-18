@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/sh
+
+set -eu
 
 # Make sure important variables exist if not already defined
 #
@@ -28,14 +30,14 @@ postgres_version=15.1
 
 current_shell=$(basename "$SHELL")
 
-case $current_shell in
-"bash" | "rbash")
+case "$current_shell" in
+  "bash" | "rbash")
     config_file="$HOME/.bash_profile"
     ;;
-"zsh")
+  "zsh")
     config_file="$HOME/.zshrc"
     ;;
-*)
+  *)
     echo "Unsupported shell: $current_shell"
     exit 1
     ;;
@@ -88,18 +90,13 @@ function install() {
         ;;
     "mise")
         curl https://mise.run | sh
-        echo -e "\n\n" >>$config_file
 
-        case $current_shell in
-        "bash" | "rbash")
-            echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
-            ;;
-        "zsh")
-            echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
-            ;;
-        esac
+        # Add activation command to the user's shell config file
+        printf "\n# Activate mise\n" >>"$config_file"
+        printf 'eval "$(~/.local/bin/mise activate %s)"\n' "$current_shell" >>"$config_file"
 
-        . $config_file >/dev/null 2>&1
+        # Activate mise in the current shell session
+        eval "$(~/.local/bin/mise activate "$current_shell")"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
@@ -258,11 +255,8 @@ while ! is_yn "$answer"; do
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
-
         echo ""
-
         sleep 3
-
         add_env
         ;;
     [nN] | [nN][oO])

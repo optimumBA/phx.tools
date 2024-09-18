@@ -7,15 +7,18 @@ serve:
 	rm -f .mise.toml
 	rm -f .tool-versions
 
-	if [[ "$$SHELL" == *"bash"* ]]; then \
-		source ~/.bash_profile; \
-	elif [[ "$$SHELL" == *"zsh"* ]]; then \
-		source ~/.zshrc; \
+	# Detect and activate mise
+	if [ "$(basename $$SHELL)" = "bash" ] || [ "$(basename $$SHELL)" = "rbash" ]; then \
+		eval "$$(~/.local/bin/mise activate bash)"; \
+	elif [ "$(basename $$SHELL)" = "zsh" ]; then \
+		eval "$$(~/.local/bin/mise activate zsh)"; \
+	else \
+		echo "Unsupported shell: $$(basename $$SHELL)"; \
+		exit 1; \
 	fi
 
-	# ~/.local/bin/mise exec -- initdb -D ~/pgdata -U postgres
-	# ~/.local/bin/mise exec -- pg_ctl start -D ~/pgdata
-	~/.local/bin/mise exec -- mix phx.new --no-install phx_tools_test
+	# Run your commands with mise activated
+	mise exec -- mix phx.new --no-install phx_tools_test
 	cd phx_tools_test
-	~/.local/bin/mise exec -- mix setup
-	~/.local/bin/mise exec -- elixir --erl '-detached' -S mix phx.server
+	mise exec -- mix setup
+	mise exec -- elixir --erl '-detached' -S mix phx.server
