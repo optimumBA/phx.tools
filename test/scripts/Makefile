@@ -11,14 +11,6 @@ serve:
 
 	echo "Debug: $$PATH"
 
-	@if [[ "$$SHELL" == *"bash"* ]]; then \
-		eval "$$(~/.local/bin/mise activate bash --shims)"; \
-		eval "$$(~/.local/bin/mise activate bash)"; \
-	elif [[ "$$SHELL" == *"zsh"* ]]; then \
-		eval "$$(~/.local/bin/mise activate zsh --shims)"; \
-		eval "$$(~/.local/bin/mise activate zsh)"; \
-	fi
-
 	echo "Debug: $$PATH"
 	mise doctor
 	ls ~/.local/share/mise/shims

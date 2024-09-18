@@ -444,7 +444,8 @@ defmodule GithubWorkflows do
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "/bin/#{shell} -c 'source #{config_file} && make -f test/scripts/Makefile serve'",
+              run:
+                "/bin/#{shell} -c 'source #{config_file} && make -f test/scripts/Makefile serve'",
               shell: "/bin/#{shell} -l {0}"
             ],
             [
