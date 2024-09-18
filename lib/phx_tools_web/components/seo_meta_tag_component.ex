@@ -15,6 +15,8 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   create a new Phoenix application, and launch the server...
   """
 
+  @keywords "elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
+
   attr :attributes, :map
 
   @spec seo_meta_tags(assigns()) :: rendered()
@@ -23,6 +25,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
       assigns
       |> assign_new(:description, fn -> String.trim(@default_description) end)
       |> assign_new(:image_url, fn -> static_url(Endpoint, ~p"/images/phx_tools.png") end)
+      |> assign_new(:keywords, fn -> @keywords end)
       |> assign_new(:url, fn
         %{attributes: %{url: url}} -> url
         _assigns -> url(~p"/")
@@ -30,10 +33,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
 
     ~H"""
     <.open_graph_meta_tags description={@description} image_url={@image_url} url={@url} />
-    <.other_meta_tags
-      description={@description}
-      keywords="elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
-    />
+    <.other_meta_tags description={@description} keywords={@keywords} />
     <.twitter_meta_tags description={@description} image_url={@image_url} url={@url} />
     """
   end
@@ -56,9 +56,11 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   attr :keywords, :string, required: true
 
   defp other_meta_tags(assigns) do
+    assigns = assign_new(assigns, :keywords, fn -> @keywords end)
+
     ~H"""
     <meta property="description" content={@description} />
-    <meta name="keywords" content="elixir, erlang, homebrew, mise, phoenix, postgres, postgresql" />
+    <meta name="keywords" content={@keywords} />
     """
   end
 

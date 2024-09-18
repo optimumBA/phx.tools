@@ -9,20 +9,12 @@ Here are the tools that `phx.tools` will install for you, if not already install
 _Required_
 
 - Build dependencies
-- Zsh
-- Homebrew
-- asdf
+- Homebrew (only on macOS)
+- mise
 - Erlang
 - Elixir
 - Phoenix
 - PostgreSQL
-
-_Optional_
-
-- Chrome
-- Node.js
-- ChromeDriver
-- Docker
 
 ## Setup
 
