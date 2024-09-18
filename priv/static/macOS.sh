@@ -246,11 +246,14 @@ is_yn() {
 answer=''
 
 while ! is_yn "$answer"; do
-    if [ "$current_shell" == "zsh" ]; then
-        read "answer?Do you want to continue? (y/n) "
-    else
+    case $current_shell in
+    "bash" | "rbash")
         read -p "Do you want to continue? (y/n) " answer
-    fi
+        ;;
+    "zsh")
+        read "answer?Do you want to continue? (y/n) "
+        ;;
+    esac
 
     echo ""
     case "$answer" in
