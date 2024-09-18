@@ -10,12 +10,10 @@ serve:
 	rm -f .tool-versions
 
 	echo "Debug: $$PATH"
-	mise doctor
 
 	export PATH="$$HOME/.local/share/mise/shims:$$PATH"
 
 	echo "Debug: $$PATH"
-	mise doctor
 
 	mise reshim
 
