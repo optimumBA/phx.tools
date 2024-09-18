@@ -224,7 +224,12 @@ is_yn() {
 answer=''
 
 while ! is_yn "$answer"; do
-    read -p "Do you want to continue? (y/n) " answer
+    if [ "$current_shell" == "zsh" ]; then
+        read "answer?Do you want to continue? (y/n) "
+    else
+        read -p "Do you want to continue? (y/n) " answer
+    fi
+
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
