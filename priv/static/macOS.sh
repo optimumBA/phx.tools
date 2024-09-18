@@ -136,33 +136,33 @@ function maybe_install() {
 function add_env() {
     echo ""
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Xcode Command Line Tools"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Xcode Command Line Tools"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Homebrew"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 1.5
     maybe_install "mise"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
     echo -e "${white}"
     sleep 1.5
     maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
