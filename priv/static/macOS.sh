@@ -87,7 +87,7 @@ function install() {
         $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
     "mise")
-        curl https://mise.run | sh
+        MISE_DEBUG=1 curl https://mise.run | sh
         echo -e "\n\n" >>$config_file
 
         case $current_shell in

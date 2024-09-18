@@ -77,7 +77,7 @@ function install() {
         mise use -g erlang@$erlang_version
         ;;
     "mise")
-        curl https://mise.run | sh
+        MISE_DEBUG=1 curl https://mise.run | sh
         echo -e "\n\n" >>$config_file
 
         case $current_shell in
