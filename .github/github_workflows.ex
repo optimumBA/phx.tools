@@ -42,9 +42,13 @@ defmodule GithubWorkflows do
       [
         name: "PR",
         on: [
-          pull_request: [
-            branches: ["main"],
-            types: ["opened", "reopened", "synchronize"]
+          # pull_request: [
+          #   branches: ["main"],
+          #   types: ["opened", "reopened", "synchronize"]
+          # ]
+          # temporary
+          push: [
+            branches: ["mise"]
           ]
         ],
         jobs:
