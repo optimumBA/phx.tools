@@ -122,7 +122,7 @@ maybe_install() {
         echo "$1 is already installed. Skipping..."
     else
         echo "Installing $1..."
-        if [[ "$1" == "Homebrew" || "$1" == "Erlang" ]]; then
+        if [ "$1" = "Homebrew" ] || [ "$1" = "Erlang" ]; then
             echo "This might take a while."
         fi
         echo ""
@@ -243,7 +243,8 @@ is_yn() {
 answer=''
 
 while ! is_yn "$answer"; do
-    read -p "Do you want to continue? (y/n) " answer
+    printf "Do you want to continue? (y/n) "
+    read -r answer
     echo ""
     case "$answer" in
     [yY] | [yY][eE][sS])
