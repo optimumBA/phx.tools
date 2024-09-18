@@ -445,7 +445,8 @@ defmodule GithubWorkflows do
               run: """
               set -x
               export MISE_VERBOSE=1
-              make -f test/scripts/Makefile serve
+              source $HOME/.#{shell}rc
+              source $HOME/.#{shell}rc && make -f test/scripts/Makefile serve
               """,
               shell: "/bin/#{shell} -l {0}"
             ],

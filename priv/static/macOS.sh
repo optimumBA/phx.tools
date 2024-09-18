@@ -89,9 +89,25 @@ install() {
         $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
     "mise")
-        curl https://mise.run | sh
-        printf 'eval "$(~/.local/bin/mise activate %s)"\n' "$current_shell" >>"$config_file"
-        . "$HOME/.local/bin/mise" activate "$current_shell"
+        arch=$(uname -m)
+        if [ "$arch" = "x86_64" ]; then
+            mise_arch="x86_64"
+        elif [ "$arch" = "arm64" ]; then
+            mise_arch="arm64"
+        else
+            printf "Unsupported architecture: %s\n" "$arch"
+            exit 1
+        fi
+        mkdir -p "$HOME/.local/bin"
+        curl -L "https://github.com/jdxcode/mise/releases/latest/download/mise-macos-$mise_arch" -o "$HOME/.local/bin/mise"
+        chmod +x "$HOME/.local/bin/mise"
+        printf 'eval "$(%s activate %s)"\n' "$HOME/.local/bin/mise" "$current_shell" >>"$config_file"
+        eval "$("$HOME/.local/bin/mise" activate "$current_shell")"
+        # Verify that 'mise' is installed correctly
+        "$HOME/.local/bin/mise" --version || {
+            printf "Failed to execute mise. Exiting.\n"
+            exit 1
+        }
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force

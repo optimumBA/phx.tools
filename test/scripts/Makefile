@@ -1,11 +1,14 @@
-SHELL := /bin/bash
+SHELL := $(SHELL)
+current_shell := $(shell basename $(SHELL))
 
 .ONESHELL:
 .SHELLFLAGS := -eu -o pipefail -c
 
 serve:
+	@echo "SHELL is $(SHELL)"
+	@echo "Current shell is $(current_shell)"
 	@echo "Activating mise..."
-	@eval "$$($(HOME)/.local/bin/mise activate bash)" && \
+	@eval "$$($(HOME)/.local/bin/mise activate $(current_shell))" && \
 	echo "Mise activated." && \
 	echo "Current PATH: $$PATH" && \
 	mise which mix && \
