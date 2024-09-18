@@ -41,11 +41,8 @@ case $current_shell in
     ;;
 esac
 
-is_non_interactive_shell() {
-    case $- in
-    *i*) return 0 ;;
-    *) return 1 ;;
-    esac
+is_ci() {
+    [ -n "${CI:-}" ]
 }
 
 function already_installed() {
@@ -92,14 +89,14 @@ function install() {
 
         case $current_shell in
         "bash" | "rbash")
-            if is_non_interactive_shell; then
+            if is_ci; then
                 echo "eval \"\$(~/.local/bin/mise activate bash --shims)\"" >>$config_file
             fi
 
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
             ;;
         "zsh")
-            if is_non_interactive_shell; then
+            if is_ci; then
                 echo "eval \"\$(~/.local/bin/mise activate zsh --shims)\"" >>$config_file
             fi
 

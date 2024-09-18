@@ -11,9 +11,11 @@ serve:
 
 	echo "Debug: $$PATH"
 
-	ls ~/.local/share/mise/shims
-	mise reshim
-	ls ~/.local/share/mise/shims
+	@ls ~/.local/share/mise/shims
+	@mise reshim
+	@ls ~/.local/share/mise/shims
+
+	@mise doctor
 
 	echo "Debug: $$PATH"
 
