@@ -69,31 +69,22 @@ function install() {
     case "$1" in
     "Elixir")
         mise use -g elixir@$elixir_version
-        mise reshim
         ;;
     "Erlang")
         if [ ! -f ~/.kerlrc ]; then
             echo 'KERL_CONFIGURE_OPTIONS="--without-javac"' >~/.kerlrc
         fi
         mise use -g erlang@$erlang_version
-        mise reshim
         ;;
     "mise")
-        MISE_DEBUG=1 curl https://mise.run | sh
         echo -e "\n\n" >>$config_file
 
         case $current_shell in
         "bash" | "rbash")
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
-            echo "eval \"\$(~/.local/bin/mise hook-env -s bash)\"" >>$config_file
-            eval "$(~/.local/bin/mise activate bash)"
-            eval "$(~/.local/bin/mise hook-env -s bash)"
             ;;
         "zsh")
             echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
-            echo "eval \"\$(~/.local/bin/mise hook-env -s zsh)\"" >>$config_file
-            eval "$(~/.local/bin/mise activate zsh)"
-            eval "$(~/.local/bin/mise hook-env -s zsh)"
             ;;
         esac
 
@@ -108,7 +99,6 @@ function install() {
         sudo apt-get update
         sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
         mise use -g postgres@$postgres_version
-        mise reshim
         ;;
     *)
         echo "Invalid name argument on install: $1"

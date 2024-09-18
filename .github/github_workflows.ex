@@ -380,7 +380,7 @@ defmodule GithubWorkflows do
       jobs ++
         [
           {:"test_linux_#{shell}", test_linux_script_job(shell)},
-          # {:"test_macos_#{shell}", test_macos_script_job(shell)}
+          {:"test_macos_#{shell}", test_macos_script_job(shell)}
         ]
     end)
   end

@@ -41,13 +41,6 @@ case $current_shell in
     ;;
 esac
 
-is_interactive_shell() {
-    case $- in
-    *i*) return 0 ;;
-    *) return 1 ;;
-    esac
-}
-
 function already_installed() {
     case "$1" in
     "Elixir")
@@ -94,27 +87,18 @@ function install() {
         $current_shell -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         ;;
     "mise")
-        MISE_DEBUG=1 curl https://mise.run | sh
         echo -e "\n\n" >>$config_file
 
         case $current_shell in
         "bash" | "rbash")
-            if is_interactive_shell; then
-                echo "eval \"\$(~/.local/bin/mise activate bash --shims)\"" >>$config_file
-            fi
-
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
             ;;
         "zsh")
-            if is_interactive_shell; then
-                echo "eval \"\$(~/.local/bin/mise activate zsh --shims)\"" >>$config_file
-            fi
-
             echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
             ;;
         esac
 
-        . "$config_file"
+        source $config_file >/dev/null 2>&1
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
