@@ -46,10 +46,10 @@ esac
 already_installed() {
     case "$1" in
     "Elixir")
-        which elixir >/dev/null 2>&1
+        mise which elixir >/dev/null 2>&1
         ;;
     "Erlang")
-        which erl >/dev/null 2>&1
+        mise which erl >/dev/null 2>&1
         ;;
     "Homebrew")
         which brew >/dev/null 2>&1
@@ -61,7 +61,7 @@ already_installed() {
         mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        which initdb >/dev/null 2>&1
+        mise which initdb >/dev/null 2>&1
         ;;
     "Xcode Command Line Tools")
         which xcode-select >/dev/null 2>&1
@@ -96,6 +96,8 @@ install() {
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
             ;;
         esac
+
+        export PATH="$HOME/.local/bin:$PATH"
         ;;
     "Phoenix")
         mise exec -- mix local.hex --force
