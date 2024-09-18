@@ -7,8 +7,15 @@ serve:
 	rm -f .mise.toml
 	rm -f .tool-versions
 
-	eval "$(mise env -s bash)"
-	# PATH="~/.local/share/mise/shims:$$PATH"
+	@if [[ "$$SHELL" == *"bash"* ]]; then \
+		echo "bash"
+		eval "$$(~/.local/bin/mise activate bash)"; \
+		eval "$$(~/.local/bin/mise hook-env -s bash)"; \
+	elif [[ "$$SHELL" == *"zsh"* ]]; then \
+		echo "zsh"
+		eval "$$(~/.local/bin/mise activate zsh)"; \
+		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
+	fi
 
 	# initdb -D ~/pgdata -U postgres
 	# pg_ctl start -D ~/pgdata

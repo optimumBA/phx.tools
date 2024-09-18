@@ -86,15 +86,16 @@ function install() {
         "bash" | "rbash")
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
             echo "eval \"\$(~/.local/bin/mise hook-env -s bash)\"" >>$config_file
+            eval "$(~/.local/bin/mise activate bash)"
+            eval "$(~/.local/bin/mise hook-env -s bash)"
             ;;
         "zsh")
             echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
             echo "eval \"\$(~/.local/bin/mise hook-env -s zsh)\"" >>$config_file
+            eval "$(~/.local/bin/mise activate zsh)"
+            eval "$(~/.local/bin/mise hook-env -s zsh)"
             ;;
         esac
-
-        cat $config_file
-        source $config_file
 
         mise doctor
         ;;
