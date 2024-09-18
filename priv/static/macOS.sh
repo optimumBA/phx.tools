@@ -42,7 +42,7 @@ case $current_shell in
 esac
 
 function already_installed() {
-    case $1 in
+    case "$1" in
     "asdf")
         which asdf >/dev/null 2>&1
         ;;
@@ -72,7 +72,7 @@ function already_installed() {
 }
 
 function install() {
-    case $1 in
+    case "$1" in
     "asdf")
         brew install asdf
         echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>$config_file

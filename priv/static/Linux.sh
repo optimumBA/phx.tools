@@ -42,7 +42,7 @@ case $current_shell in
 esac
 
 function already_installed() {
-    case $1 in
+    case "$1" in
     "asdf")
         which asdf >/dev/null 2>&1
         ;;
@@ -66,7 +66,7 @@ function already_installed() {
 }
 
 function install() {
-    case $1 in
+    case "$1" in
     "asdf")
         sudo apt-get update
         sudo apt-get -y install curl git
