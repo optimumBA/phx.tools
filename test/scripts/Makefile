@@ -4,7 +4,12 @@ SHELL := $(shell echo $$SHELL)
 .SHELLFLAGS := -eu -c
 
 serve:
-	eval "$(~/.local/bin/mise hook-env)"
+	@if [[ "$$SHELL" == *"bash"* ]]; then \
+		eval "$$(~/.local/bin/mise hook-env -s bash)"; \
+	elif [[ "$$SHELL" == *"zsh"* ]]; then \
+		eval "$$(~/.local/bin/mise hook-env -s zsh)"; \
+	fi
+
 	initdb -D ~/pgdata -U postgres
 	pg_ctl start -D ~/pgdata
 	mix phx.new --no-install phx_tools_test
