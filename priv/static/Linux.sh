@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Make sure important variables exist if not already defined
 #
@@ -30,7 +30,7 @@ current_shell=$(basename "$SHELL")
 
 case $current_shell in
 "bash" | "rbash")
-    config_file="$HOME/.bashrc"
+    config_file="$HOME/.bash_profile"
     ;;
 "zsh")
     config_file="$HOME/.zshrc"
@@ -88,6 +88,7 @@ function install() {
         ;;
     "Phoenix")
         mix local.hex --force
+        mix local.rebar --force
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
@@ -149,7 +150,7 @@ phx_tools="
         ██████╗░██╗░░██╗██╗░░██╗  ████████╗░█████╗░░█████╗░██╗░░░░░░██████╗ 
         ██╔══██╗██║░░██║╚██╗██╔╝  ╚══██╔══╝██╔══██╗██╔══██╗██║░░░░░██╔════╝ 
         ██████╔╝███████║░╚███╔╝░  ░░░██║░░░██║░░██║██║░░██║██║░░░░░╚█████╗░ 
-        ██╔═══╝░██╔══██║���██╔██╗░  ░░░██║░░░██║░░██║██║░░██║██║░░░░░░╚═══██╗ 
+        ██╔═══╝░██╔══██║░██╔██╗░  ░░░██║░░░██║░░██║██║░░██║██║░░░░░░╚═══██╗ 
         ██║░░░░░██║░░██║██╔╝╚██╗  ░░░██║░░░╚█████╔╝╚█████╔╝███████╗██████╔╝ 
         ╚═╝░░░░░╚═╝░░╚═╝╚═╝░░╚═╝  ░░░╚═╝░░░░╚════╝░░╚════╝░╚══════╝╚═════╝░ 
 "

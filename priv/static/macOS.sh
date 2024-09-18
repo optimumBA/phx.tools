@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Make sure important variables exist if not already defined
 #
@@ -30,7 +30,7 @@ current_shell=$(basename "$SHELL")
 
 case $current_shell in
 "bash" | "rbash")
-    config_file="$HOME/.bashrc"
+    config_file="$HOME/.bash_profile"
     ;;
 "zsh")
     config_file="$HOME/.zshrc"
@@ -65,7 +65,7 @@ function already_installed() {
         which xcode-select >/dev/null
         ;;
     *)
-        echo "Invalid name argument on checking"
+        echo "Invalid name argument on checking: $1"
         exit 1
         ;;
     esac
@@ -95,6 +95,7 @@ function install() {
         ;;
     "Phoenix")
         mix local.hex --force
+        mix local.rebar --force
         mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
@@ -108,7 +109,8 @@ function install() {
         xcode-select --install
         ;;
     *)
-        echo "Invalid name argument on install"
+        echo "Invalid name argument on install: $1"
+        exit 1
         ;;
     esac
 }

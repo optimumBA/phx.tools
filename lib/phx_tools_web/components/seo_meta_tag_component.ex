@@ -24,8 +24,8 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
     assigns =
       assigns
       |> assign_new(:description, fn -> String.trim(@default_description) end)
-      |> assign_new(:keywords, fn -> @keywords end)
       |> assign_new(:image_url, fn -> static_url(Endpoint, ~p"/images/phx_tools.png") end)
+      |> assign_new(:keywords, fn -> @keywords end)
       |> assign_new(:url, fn
         %{attributes: %{url: url}} -> url
         _assigns -> url(~p"/")

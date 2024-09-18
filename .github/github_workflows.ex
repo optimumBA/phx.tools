@@ -390,7 +390,7 @@ defmodule GithubWorkflows do
 
     config_file =
       case shell do
-        "bash" -> "~/.bashrc"
+        "bash" -> "~/.bash_profile"
         "zsh" -> "~/.zshrc"
       end
 
