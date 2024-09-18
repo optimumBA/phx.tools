@@ -44,10 +44,10 @@ esac
 function already_installed() {
     case "$1" in
     "Elixir")
-        mise which elixir >/dev/null 2>&1
+        which elixir >/dev/null 2>&1
         ;;
     "Erlang")
-        mise which erl >/dev/null 2>&1
+        which erl >/dev/null 2>&1
         ;;
     "Homebrew")
         which brew >/dev/null 2>&1
@@ -56,13 +56,13 @@ function already_installed() {
         which mise >/dev/null 2>&1
         ;;
     "Phoenix")
-        mise exec mix phx.new --version >/dev/null 2>&1
+        mix phx.new --version >/dev/null 2>&1
         ;;
     "PostgreSQL")
-        mise which initdb >/dev/null 2>&1
+        which initdb >/dev/null 2>&1
         ;;
     "Xcode Command Line Tools")
-        which xcode-select >/dev/null
+        which xcode-select >/dev/null 2>&1
         ;;
     *)
         echo "Invalid name argument on checking: $1"
@@ -89,16 +89,18 @@ function install() {
         case $current_shell in
         "bash" | "rbash")
             echo "eval \"\$(~/.local/bin/mise activate bash)\"" >>$config_file
+            eval "$(~/.local/bin/mise hook-env -s bash)"
             ;;
         "zsh")
             echo "eval \"\$(~/.local/bin/mise activate zsh)\"" >>$config_file
+            eval "$(~/.local/bin/mise hook-env -s zsh)"
             ;;
         esac
         ;;
     "Phoenix")
-        mise exec mix local.hex --force
-        mise exec mix local.rebar --force
-        mise exec mix archive.install --force hex phx_new $phoenix_version
+        mix local.hex --force
+        mix local.rebar --force
+        mix archive.install --force hex phx_new $phoenix_version
         ;;
     "PostgreSQL")
         brew install gcc readline zlib curl ossp-uuid
@@ -130,33 +132,33 @@ function maybe_install() {
 function add_env() {
     echo ""
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Xcode Command Line Tools"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Xcode Command Line Tools"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Homebrew"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Homebrew"
 
     echo -e "${white}"
     sleep 1.5
     maybe_install "mise"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Erlang"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Erlang"
 
     echo -e "${white}"
     sleep 1.5
     maybe_install "Elixir"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "Phoenix"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "Phoenix"
 
-    echo -e "${white}"
-    sleep 1.5
-    maybe_install "PostgreSQL"
+    # echo -e "${white}"
+    # sleep 1.5
+    # maybe_install "PostgreSQL"
 
     echo -e "${white}"
     echo -e "${cyan}${bold}phx.tools setup is complete!"
