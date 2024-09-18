@@ -84,11 +84,9 @@ install() {
         case $current_shell in
         "bash")
             echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
-            eval "$(~/.local/bin/mise activate bash)"
             ;;
         "zsh")
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
-            eval "$(~/.local/bin/mise activate zsh)"
             ;;
         esac
         ;;
