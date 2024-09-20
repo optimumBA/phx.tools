@@ -1,12 +1,22 @@
 export default {
   mounted() {
-    this.el.addEventListener('click', () => {
-      var copyText = document.getElementById('tool-installation').innerText
+    const copyContainer = this.el
+    const copyElement = document.getElementById('copy-icon')
+    const copyConfirmationElement = document.getElementById('copied-icon')
+
+    copyContainer.addEventListener('click', (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+
+      const copyText = document.getElementById('tool-installation').innerText
       navigator.clipboard.writeText(copyText)
-      copyBtn = document.getElementById('copy')
-      copyBtn.innerHTML = 'Copied'
-      copyBtn.setAttribute('disabled', '')
-      copyBtn.classList.add('bg-[#9887FF]')
+      copyElement.classList.add('hidden')
+      copyConfirmationElement.classList.remove('hidden')
+
+      setTimeout(() => {
+        copyConfirmationElement.classList.add('hidden')
+        copyElement.classList.remove('hidden')
+      }, 600)
     })
   },
 }

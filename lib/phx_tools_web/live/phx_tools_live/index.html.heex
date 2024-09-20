@@ -1,52 +1,9 @@
-<%= case @live_action do %>
-  <% :index -> %>
-    <LandingComponent.landing_page operating_system={@operating_system} />
-  <% :linux -> %>
-    <InstructionComponents.os_instructions>
-      <:header>
-        Linux installation process
-      </:header>
-
-      <:installation_command>
-        <%= "$SHELL -c \"$(curl -fsSL #{Endpoint.url() <> "/Linux.sh"})\"" %>
-      </:installation_command>
-
-      <:instruction>
-        2. Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together
-      </:instruction>
-
-      <:instruction>
-        3. Paste the shell command by pressing <b>Shift + Ctrl + V</b> together
-      </:instruction>
-
-      <:instruction>
-        4. Run the command by hitting <b>ENTER</b>
-      </:instruction>
-    </InstructionComponents.os_instructions>
-  <% :macOS -> %>
-    <InstructionComponents.os_instructions>
-      <:header>
-        macOS installation process
-      </:header>
-
-      <:installation_command>
-        <%= "$SHELL -c \"$(curl -fsSL #{Endpoint.url() <> "/macOS.sh"})\"" %>
-      </:installation_command>
-
-      <:instruction>
-        2. Open Terminal by pressing <b class="font-extrabold"> ⌘ + SPACE </b> together
-      </:instruction>
-
-      <:instruction>
-        3. Type "Terminal" and hit <b>RETURN</b>
-      </:instruction>
-
-      <:instruction>
-        4. Paste the shell command by hitting<b> ⌘ + V </b> together.
-      </:instruction>
-
-      <:instruction>
-        5. Run the command by hitting <b>RETURN</b>
-      </:instruction>
-    </InstructionComponents.os_instructions>
-<% end %>
+<PhxToolsComponents.os_landing_card
+  operating_system={@operating_system}
+  live_action={@live_action}
+  source_code_url={@source_code_url}
+>
+  <:installation_command>
+    <%= installation_command(@live_action) %>
+  </:installation_command>
+</PhxToolsComponents.os_landing_card>

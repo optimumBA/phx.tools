@@ -72,7 +72,6 @@ defmodule PhxToolsWeb do
     quote do
       use Phoenix.Component
 
-      alias PhxToolsWeb.Components.SharedComponents
       alias PhxToolsWeb.SeoMetaTagComponent
 
       # Import convenience functions from controllers

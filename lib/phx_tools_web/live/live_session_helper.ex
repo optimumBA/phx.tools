@@ -13,7 +13,7 @@ defmodule PhxToolsWeb.LiveSessionHelper do
         %{"operating_system" => "Linux"}
 
       "Mac" ->
-        %{"operating_system" => "Mac"}
+        %{"operating_system" => "macOS"}
 
       _other ->
         %{"operating_system" => operating_system}

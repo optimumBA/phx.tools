@@ -16,11 +16,20 @@ module.exports = {
       // => @media (min-width: 1240px) { ... }
     },
     extend: {
+      boxShadow: {
+        custom: '0 4px 10px rgba(194, 184, 255, 0.5)',
+      },
       fontSize: {
         md: '15px',
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
+      },
+      fontFamily: {
+        pixelify: ['Pixelify Sans', 'sans-serif'],
+      },
+      fontFamily: {
+        martian: ['Martian Mono', 'sans-serif'],
       },
       colors: {
         brand: '#FD4F00',
