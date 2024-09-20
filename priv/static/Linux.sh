@@ -51,6 +51,9 @@ already_installed() {
     "Erlang")
         mise which erl >/dev/null 2>&1
         ;;
+    "git")
+        which git >/dev/null 2>&1
+        ;;
     "mise")
         which mise >/dev/null 2>&1
         ;;
@@ -70,13 +73,22 @@ already_installed() {
 install() {
     case "$1" in
     "Elixir")
+        sudo apt-get update
+        sudo apt-get install -y unzip
         mise use -g -y elixir@$elixir_version
         ;;
     "Erlang")
+        sudo apt-get update
+        sudo apt-get install -y build-essential automake autoconf libssl-dev libncurses5-dev
+
         if [ ! -f ~/.kerlrc ]; then
             printf "KERL_CONFIGURE_OPTIONS=\"--without-javac\"\n" >~/.kerlrc
         fi
         mise use -g -y erlang@$erlang_version
+        ;;
+    "git")
+        sudo apt-get update
+        sudo apt-get -y install git
         ;;
     "mise")
         curl https://mise.run | sh
@@ -134,6 +146,10 @@ add_env() {
         sleep 60
         kill -0 "$$" || exit
     done 2>/dev/null &
+
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "git"
 
     printf "${white}\n"
     sleep 1.5
