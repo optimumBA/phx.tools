@@ -135,7 +135,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </div>
             <div
               class="mx-auto"
-              data-asciicast={ascii_cast_id(@live_action)}
+              data-asciicast={asciinema_cast_id(@live_action)}
               id={"asciinema-#{Utils.random_id()}"}
               phx-hook="AsciinemaHook"
             >
@@ -150,9 +150,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  defp ascii_cast_id(:macos), do: "bJMOlPe5F4mFLY0Rl6fiJSOp3"
+  defp asciinema_cast_id(:macos), do: "676867"
 
-  defp ascii_cast_id(:linux), do: "XhDpRstBJ4df2gfiRfp0awDPO"
+  defp asciinema_cast_id(:linux), do: "676866"
 
   defp os_instructions(assigns) do
     ~H"""
