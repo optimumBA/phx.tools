@@ -83,6 +83,7 @@ install() {
         if [ ! -f ~/.kerlrc ]; then
             printf "KERL_CONFIGURE_OPTIONS=\"--with-ssl=$(brew --prefix openssl@1.1) --without-javac\"\n" >~/.kerlrc
         fi
+        ulimit -n 1024
         mise use -g -y erlang@$erlang_version
         ;;
     "Homebrew")
