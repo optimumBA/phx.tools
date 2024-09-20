@@ -86,7 +86,22 @@ install() {
         mise use -g -y erlang@$erlang_version
         ;;
     "Homebrew")
-        $SHELL -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        UNAME_MACHINE="$(/usr/bin/uname -m)"
+
+        if [[ "${UNAME_MACHINE}" == "arm64" ]]; then
+            (
+                echo
+                echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+            ) >>$config_file
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        else
+            (
+                echo
+                echo 'eval "$(/usr/local/bin/brew shellenv)"'
+            ) >>$config_file
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
         ;;
     "mise")
         curl https://mise.run | sh
