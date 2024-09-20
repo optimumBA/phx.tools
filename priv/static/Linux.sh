@@ -125,6 +125,16 @@ maybe_install() {
 add_env() {
     printf "\n"
 
+    # Ask for sudo password upfront
+    sudo -v
+
+    # Keep sudo alive
+    while true; do
+        sudo -n true
+        sleep 60
+        kill -0 "$$" || exit
+    done 2>/dev/null &
+
     printf "${white}\n"
     sleep 1.5
     maybe_install "mise"

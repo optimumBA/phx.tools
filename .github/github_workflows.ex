@@ -419,6 +419,17 @@ defmodule GithubWorkflows do
               ]
             ]
           ) ++
+          if(os == "Linux",
+            do: [],
+            else: [
+              [
+                name: "Disable password prompt for macOS",
+                if: "steps.result_cache.outputs.cache-hit != 'true'",
+                run:
+                  ~S<sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers>
+              ]
+            ]
+          ) ++
           [
             [
               name: "Install expect tool",

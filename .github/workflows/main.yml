@@ -313,6 +313,9 @@ jobs:
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
           path: priv/static/macOS.sh
+      - name: Disable password prompt for macOS
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
@@ -391,6 +394,9 @@ jobs:
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install zsh
+      - name: Disable password prompt for macOS
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
