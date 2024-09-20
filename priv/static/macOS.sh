@@ -85,6 +85,9 @@ install() {
         fi
         mise use -g -y erlang@$erlang_version
         ;;
+    "Homebrew")
+        $SHELL -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ;;
     "mise")
         curl https://mise.run | sh
 
