@@ -9,6 +9,7 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
+  @shells ["bash", "zsh"]
 
   def get do
     %{
@@ -28,7 +29,7 @@ defmodule GithubWorkflows do
           ]
         ],
         jobs:
-          elixir_ci_jobs() ++
+          ci_jobs() ++
             [
               deploy_production_app: deploy_production_app_job()
             ]
@@ -47,7 +48,7 @@ defmodule GithubWorkflows do
           ]
         ],
         jobs:
-          elixir_ci_jobs() ++
+          ci_jobs() ++
             [
               deploy_preview_app: deploy_preview_app_job()
             ]
@@ -72,7 +73,7 @@ defmodule GithubWorkflows do
     ]
   end
 
-  defp elixir_ci_jobs do
+  defp ci_jobs do
     [
       compile: compile_job(),
       credo: credo_job(),
@@ -83,10 +84,8 @@ defmodule GithubWorkflows do
       prettier: prettier_job(),
       sobelow: sobelow_job(),
       test: test_job(),
-      test_linux_script_job: test_linux_script_job(),
-      test_macos_script_job: test_macos_script_job(),
       unused_deps: unused_deps_job()
-    ]
+    ] ++ test_scripts_jobs()
   end
 
   defp compile_job do
@@ -162,7 +161,7 @@ defmodule GithubWorkflows do
   defp deploy_job(env, opts) do
     [
       name: "Deploy #{env} app",
-      needs: Enum.map(elixir_ci_jobs(), &elem(&1, 0)),
+      needs: Enum.map(ci_jobs(), &elem(&1, 0)),
       "runs-on": "ubuntu-latest"
     ] ++ opts
   end
@@ -372,64 +371,121 @@ defmodule GithubWorkflows do
     )
   end
 
-  defp test_linux_script_job do
+  defp test_scripts_jobs do
+    Enum.reduce(@shells, [], fn shell, jobs ->
+      jobs ++
+        [
+          {:"test_linux_#{shell}", test_linux_script_job(shell)},
+          {:"test_macos_#{shell}", test_macos_script_job(shell)}
+        ]
+    end)
+  end
+
+  defp test_shell_script_job(opts) do
+    os = Keyword.fetch!(opts, :os)
+    runs_on = Keyword.fetch!(opts, :runs_on)
+    shell = Keyword.fetch!(opts, :shell)
+    shell_install_command = Keyword.fetch!(opts, :shell_install_command)
+    expect_install_command = Keyword.fetch!(opts, :expect_install_command)
+
+    [
+      name: "Test #{os} script with #{shell} shell",
+      "runs-on": runs_on,
+      env: [
+        SHELL: "/bin/#{shell}",
+        TZ: "America/New_York"
+      ],
+      steps:
+        [
+          checkout_step(),
+          [
+            name: "Restore script result cache",
+            uses: "actions/cache@v3",
+            id: "result_cache",
+            with: [
+              key:
+                "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
+              path: "priv/static/#{os}.sh"
+            ]
+          ]
+        ] ++
+          if(shell == "bash",
+            do: [],
+            else: [
+              [
+                name: "Install shell",
+                if: "steps.result_cache.outputs.cache-hit != 'true'",
+                run: shell_install_command
+              ]
+            ]
+          ) ++
+          if(os == "Linux",
+            do: [],
+            else: [
+              [
+                name: "Disable password prompt for macOS",
+                if: "steps.result_cache.outputs.cache-hit != 'true'",
+                run:
+                  ~S<sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers>
+              ]
+            ]
+          ) ++
+          [
+            [
+              name: "Install expect tool",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: expect_install_command
+            ],
+            [
+              name: "Remove mise config files",
+              run: "rm -f .mise.toml .tool-versions"
+            ],
+            [
+              name: "Test the script",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: "cd test/scripts && expect script.exp #{os}.sh",
+              shell: "/bin/#{shell} -l {0}"
+            ],
+            [
+              name: "Generate an app and start the server",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              run: "make -f test/scripts/Makefile serve",
+              shell: "/bin/#{shell} -l {0}"
+            ],
+            [
+              name: "Check HTTP status code",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              uses: "nick-fields/retry@v2",
+              with: [
+                command:
+                  "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh",
+                max_attempts: 7,
+                retry_wait_seconds: 5,
+                timeout_seconds: 1
+              ]
+            ]
+          ]
+    ]
+  end
+
+  defp test_linux_script_job(shell) do
     test_shell_script_job(
-      "Linux",
-      "ubuntu-latest",
-      "sudo apt-get update && sudo apt-get install -y expect"
+      expect_install_command: "sudo apt-get update && sudo apt-get install -y expect",
+      os: "Linux",
+      runs_on: "ubuntu-latest",
+      shell: shell,
+      shell_install_command: "sudo apt-get update && sudo apt-get install -y #{shell}"
     )
   end
 
-  defp test_macos_script_job do
-    test_shell_script_job("macOS", "macos-latest", "brew install expect")
-  end
-
-  defp test_shell_script_job(os, runs_on, expect_install_command) do
-    [
-      name: "Test #{os} script",
-      "runs-on": runs_on,
-      env: [TZ: "America/New_York"],
-      steps: [
-        checkout_step(),
-        [
-          name: "Restore script result cache",
-          uses: "actions/cache@v3",
-          id: "result_cache",
-          with: [
-            key:
-              "${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
-            path: "priv/static/#{os}.sh"
-          ]
-        ],
-        [
-          name: "Install expect tool",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: expect_install_command
-        ],
-        [
-          name: "Test the script",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "cd test/scripts && expect script.exp #{os}.sh"
-        ],
-        [
-          name: "Generate an app and start the server",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          run: "/bin/zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'"
-        ],
-        [
-          name: "Check HTTP status code",
-          if: "steps.result_cache.outputs.cache-hit != 'true'",
-          uses: "nick-fields/retry@v2",
-          with: [
-            command:
-              "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh",
-            max_attempts: 7,
-            retry_wait_seconds: 5,
-            timeout_seconds: 1
-          ]
-        ]
-      ]
-    ]
+  defp test_macos_script_job(shell) do
+    test_shell_script_job(
+      expect_install_command: "brew install expect",
+      os: "macOS",
+      runs_on: "macos-latest",
+      shell: shell,
+      shell_install_command: "brew install #{shell}"
+    )
   end
 
   defp unused_deps_job do

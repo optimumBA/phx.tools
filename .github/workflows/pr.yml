@@ -241,68 +241,6 @@ jobs:
         env:
           MIX_ENV: test
         run: mix test --cover --warnings-as-errors
-  test_linux_script_job:
-    name: Test Linux script
-    runs-on: ubuntu-latest
-    env:
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
-          path: priv/static/Linux.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp Linux.sh
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-  test_macos_script_job:
-    name: Test macOS script
-    runs-on: macos-latest
-    env:
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
-          path: priv/static/macOS.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp macOS.sh
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: /bin/zsh -c 'source ~/.zshrc && make -f test/scripts/Makefile'
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
   unused_deps:
     needs: compile
     name: Check unused deps
@@ -328,6 +266,162 @@ jobs:
         env:
           MIX_ENV: test
         run: mix deps.unlock --check-unused
+  test_linux_bash:
+    name: Test Linux script with bash shell
+    runs-on: ubuntu-latest
+    env:
+      SHELL: /bin/bash
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore script result cache
+        uses: actions/cache@v3
+        id: result_cache
+        with:
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
+          path: priv/static/Linux.sh
+      - name: Install expect tool
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
+      - name: Test the script
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: cd test/scripts && expect script.exp Linux.sh
+        shell: /bin/bash -l {0}
+      - name: Generate an app and start the server
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: make -f test/scripts/Makefile serve
+        shell: /bin/bash -l {0}
+      - name: Check HTTP status code
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: nick-fields/retry@v2
+        with:
+          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
+          max_attempts: 7
+          retry_wait_seconds: 5
+          timeout_seconds: 1
+  test_macos_bash:
+    name: Test macOS script with bash shell
+    runs-on: macos-latest
+    env:
+      SHELL: /bin/bash
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore script result cache
+        uses: actions/cache@v3
+        id: result_cache
+        with:
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          path: priv/static/macOS.sh
+      - name: Disable password prompt for macOS
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
+      - name: Install expect tool
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
+      - name: Test the script
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: cd test/scripts && expect script.exp macOS.sh
+        shell: /bin/bash -l {0}
+      - name: Generate an app and start the server
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: make -f test/scripts/Makefile serve
+        shell: /bin/bash -l {0}
+      - name: Check HTTP status code
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: nick-fields/retry@v2
+        with:
+          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
+          max_attempts: 7
+          retry_wait_seconds: 5
+          timeout_seconds: 1
+  test_linux_zsh:
+    name: Test Linux script with zsh shell
+    runs-on: ubuntu-latest
+    env:
+      SHELL: /bin/zsh
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore script result cache
+        uses: actions/cache@v3
+        id: result_cache
+        with:
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
+          path: priv/static/Linux.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y zsh
+      - name: Install expect tool
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
+      - name: Test the script
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: cd test/scripts && expect script.exp Linux.sh
+        shell: /bin/zsh -l {0}
+      - name: Generate an app and start the server
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: make -f test/scripts/Makefile serve
+        shell: /bin/zsh -l {0}
+      - name: Check HTTP status code
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: nick-fields/retry@v2
+        with:
+          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
+          max_attempts: 7
+          retry_wait_seconds: 5
+          timeout_seconds: 1
+  test_macos_zsh:
+    name: Test macOS script with zsh shell
+    runs-on: macos-latest
+    env:
+      SHELL: /bin/zsh
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore script result cache
+        uses: actions/cache@v3
+        id: result_cache
+        with:
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          path: priv/static/macOS.sh
+      - name: Install shell
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install zsh
+      - name: Disable password prompt for macOS
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
+      - name: Install expect tool
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: brew install expect
+      - name: Remove mise config files
+        run: rm -f .mise.toml .tool-versions
+      - name: Test the script
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: cd test/scripts && expect script.exp macOS.sh
+        shell: /bin/zsh -l {0}
+      - name: Generate an app and start the server
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        run: make -f test/scripts/Makefile serve
+        shell: /bin/zsh -l {0}
+      - name: Check HTTP status code
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: nick-fields/retry@v2
+        with:
+          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
+          max_attempts: 7
+          retry_wait_seconds: 5
+          timeout_seconds: 1
   deploy_preview_app:
     name: Deploy preview app
     needs:
@@ -340,9 +434,11 @@ jobs:
       - prettier
       - sobelow
       - test
-      - test_linux_script_job
-      - test_macos_script_job
       - unused_deps
+      - test_linux_bash
+      - test_macos_bash
+      - test_linux_zsh
+      - test_macos_zsh
     runs-on: ubuntu-latest
     permissions: write-all
     concurrency:

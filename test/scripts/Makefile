@@ -1,6 +1,13 @@
+SHELL := $(SHELL)
+current_shell := $(shell basename $(SHELL))
+
+.ONESHELL:
+SHELLFLAGS := -eu -c
+
 serve:
-	initdb -D ~/pgdata -U postgres
-	pg_ctl start -D ~/pgdata
-	mix phx.new --no-install phx_tools_test
-	cd phx_tools_test && mix local.rebar --force && mix setup
-	cd phx_tools_test && elixir --erl '-detached' -S mix phx.server
+	mise exec -- initdb -D ~/pgdata -U postgres
+	mise exec -- pg_ctl start -D ~/pgdata
+	mise exec -- mix phx.new --no-install phx_tools_test
+	cd phx_tools_test
+	mise exec -- mix setup
+	mise exec -- elixir --erl '-detached' -S mix phx.server

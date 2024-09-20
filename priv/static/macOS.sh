@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+set -eu
 
 # Make sure important variables exist if not already defined
 #
@@ -12,8 +14,8 @@ HOME="${HOME:-$(getent passwd $USER 2>/dev/null | cut -d: -f6)}"
 # macOS does not have getent, but this works even if $HOME is unset
 HOME="${HOME:-$(eval echo ~$USER)}"
 
-bold=$(tput bold)
-normal=$(tput sgr0)
+bold='\033[1m'
+normal='\033[0m'
 red='\033[0;31m'
 blue='\033[0;34m'
 bblue='\033[1;34m'
@@ -21,201 +23,179 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
-function already_installed() {
-    case $1 in
-    "Xcode Command Line Tools")
-        which xcode-select >/dev/null
-        ;;
+elixir_version=1.17.2-otp-27
+erlang_version=27.0.1
+phoenix_version=1.7.14
+postgres_version=15.1
 
-    "oh-my-zsh")
-        [ -d ~/.oh-my-zsh ]
+case "${SHELL:-}" in
+*/bash)
+    current_shell="bash"
+    config_file="$HOME/.bashrc"
+    ;;
+*/zsh)
+    current_shell="zsh"
+    config_file="$HOME/.zshrc"
+    ;;
+*)
+    printf "Unsupported shell: %s\n" "$SHELL"
+    exit 1
+    ;;
+esac
+
+already_installed() {
+    case "$1" in
+    "Elixir")
+        mise which elixir >/dev/null 2>&1
+        ;;
+    "Erlang")
+        mise which erl >/dev/null 2>&1
         ;;
     "Homebrew")
         which brew >/dev/null 2>&1
         ;;
-    "asdf")
-        brew list | grep -q asdf
-        ;;
-    "Erlang")
-        command -v erl >/dev/null 2>&1
-        ;;
-    "Elixir")
-        which elixir >/dev/null 2>&1
+    "mise")
+        which mise >/dev/null 2>&1
         ;;
     "Phoenix")
         mix phx.new --version >/dev/null 2>&1
         ;;
-    "Node.js")
-        which node >/dev/null 2>&1
-        ;;
     "PostgreSQL")
-        which pg_ctl >/dev/null 2>&1
+        mise which initdb >/dev/null 2>&1
         ;;
-    "Chrome")
-        brew list | grep -q google-chrome
-        ;;
-    "ChromeDriver")
-        brew list | grep -q chromedriver
-        ;;
-    "Docker")
-        which docker >/dev/null 2>&1
+    "Xcode Command Line Tools")
+        which xcode-select >/dev/null 2>&1
         ;;
     *)
-        echo "Invalid name argument on checking"
+        printf "Invalid name argument on checking: %s\n" "$1"
+        exit 1
         ;;
     esac
 }
 
-function install() {
-    case $1 in
+install() {
+    case "$1" in
+    "Elixir")
+        mise use -g -y elixir@$elixir_version
+        ;;
+    "Erlang")
+        brew install autoconf openssl@1.1 wxwidgets libxslt fop
+        if [ ! -f ~/.kerlrc ]; then
+            printf "KERL_CONFIGURE_OPTIONS=\"--with-ssl=$(brew --prefix openssl@1.1) --without-javac\"\n" >~/.kerlrc
+        fi
+        ulimit -n 1024
+        mise use -g -y erlang@$erlang_version
+        ;;
+    "Homebrew")
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        UNAME_MACHINE="$(/usr/bin/uname -m)"
+
+        if [[ "${UNAME_MACHINE}" == "arm64" ]]; then
+            (
+                echo
+                echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+            ) >>$config_file
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        else
+            (
+                echo
+                echo 'eval "$(/usr/local/bin/brew shellenv)"'
+            ) >>$config_file
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+        ;;
+    "mise")
+        curl https://mise.run | sh
+
+        case $current_shell in
+        "bash")
+            echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
+            ;;
+        "zsh")
+            echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
+            ;;
+        esac
+
+        export PATH="$HOME/.local/bin:$PATH"
+        ;;
+    "Phoenix")
+        mise exec -- mix local.hex --force
+        mise exec -- mix local.rebar --force
+        mise exec -- mix archive.install --force hex phx_new $phoenix_version
+        ;;
+    "PostgreSQL")
+        brew install gcc readline zlib curl ossp-uuid
+        mise use -g -y postgres@$postgres_version
+        ;;
     "Xcode Command Line Tools")
         xcode-select --install
         ;;
-    "oh-my-zsh")
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-        ;;
-    "Homebrew")
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        ;;
-    "asdf")
-        # Deps for asdf
-        brew install coreutils curl git
-
-        brew install asdf && echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >>${ZDOTDIR:-~}/.zshrc
-        ;;
-    "Erlang")
-        # Deps for erlang
-        brew install autoconf openssl@1.1 wxwidgets libxslt fop
-
-        export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf install erlang 27.0
-        asdf global erlang 27.0
-        asdf reshim erlang 27.0
-        ;;
-    "Elixir")
-        # Deps for elixir
-        brew install unzip
-
-        asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf install elixir 1.17.1-otp-27
-        asdf global elixir 1.17.1-otp-27
-        asdf reshim elixir 1.17.1-otp-27
-        ;;
-    "Phoenix")
-        source ~/.zshrc >/dev/null 2>&1
-        mix local.hex --force
-        mix archive.install --force hex phx_new 1.7.0-rc.3
-        ;;
-    "Node.js")
-        asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-        asdf install nodejs 20.14.0
-        asdf global nodejs 20.14.0
-        asdf reshim nodejs 20.14.0
-        ;;
-    "PostgreSQL")
-        # Dependencies for PSQL
-        brew install gcc readline zlib curl ossp-uuid
-
-        asdf plugin add postgres https://github.com/smashedtoatoms/asdf-postgres.git
-        asdf install postgres 15.1
-        asdf global postgres 15.1
-        asdf reshim postgres
-
-        echo 'pg_ctl() { "$HOME/.asdf/shims/pg_ctl" "$@"; }' >>~/.profile
-        source ~/.zshrc >/dev/null 2>&1
-        ;;
-    "Chrome")
-        brew install google-chrome
-        ;;
-    "ChromeDriver")
-        # Dependencies for chromedriver
-        brew install zip
-
-        asdf plugin add chromedriver
-        asdf install chromedriver latest
-        asdf global chromedriver latest
-        asdf reshim chromedriver latest
-        ;;
-    "Docker")
-        brew install --cask docker
-        ;;
     *)
-        echo "Invalid name argument on install"
+        printf "Invalid name argument on install: %s\n" "$1"
+        exit 1
         ;;
     esac
 }
 
-function maybe_install() {
-    if already_installed $1; then
-        echo "$1 is already installed. Skipping..."
+maybe_install() {
+    if already_installed "$1"; then
+        printf "%s is already installed. Skipping...\n" "$1"
     else
-        echo "Installing $1..."
-        if [[ $1 == "Homebrew" || $1 == "Erlang" ]]; then
-            echo "This might take a while."
+        printf "Installing %s...\n" "$1"
+        if [ "$1" = "Homebrew" ] || [ "$1" = "Erlang" ]; then
+            printf "This might take a while.\n"
         fi
-        echo ""
-        install $1
+        printf "\n"
+        install "$1"
     fi
 }
 
-function add_env() {
-    echo ""
-    echo -e "${white}"
-    sleep 2
-    maybe_install "xcode"
+add_env() {
+    printf "\n"
 
-    echo -e "${white}"
-    sleep 2
-    maybe_install "oh-my-zsh"
+    # Ask for sudo password upfront
+    sudo -v
 
-    echo -e "${white}"
-    sleep 2
+    # Keep sudo alive
+    while true; do
+        sudo -n true
+        sleep 60
+        kill -0 "$$" || exit
+    done 2>/dev/null &
+
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "Xcode Command Line Tools"
+
+    printf "${white}\n"
+    sleep 1.5
     maybe_install "Homebrew"
 
-    echo -e "${white}"
-    sleep 3
-    maybe_install "asdf"
+    printf "${white}\n"
+    sleep 1.5
+    maybe_install "mise"
 
-    echo -e "${white}"
+    printf "${white}\n"
     sleep 1.5
     maybe_install "Erlang"
 
-    echo -e "${white}"
+    printf "${white}\n"
     sleep 1.5
     maybe_install "Elixir"
 
-    echo -e "${white}"
+    printf "${white}\n"
     sleep 1.5
     maybe_install "Phoenix"
 
-    echo -e "${white}"
+    printf "${white}\n"
     sleep 1.5
     maybe_install "PostgreSQL"
 
-    if [[ "$1" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        echo -e "${white}"
-        sleep 3
-        maybe_install "Chrome"
-        echo -e "${white}"
-
-        sleep 1.5
-        maybe_install "Node.js"
-        echo -e "${white}"
-
-        sleep 2
-        maybe_install "ChromeDriver"
-        echo -e "${white}"
-
-        maybe_install "Docker"
-        echo -e "${white}"
-    fi
-
-    echo -e "${white}"
-    echo -e "${cyan}${bold}phx.tools setup is complete!"
-    echo -e "${cyan}${bold}Please restart the terminal and type in the following command:"
-    echo -e "${cyan}${bold}mix phx.new"
-    echo -e "${white}"
+    printf "${white}\n"
+    printf "${cyan}${bold}phx.tools setup is complete!\n"
+    printf "${cyan}${bold}Please restart the terminal and type in the following command:\n"
+    printf "${cyan}${bold}mix phx.new\n"
+    printf "${white}\n"
 }
 
 phx_tools="
@@ -243,41 +223,37 @@ optimum="
     ░╚════╝░╚═╝░░░░░░░░╚═╝░░░╚═╝╚═╝░░░░░╚═╝░╚═════╝░╚═╝░░░░░╚═╝╚═════╝░╚═╝░░╚═╝
 "
 
-echo -e "$phx_tools"
-
-echo -e "$by"
-
-echo -e "$optimum"
+printf "%s\n" "$phx_tools"
+printf "%s\n" "$by"
+printf "%s\n" "$optimum"
 
 sleep 3
 
-echo ""
+printf "\n"
 
-echo -e "${bblue}${bold}Welcome to the phx.tools shell script for macOS."
+printf "${bblue}${bold}Welcome to the phx.tools shell script for macOS.\n"
 
 sleep 3
 
-echo ""
+printf "\n"
 
-echo -e "${bblue}${bold}The following will be installed if not available already:"
+printf "${bblue}${bold}The following will be installed if not available already:\n"
 
-echo -e "${cyan}${bold}"
+printf "${cyan}${bold}\n"
 
-echo "1) Build dependencies"
-echo "2) oh-my-zsh"
-echo "3) Homebrew"
-echo "4) asdf"
-echo "5) Erlang"
-echo "6) Elixir"
-echo "7) Phoenix"
-echo "8) PostgreSQL"
+printf "1) Build dependencies\n"
+printf "2) Homebrew\n"
+printf "3) mise\n"
+printf "4) Erlang\n"
+printf "5) Elixir\n"
+printf "6) Phoenix\n"
+printf "7) PostgreSQL\n"
 
-echo ""
-echo -e "${white} ${bold}"
+printf "\n"
+printf "${white}${bold}\n"
 
 sleep 1
 
-# only true if user answer y/n
 is_yn() {
     case "$1" in
     [yY] | [yY][eE][sS])
@@ -295,54 +271,22 @@ is_yn() {
 answer=''
 
 while ! is_yn "$answer"; do
-    read -p "Do you want to continue? (y/n) " answer
-    echo ""
+    printf "Do you want to continue? (y/n) "
+    read -r answer
+    printf "\n"
     case "$answer" in
     [yY] | [yY][eE][sS])
-        echo -e "${bblue}${bold}We can also install some optional tools:"
-
-        echo -e "${cyan}${bold}"
-
-        echo "1) Chrome"
-        echo "2) Node.js"
-        echo "3) ChromeDriver"
-        echo "4) Docker"
-
-        echo -e "${white}"
-        echo -e "${white} ${bold}"
-
-        optional=""
-
-        while ! is_yn "$optional"; do
-            read -p "Do you want us to install those as well? (y/n) " optional
-
-            if ! [[ "$optional" =~ ^([yY][eE][sS]|[yY]|[nN]|[nN][oO])$ ]]; then
-                echo "Please enter y or n"
-                echo ""
-            fi
-        done
-
-        echo ""
-
-        echo -e "${bblue}${bold}We're going to switch your default shell to Zsh even if it's not available yet, so you might see the following:"
-
-        echo -e "${bblue}${bold}chsh: Warning: /bin/zsh does not exist"
-
-        echo -e "${bblue}${bold}But don't worry. The installation will proceed as regular."
-
+        printf "\n"
         sleep 3
-
-        sudo -S chsh -s '/bin/zsh' "${USER}"
-
-        add_env "$optional"
+        add_env
         ;;
     [nN] | [nN][oO])
-        echo "Thank you for your time"
-        echo ""
+        printf "Thank you for your time\n"
+        printf "\n"
         ;;
     *)
-        echo "Please enter y or n"
-        echo ""
+        printf "Please enter y or n\n"
+        printf "\n"
         ;;
     esac
 done
