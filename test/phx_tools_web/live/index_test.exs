@@ -127,12 +127,12 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
   describe "scripts" do
     test "user accesses Linux script", %{conn: conn} do
       conn = get(conn, "/Linux.sh")
-      assert conn.resp_body =~ "Welcome to the phx.tools shell script for Linux-based OS."
+      assert conn.resp_body =~ "Welcome to the phx.tools shell script"
     end
 
     test "user accesses macOS script", %{conn: conn} do
       conn = get(conn, "/macOS.sh")
-      assert conn.resp_body =~ "Welcome to the phx.tools shell script for macOS."
+      assert conn.resp_body =~ "Welcome to the phx.tools shell script"
     end
   end
 end

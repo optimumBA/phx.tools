@@ -404,7 +404,7 @@ defmodule GithubWorkflows do
             id: "result_cache",
             with: [
               key:
-                "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/#{os}.sh') }}",
+                "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
               path: "priv/static/#{os}.sh"
             ]
           ]

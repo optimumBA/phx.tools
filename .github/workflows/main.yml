@@ -275,7 +275,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/static/Linux.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -311,7 +311,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/static/macOS.sh
       - name: Disable password prompt for macOS
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -350,7 +350,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/Linux.sh') }}
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/static/Linux.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -389,7 +389,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/static/macOS.sh') }}
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/static/macOS.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
