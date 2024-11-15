@@ -1,8 +1,8 @@
 defmodule PhxToolsWeb.CurlDetector do
   @moduledoc """
-  A plug that serves a script based on the request's `User-Agent` or specific URL paths.
+  A plug that serves a script based on the request's `User-Agent`.
 
-  Requests from `curl` receive the script content directly, halting further processing. Additionally, requests to `/Linux.sh` or `/macOS.sh` paths return the script regardless of `User-Agent`.
+  Requests from `curl` receive the script content directly, halting further processing.
   """
 
   import Plug.Conn
