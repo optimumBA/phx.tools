@@ -150,9 +150,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  defp asciinema_cast_id(:macos), do: "676867"
+  defp asciinema_cast_id(:macos), do: "689829"
 
-  defp asciinema_cast_id(:linux), do: "676866"
+  defp asciinema_cast_id(:linux), do: "689816"
 
   defp os_instructions(assigns) do
     ~H"""
