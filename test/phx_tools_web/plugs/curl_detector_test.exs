@@ -1,7 +1,7 @@
 defmodule PhxToolsWeb.CurlDetectorTest do
   use PhxToolsWeb.ConnCase, async: true
 
-  @script_content "#!/bin/sh"
+  @script_content File.read!("test/support/script.sh")
 
   describe "call/2" do
     test "returns script content for requests with curl User-Agent on root path", %{conn: conn} do
