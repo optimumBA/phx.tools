@@ -14,11 +14,31 @@ defmodule PhxToolsWeb.CurlDetectorTest do
       assert String.contains?(conn.resp_body, @script_content)
     end
 
+    test "returns script content for /macOS.sh regardless of User-Agent,", %{conn: conn} do
+      conn =
+        conn
+        |> put_req_header("user-agent", "curl/7.68.0")
+        |> get("/macOS.sh")
+
+      assert conn.status == 200
+      assert String.contains?(conn.resp_body, @script_content)
+    end
+
+    test "returns script content for /Linux.sh regardless of User-Agent,", %{conn: conn} do
+      conn =
+        conn
+        |> put_req_header("user-agent", "curl/7.68.0")
+        |> get("/Linux.sh")
+
+      assert conn.status == 200
+      assert String.contains?(conn.resp_body, @script_content)
+    end
+
     test "does not return script content for requests with non-curl User-Agent", %{conn: conn} do
       conn =
         conn
         |> put_req_header("user-agent", "Mozilla/5.0")
-        |> get("/macOS.sh")
+        |> get("/")
 
       assert conn.status == 200
       refute conn.resp_body == @script_content
