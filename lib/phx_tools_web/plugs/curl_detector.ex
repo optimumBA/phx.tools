@@ -44,6 +44,7 @@ defmodule PhxToolsWeb.CurlDetector do
   end
 
   defp script_content do
-    File.read!(@script_path)
+    script_path = Path.join(:code.priv_dir(:phx_tools), "script.sh")
+    File.read!(script_path)
   end
 end
