@@ -44,5 +44,10 @@ defmodule PhxToolsWeb.CurlDetectorTest do
       assert conn.status == 200
       assert String.contains?(conn.resp_body, @script_content)
     end
+
+    test "doesn't crash when User-Agent is nil", %{conn: conn} do
+      conn = get(conn, "/")
+      assert conn.status == 200
+    end
   end
 end
