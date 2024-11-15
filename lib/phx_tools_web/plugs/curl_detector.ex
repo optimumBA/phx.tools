@@ -21,11 +21,7 @@ defmodule PhxToolsWeb.CurlDetector do
       |> get_req_header("user-agent")
       |> List.first()
 
-    Logger.info("User-Agent: #{user_agent}==========")
-    path = conn.request_path
-    Logger.info("User-Agent: #{path}==========")
-
-    if should_serve_script?(user_agent, path) do
+    if should_serve_script?(user_agent) do
       conn
       |> put_resp_content_type("text/plain")
       |> send_resp(200, script_content())
@@ -35,8 +31,8 @@ defmodule PhxToolsWeb.CurlDetector do
     end
   end
 
-  defp should_serve_script?(user_agent, path) do
-    curl_user_agent?(user_agent) || path in ["/Linux.sh", "/macOS.sh"]
+  defp should_serve_script?(user_agent) do
+    curl_user_agent?(user_agent)
   end
 
   defp curl_user_agent?(user_agent) do
