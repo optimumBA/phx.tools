@@ -17,7 +17,7 @@ defmodule PhxToolsWeb.CurlDetectorTest do
     test "returns script content for /macOS.sh regardless of User-Agent,", %{conn: conn} do
       conn =
         conn
-        |> put_req_header("user-agent", "curl/7.68.0")
+        |> put_req_header("user-agent", "Mozilla/5.0")
         |> get("/macOS.sh")
 
       assert conn.status == 200
@@ -27,7 +27,7 @@ defmodule PhxToolsWeb.CurlDetectorTest do
     test "returns script content for /Linux.sh regardless of User-Agent,", %{conn: conn} do
       conn =
         conn
-        |> put_req_header("user-agent", "curl/7.68.0")
+        |> put_req_header("user-agent", "Mozilla/5.0")
         |> get("/Linux.sh")
 
       assert conn.status == 200
