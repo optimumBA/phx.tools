@@ -10,12 +10,16 @@ defmodule PhxToolsWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :curl_detector do
+    plug PhxToolsWeb.CurlDetector
+  end
+
   pipeline :system_detector do
     plug PhxToolsWeb.SystemDetector
   end
 
   scope "/", PhxToolsWeb do
-    pipe_through [:browser, :system_detector]
+    pipe_through [:browser, :curl_detector, :system_detector]
 
     live_session :default,
       session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
