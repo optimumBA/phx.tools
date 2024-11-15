@@ -19,7 +19,7 @@ defmodule PhxToolsWeb.Router do
   end
 
   scope "/", PhxToolsWeb do
-    pipe_through [:browser, :system_detector, :curl_detector]
+    pipe_through [:browser, :curl_detector, :system_detector]
 
     live_session :default,
       session: {PhxToolsWeb.LiveSessionHelper, :get_system_name, []} do
