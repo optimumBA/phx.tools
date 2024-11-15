@@ -27,9 +27,8 @@ defmodule PhxToolsWeb.CurlDetector do
     end
   end
 
-  defp request_sent_from_curl?(user_agent) do
-    user_agent && String.starts_with?(user_agent, "curl")
-  end
+  defp request_sent_from_curl?(nil), do: false
+  defp request_sent_from_curl?(user_agent), do: String.starts_with?(user_agent, "curl")
 
   defp script_content do
     :phx_tools

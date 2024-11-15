@@ -10,12 +10,12 @@ defmodule PhxToolsWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :system_detector do
-    plug PhxToolsWeb.SystemDetector
-  end
-
   pipeline :curl_detector do
     plug PhxToolsWeb.CurlDetector
+  end
+
+  pipeline :system_detector do
+    plug PhxToolsWeb.SystemDetector
   end
 
   scope "/", PhxToolsWeb do
