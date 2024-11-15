@@ -36,7 +36,9 @@ defmodule PhxToolsWeb.CurlDetector do
   end
 
   defp script_content do
-    script_path = Path.join(:code.priv_dir(:phx_tools), "script.sh")
-    File.read!(script_path)
+    :phx_tools
+    |> :code.priv_dir()
+    |> Path.join("script.sh")
+    |> File.read!()
   end
 end
