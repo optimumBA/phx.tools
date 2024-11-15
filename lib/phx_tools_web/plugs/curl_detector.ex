@@ -7,12 +7,8 @@ defmodule PhxToolsWeb.CurlDetector do
 
   import Plug.Conn
 
-  require Logger
-
-  @script_path "priv/script.sh"
-
   @spec init(Keyword.t()) :: nil
-  def init(opts), do: nil
+  def init(_opts), do: nil
 
   @spec call(Plug.Conn.t(), nil) :: Plug.Conn.t()
   def call(conn, _opts) do
