@@ -46,7 +46,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         </div>
       </div>
       <div class="flex flex-col items-center md:w-11/12 lg:w-[1100px]">
-        <div class="bg-[#110A33] rounded-xl shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
+        <div class=" bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
           <div class="bg-[#2C2650] p-3 rounded-t-xl flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
             <Icons.exclamation_icon />
             <p class="font-martian sm:text-sm md:text-base lg:text-lg md:py-2">
