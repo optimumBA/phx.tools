@@ -3,13 +3,7 @@
 exp_internal 1
 set timeout -1
 
-puts "Debug: argv = $argv"
-puts "Debug: pwd = [pwd]"
-
-set script [lindex $argv 0]
-puts "Debug: script path = $script"
-
-spawn ./../../priv/static/$script
+spawn ./../../priv/script.sh
 match_max 100000
 expect "Do you want to continue? (y/n) "
 send -- "y\r"
