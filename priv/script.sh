@@ -33,6 +33,11 @@ case "${SHELL:-}" in
     current_shell="bash"
     config_file="$HOME/.bashrc"
     ;;
+*/fish)
+    current_shell="fish"
+    config_file="$HOME/.config/fish/config.fish"
+    mkdir -p "$(dirname "$config_file")"
+    ;;
 */zsh)
     current_shell="zsh"
     config_file="$HOME/.zshrc"
@@ -126,16 +131,24 @@ install() {
         UNAME_MACHINE="$(/usr/bin/uname -m)"
 
         if [[ "${UNAME_MACHINE}" == "arm64" ]]; then
-            (
-                echo
-                echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-            ) >>$config_file
+            if [ "$current_shell" = "fish" ]; then
+                fish_add_path /opt/homebrew/bin
+            else
+                (
+                    echo
+                    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+                ) >>$config_file
+            fi
             eval "$(/opt/homebrew/bin/brew shellenv)"
         else
-            (
-                echo
-                echo 'eval "$(/usr/local/bin/brew shellenv)"'
-            ) >>$config_file
+            if [ "$current_shell" = "fish" ]; then
+                fish_add_path /usr/local/bin
+            else
+                (
+                    echo
+                    echo 'eval "$(/usr/local/bin/brew shellenv)"'
+                ) >>$config_file
+            fi
             eval "$(/usr/local/bin/brew shellenv)"
         fi
         ;;
@@ -145,6 +158,9 @@ install() {
         case $current_shell in
         "bash")
             echo 'eval "$(~/.local/bin/mise activate bash)"' >>$config_file
+            ;;
+        "fish")
+            echo '~/.local/bin/mise activate fish | source' >>$config_file
             ;;
         "zsh")
             echo 'eval "$(~/.local/bin/mise activate zsh)"' >>$config_file
