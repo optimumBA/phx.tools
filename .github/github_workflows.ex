@@ -9,8 +9,7 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
-  # @shells ["bash", "fish", "zsh"]
-  @shells ["fish"]
+  @shells ["bash", "fish", "zsh"]
 
   def get do
     %{
@@ -76,16 +75,16 @@ defmodule GithubWorkflows do
 
   defp ci_jobs do
     [
-      # compile: compile_job(),
-      # credo: credo_job(),
-      # deps_audit: deps_audit_job(),
-      # dialyzer: dialyzer_job(),
-      # format: format_job(),
-      # hex_audit: hex_audit_job(),
-      # prettier: prettier_job(),
-      # sobelow: sobelow_job(),
-      # test: test_job(),
-      # unused_deps: unused_deps_job()
+      compile: compile_job(),
+      credo: credo_job(),
+      deps_audit: deps_audit_job(),
+      dialyzer: dialyzer_job(),
+      format: format_job(),
+      hex_audit: hex_audit_job(),
+      prettier: prettier_job(),
+      sobelow: sobelow_job(),
+      test: test_job(),
+      unused_deps: unused_deps_job()
     ] ++ test_scripts_jobs()
   end
 
@@ -376,7 +375,7 @@ defmodule GithubWorkflows do
     Enum.reduce(@shells, [], fn shell, jobs ->
       jobs ++
         [
-          # {:"test_linux_#{shell}", test_linux_script_job(shell)},
+          {:"test_linux_#{shell}", test_linux_script_job(shell)},
           {:"test_macos_#{shell}", test_macos_script_job(shell)}
         ]
     end)
@@ -393,7 +392,7 @@ defmodule GithubWorkflows do
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
       env: [
-        SHELL: "/bin/#{shell}",
+        SHELL: shell,
         TZ: "America/New_York"
       ],
       steps:
@@ -451,7 +450,7 @@ defmodule GithubWorkflows do
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "make -f test/scripts/Makefile serve",
-              shell: "/bin/#{shell} -l {0}"
+              shell: "#{shell} -l {0}"
             ],
             [
               name: "Check HTTP status code",
