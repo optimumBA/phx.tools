@@ -445,7 +445,7 @@ defmodule GithubWorkflows do
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: ~s"""
               cd test/scripts
-              expect script.exp #{os}.sh
+              expect $PWD/test/scripts/script.exp $PWD/priv/static/#{os}.sh
               """,
               shell: "/bin/#{shell} -l {0}"
             ],

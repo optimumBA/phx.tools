@@ -286,7 +286,7 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
           cd test/scripts
-          expect script.exp Linux.sh
+          expect $PWD/test/scripts/script.exp $PWD/priv/static/Linux.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -327,7 +327,7 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
           cd test/scripts
-          expect script.exp macOS.sh
+          expect $PWD/test/scripts/script.exp $PWD/priv/static/macOS.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -368,7 +368,7 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
           cd test/scripts
-          expect script.exp Linux.sh
+          expect $PWD/test/scripts/script.exp $PWD/priv/static/Linux.sh
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -412,7 +412,7 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
           cd test/scripts
-          expect script.exp macOS.sh
+          expect $PWD/test/scripts/script.exp $PWD/priv/static/macOS.sh
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -453,7 +453,7 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
           cd test/scripts
-          expect script.exp Linux.sh
+          expect $PWD/test/scripts/script.exp $PWD/priv/static/Linux.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -497,7 +497,7 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
           cd test/scripts
-          expect script.exp macOS.sh
+          expect $PWD/test/scripts/script.exp $PWD/priv/static/macOS.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
