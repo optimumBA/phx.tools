@@ -442,14 +442,10 @@ defmodule GithubWorkflows do
               run: "rm -f .mise.toml .tool-versions"
             ],
             [
-              name: "Setup Debug Session",
-              uses: "csexton/debugger-action@master",
-            ],
-            [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "cd test/scripts && expect -d script.exp",
-              shell: "/bin/#{shell} -l {0}"
+              shell: "#{shell} -l {0}"
             ],
             [
               name: "Generate an app and start the server",
