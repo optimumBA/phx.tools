@@ -443,7 +443,10 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "cd test/scripts && expect script.exp #{os}.sh",
+              run: ~s"""
+              cd test/scripts
+              expect script.exp #{os}.sh
+              """,
               shell: "/bin/#{shell} -l {0}"
             ],
             [

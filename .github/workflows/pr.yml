@@ -288,7 +288,9 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp Linux.sh
+        run: |
+          cd test/scripts
+          expect script.exp Linux.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -327,7 +329,9 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp macOS.sh
+        run: |
+          cd test/scripts
+          expect script.exp macOS.sh
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -366,7 +370,9 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp Linux.sh
+        run: |
+          cd test/scripts
+          expect script.exp Linux.sh
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -408,7 +414,9 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp macOS.sh
+        run: |
+          cd test/scripts
+          expect script.exp macOS.sh
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -447,7 +455,9 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp Linux.sh
+        run: |
+          cd test/scripts
+          expect script.exp Linux.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -489,7 +499,9 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp macOS.sh
+        run: |
+          cd test/scripts
+          expect script.exp macOS.sh
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
