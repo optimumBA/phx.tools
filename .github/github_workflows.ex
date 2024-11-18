@@ -444,7 +444,6 @@ defmodule GithubWorkflows do
             [
               name: "Setup Debug Session",
               uses: "csexton/debugger-action@master",
-              shell: "/bin/#{shell} -l {0}"
             ],
             [
               name: "Test the script",

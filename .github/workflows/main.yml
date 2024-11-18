@@ -34,7 +34,6 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Setup Debug Session
         uses: csexton/debugger-action@master
-        shell: /bin/fish -l {0}
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect -d script.exp
