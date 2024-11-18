@@ -106,7 +106,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 </div>
               </div>
             </div>
-            <div class="w-full bg-blue-600 flex justify-end">
+            <div class="w-full bg-blue-600 flex justify-center">
               <.os_instructions
                 :let={installation_instruction}
                 installation_instructions={installation_instructions(@live_action)}
