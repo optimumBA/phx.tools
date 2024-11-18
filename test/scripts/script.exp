@@ -1,10 +1,39 @@
 #!/usr/bin/expect
 
 exp_internal 1
+log_user 1
 set timeout -1
 
-spawn ./../../priv/script.sh
+puts "Debug: Starting script"
+puts "Debug: Current directory: [pwd]"
+
+# Try each step separately with error checking
+puts "Debug: Attempting to construct path..."
+if {[catch {
+    set script_path [file normalize "./../../priv/script.sh"]
+    puts "Debug: Normalized path: $script_path"
+} err]} {
+    puts "Error in path normalization: $err"
+    exit 1
+}
+
+puts "Debug: Attempting spawn..."
+if {[catch {
+    spawn $script_path
+    puts "Debug: Spawn successful"
+} err]} {
+    puts "Error in spawn: $err"
+    exit 1
+}
+
+puts "Debug: Setting match_max..."
 match_max 100000
+
+puts "Debug: Waiting for prompt..."
 expect "Do you want to continue? (y/n) "
+
+puts "Debug: Sending response..."
 send -- "y\r"
+
+puts "Debug: Waiting for eof..."
 expect eof
