@@ -3,7 +3,8 @@
 set script [lindex $argv 0];
 
 set timeout -1
-spawn ./../../priv/static/$script
+set script_path [file normalize [file join [pwd] ./../../priv/static/$script]]
+spawn $script_path
 match_max 100000
 expect "Do you want to continue? (y/n) "
 send -- "y\r"
