@@ -29,16 +29,16 @@ phoenix_version=1.7.14
 postgres_version=15.1
 
 case "${SHELL:-}" in
-*/bash)
+**/bash)
     current_shell="bash"
     config_file="$HOME/.bashrc"
     ;;
-*/fish)
+**/fish)
     current_shell="fish"
     config_file="$HOME/.config/fish/config.fish"
     mkdir -p "$(dirname "$config_file")"
     ;;
-*/zsh)
+**/zsh)
     current_shell="zsh"
     config_file="$HOME/.zshrc"
     ;;
