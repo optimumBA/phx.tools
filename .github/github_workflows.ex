@@ -443,10 +443,8 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: ~s"""
-              cd test/scripts
-              expect $PWD/test/scripts/script.exp $PWD/priv/static/#{os}.sh
-              """,
+              run:
+                "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp #{os}.sh",
               shell: "/bin/#{shell} -l {0}"
             ],
             [

@@ -1,7 +1,14 @@
 #!/usr/bin/expect
 
-set script [lindex $argv 0]
+exp_internal 1
 set timeout -1
+
+puts "Debug: argv = $argv"
+puts "Debug: pwd = [pwd]"
+
+set script [lindex $argv 0]
+puts "Debug: script path = $script"
+
 spawn ./../../priv/static/$script
 match_max 100000
 expect "Do you want to continue? (y/n) "

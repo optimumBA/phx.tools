@@ -284,9 +284,7 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          cd test/scripts
-          expect $PWD/test/scripts/script.exp $PWD/priv/static/Linux.sh
+        run: "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp Linux.sh"
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -325,9 +323,7 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          cd test/scripts
-          expect $PWD/test/scripts/script.exp $PWD/priv/static/macOS.sh
+        run: "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp macOS.sh"
         shell: /bin/bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -366,9 +362,7 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          cd test/scripts
-          expect $PWD/test/scripts/script.exp $PWD/priv/static/Linux.sh
+        run: "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp Linux.sh"
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -410,9 +404,7 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          cd test/scripts
-          expect $PWD/test/scripts/script.exp $PWD/priv/static/macOS.sh
+        run: "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp macOS.sh"
         shell: /bin/fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -451,9 +443,7 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          cd test/scripts
-          expect $PWD/test/scripts/script.exp $PWD/priv/static/Linux.sh
+        run: "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp Linux.sh"
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -495,9 +485,7 @@ jobs:
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          cd test/scripts
-          expect $PWD/test/scripts/script.exp $PWD/priv/static/macOS.sh
+        run: "pwd && ls -la && echo 'Current directory contents:' && ls -R && echo 'PWD: $PWD' && echo 'Running expect script...' && expect script.exp macOS.sh"
         shell: /bin/zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
