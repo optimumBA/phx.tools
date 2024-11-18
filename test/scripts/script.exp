@@ -1,9 +1,18 @@
 #!/usr/bin/expect
 
-set script [lindex $argv 0];
-
+set script [lindex $argv 0]
 set timeout -1
-set script_path [file normalize [file join [pwd] ./../../priv/static/$script]]
+
+# Get absolute paths explicitly
+set current_dir [file normalize [pwd]]
+set target_dir [file normalize [file join $current_dir ./../../priv/static]]
+set script_path [file join $target_dir $script]
+
+# Debug output
+puts "Current dir: $current_dir"
+puts "Target dir: $target_dir"
+puts "Script path: $script_path"
+
 spawn $script_path
 match_max 100000
 expect "Do you want to continue? (y/n) "
