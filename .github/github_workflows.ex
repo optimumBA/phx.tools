@@ -9,7 +9,7 @@ defmodule GithubWorkflows do
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
-  @shells ["bash", "zsh"]
+  @shells ["bash", "fish", "zsh"]
 
   def get do
     %{
@@ -392,7 +392,7 @@ defmodule GithubWorkflows do
       name: "Test #{os} script with #{shell} shell",
       "runs-on": runs_on,
       env: [
-        SHELL: "/bin/#{shell}",
+        SHELL: shell,
         TZ: "America/New_York"
       ],
       steps:
@@ -443,14 +443,14 @@ defmodule GithubWorkflows do
             [
               name: "Test the script",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "cd test/scripts && expect script.exp #{os}.sh",
-              shell: "/bin/#{shell} -l {0}"
+              run: "cd test/scripts && expect script.exp",
+              shell: "#{shell} -l {0}"
             ],
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
               run: "make -f test/scripts/Makefile serve",
-              shell: "/bin/#{shell} -l {0}"
+              shell: "#{shell} -l {0}"
             ],
             [
               name: "Check HTTP status code",
