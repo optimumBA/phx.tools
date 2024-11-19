@@ -52,7 +52,10 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp get_script_filename(live_action_or_os) do
-    "#{get_operating_system(to_string(live_action_or_os))}.sh"
+    case "#{get_operating_system(to_string(live_action_or_os))}" do
+      "Unsupported OS" -> ""
+      other -> other <> ".sh"
+    end
   end
 
   @spec get_operating_system(String.t()) :: String.t()
