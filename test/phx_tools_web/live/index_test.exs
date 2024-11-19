@@ -30,21 +30,18 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
     test "user visits the page with Linux OS user agent", %{conn: conn} do
       updated_conn = put_req_header(conn, "user-agent", "Linux")
-      {:ok, landing_live, html} = live(updated_conn, "/")
+      {:ok, _landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
       assert html =~ "Linux.sh"
-
-      assert has_element?(landing_live, "#macOS")
     end
 
     test "user visits the page with Mac OS user agent", %{conn: conn} do
       updated_conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
-      {:ok, landing_live, html} = live(updated_conn, "/")
+      {:ok, _landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
       assert html =~ "macOS.sh"
-      assert has_element?(landing_live, "#Linux")
     end
 
     test "is accessed with unsupported OS", %{conn: conn} do

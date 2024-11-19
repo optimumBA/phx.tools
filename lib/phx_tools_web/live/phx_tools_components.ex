@@ -117,12 +117,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               </.os_instructions>
             </div>
             <div class="justify-center gap-4 md:flex">
-              <div class="sm:grid grid-cols-2 gap-4 sm:py-4">
-                <.command_select_button
-                  live_action={@live_action}
-                  operating_system={@operating_system}
-                  class="px-3 flex justify-center"
-                />
+              <div class="sm:grid grid gap-4 sm:py-4">
                 <.source_code_button source_code_url={@source_code_url} />
               </div>
             </div>
@@ -159,7 +154,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     <div
       id="installation-instructions"
       phx-click-away={JS.hide(to: "#installation-instructions")}
-      class="hidden font-normal solved-height font-martian bg-[#110A33] absolute md:w-[90%]"
+      class="hidden font-normal solved-height font-martian bg-[#110A33] absolute md:w-[95%]"
     >
       <div class="block">
         <div class="h-full shadow-custom shadow-md rounded-md pb-2">
@@ -178,48 +173,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         </div>
       </div>
     </div>
-    """
-  end
-
-  defp command_select_button(%{live_action: :linux} = assigns) do
-    ~H"""
-    <.link href={~p"/macos"}>
-      <div
-        id="macOS"
-        class={[
-          "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
-          @class
-        ]}
-      >
-        <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
-          <Icons.os_icon os="macOS" />
-        </div>
-        <h1 class="text-center text-white text-sm md:text-base font-martian">
-          macOS
-        </h1>
-      </div>
-    </.link>
-    """
-  end
-
-  defp command_select_button(%{live_action: :macos} = assigns) do
-    ~H"""
-    <.link href={~p"/linux"}>
-      <div
-        id="Linux"
-        class={[
-          "border-2 border-[#755FFF] py-2 rounded-xl cursor-pointer hover:bg-indigo-850 flex items-center md:w-44 space-x-2",
-          @class
-        ]}
-      >
-        <div class="bg-white w-6 h-6 rounded-full flex items-center justify-center">
-          <Icons.os_icon os="Linux" />
-        </div>
-        <h1 class="text-center text-white text-sm md:text-base font-martian">
-          Linux
-        </h1>
-      </div>
-    </.link>
     """
   end
 
@@ -244,7 +197,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   defp source_code_button(assigns) do
     ~H"""
-    <div class="border-2 border-[#755FFF] rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
+    <div class="border-2 border-[#755FFF] py-4 rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
       <.link
         href={@source_code_url}
         target="_blank"
