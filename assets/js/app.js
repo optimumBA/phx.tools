@@ -23,7 +23,13 @@ import { LiveSocket } from 'phoenix_live_view'
 import topbar from '../vendor/topbar'
 import AsciinemaHook from './hooks/asciinema_hook'
 import CopyHook from './hooks/copy_hook'
+document.addEventListener('DOMContentLoaded', () => {
+  const toolInstallationElement = document.getElementById('tool-installation')
 
+  if (toolInstallationElement) {
+    toolInstallationElement.scrollRight = toolInstallationElement.scrollWidth
+  }
+})
 const Hooks = {
   AsciinemaHook,
   CopyHook,
