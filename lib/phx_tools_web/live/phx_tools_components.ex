@@ -45,7 +45,28 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           </p>
         </div>
       </div>
-      <div class="flex flex-col items-center md:w-11/12 lg:w-[1100px]">
+      <div class="flex flex-col items-center w-full md:w-11/12 lg:w-[1100px]">
+        <div class=" w-[98%] md:hidden">
+          <div class="flex justify-end items-center md:order-last md:mx-2 sm:mb-2">
+            <Heroicons.information_circle
+              class="hidden md:block w-6 h-6 text-white cursor-pointer focus:text-gray-500"
+              phx-click={JS.show(to: "#installation-instructions")}
+            />
+          </div>
+          <div class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm overflow-x-auto whitespace-nowrap no-scrollbar">
+            <h1 id="tool-installation" class="scroll text-center text-white font-martian sm:text-sm">
+              <%= render_slot(@installation_command) %>
+            </h1>
+            <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
+              <Icons.copied_icon />
+              <Icons.copy_icon />
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:grid md:hidden grid gap-4 sm:py-4">
+          <.source_code_button source_code_url={@source_code_url} />
+        </div>
         <div class=" bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
           <div class="bg-[#2C2650] p-3 rounded-t-xl flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
             <Icons.exclamation_icon />
@@ -92,7 +113,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             <div class="md:flex">
               <div class="flex justify-end items-center md:order-last md:mx-2 sm:mb-2">
                 <Heroicons.information_circle
-                  class="w-6 h-6 text-white cursor-pointer focus:text-gray-500"
+                  class="hidden md:block w-6 h-6 text-white cursor-pointer focus:text-gray-500"
                   phx-click={JS.show(to: "#installation-instructions")}
                 />
               </div>
@@ -116,7 +137,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 <%= raw(installation_instruction) %>
               </.os_instructions>
             </div>
-            <div class="justify-center gap-4 md:flex">
+            <div class="justify-center gap-4 flex">
               <div class="sm:grid grid gap-4 sm:py-4">
                 <.source_code_button source_code_url={@source_code_url} />
               </div>
@@ -197,7 +218,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   defp source_code_button(assigns) do
     ~H"""
-    <div class="border-2 border-[#755FFF] py-4 rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian md:w-44">
+    <div class="border-2 border-[#755FFF] py-4 rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian w-44 ">
       <.link
         href={@source_code_url}
         target="_blank"
