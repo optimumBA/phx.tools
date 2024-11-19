@@ -67,6 +67,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="sm:grid md:hidden grid gap-4 sm:py-4">
           <.source_code_button source_code_url={@source_code_url} />
         </div>
+        <p class="md:hidden text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
+          <%= phx_tools_description() %>
+        </p>
         <div class=" bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
           <div class="bg-[#2C2650] p-3 rounded-t-xl flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
             <Icons.exclamation_icon />
@@ -87,7 +90,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </a>
           </div>
         </div>
-        <p class="text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
+        <p class="thidden md:block ext-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
           <%= phx_tools_description() %>
         </p>
       </div>
