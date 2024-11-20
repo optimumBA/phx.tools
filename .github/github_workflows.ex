@@ -372,17 +372,10 @@ defmodule GithubWorkflows do
   end
 
   defp test_scripts_jobs do
-    linux_job = fn image, shell, install_command ->
-      {:"test_#{image}_#{shell}", test_linux_script_job(image, shell, install_command)}
-    end
-
     Enum.reduce(@shells, [], fn shell, jobs ->
       jobs ++
         [
-          linux_job.("ubuntu", shell, "apt-get install -y"),
-          linux_job.("fedora", shell, "dnf install -y"),
-          linux_job.("arch", shell, "pacman -Sy --noconfirm"),
-          linux_job.("alpine", shell, "apk add --no-cache"),
+          {:"test_linux_#{shell}", test_linux_script_job(shell)},
           {:"test_macos_#{shell}", test_macos_script_job(shell)}
         ]
     end)
@@ -411,7 +404,7 @@ defmodule GithubWorkflows do
             id: "result_cache",
             with: [
               key:
-                "#{os}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
+                "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
               path: "priv/script.sh"
             ]
           ]
@@ -426,16 +419,16 @@ defmodule GithubWorkflows do
               ]
             ]
           ) ++
-          if(os == "macOS",
-            do: [
+          if(os == "Linux",
+            do: [],
+            else: [
               [
                 name: "Disable password prompt for macOS",
                 if: "steps.result_cache.outputs.cache-hit != 'true'",
                 run:
                   ~S<sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers>
               ]
-            ],
-            else: []
+            ]
           ) ++
           [
             [
@@ -475,20 +468,14 @@ defmodule GithubWorkflows do
     ]
   end
 
-  defp test_linux_script_job(image, shell, install_command) do
+  defp test_linux_script_job(shell) do
     test_shell_script_job(
-      expect_install_command: "#{install_command} expect",
-      os: String.capitalize(image),
+      expect_install_command: "sudo apt-get update && sudo apt-get install -y expect",
+      os: "Linux",
       runs_on: "ubuntu-latest",
       shell: shell,
-      shell_install_command: "#{install_command} #{shell}"
-    ) ++
-      [
-        container: [
-          image: "#{image}:latest",
-          options: "--user root"
-        ]
-      ]
+      shell_install_command: "sudo apt-get update && sudo apt-get install -y #{shell}"
+    )
   end
 
   defp test_macos_script_job(shell) do

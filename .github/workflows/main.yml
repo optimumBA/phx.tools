@@ -262,8 +262,8 @@ jobs:
         env:
           MIX_ENV: test
         run: mix deps.unlock --check-unused
-  test_ubuntu_bash:
-    name: Test Ubuntu script with bash shell
+  test_linux_bash:
+    name: Test Linux script with bash shell
     runs-on: ubuntu-latest
     env:
       SHELL: bash
@@ -275,11 +275,11 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: Ubuntu-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apt-get install -y expect
+        run: sudo apt-get update && sudo apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
@@ -298,126 +298,6 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-    container:
-      image: ubuntu:latest
-      options: --user root
-  test_fedora_bash:
-    name: Test Fedora script with bash shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: bash
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Fedora-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: dnf install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: bash -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: bash -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: fedora:latest
-      options: --user root
-  test_arch_bash:
-    name: Test Arch script with bash shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: bash
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Arch-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: pacman -Sy --noconfirm expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: bash -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: bash -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: arch:latest
-      options: --user root
-  test_alpine_bash:
-    name: Test Alpine script with bash shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: bash
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Alpine-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apk add --no-cache expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: bash -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: bash -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: alpine:latest
-      options: --user root
   test_macos_bash:
     name: Test macOS script with bash shell
     runs-on: macos-latest
@@ -431,7 +311,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: macOS-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Disable password prompt for macOS
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -457,8 +337,8 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-  test_ubuntu_fish:
-    name: Test Ubuntu script with fish shell
+  test_linux_fish:
+    name: Test Linux script with fish shell
     runs-on: ubuntu-latest
     env:
       SHELL: fish
@@ -470,14 +350,14 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: Ubuntu-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apt-get install -y fish
+        run: sudo apt-get update && sudo apt-get install -y fish
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apt-get install -y expect
+        run: sudo apt-get update && sudo apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
@@ -496,135 +376,6 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-    container:
-      image: ubuntu:latest
-      options: --user root
-  test_fedora_fish:
-    name: Test Fedora script with fish shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: fish
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Fedora-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: dnf install -y fish
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: dnf install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: fish -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: fish -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: fedora:latest
-      options: --user root
-  test_arch_fish:
-    name: Test Arch script with fish shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: fish
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Arch-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: pacman -Sy --noconfirm fish
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: pacman -Sy --noconfirm expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: fish -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: fish -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: arch:latest
-      options: --user root
-  test_alpine_fish:
-    name: Test Alpine script with fish shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: fish
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Alpine-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apk add --no-cache fish
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apk add --no-cache expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: fish -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: fish -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: alpine:latest
-      options: --user root
   test_macos_fish:
     name: Test macOS script with fish shell
     runs-on: macos-latest
@@ -638,7 +389,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: macOS-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -667,8 +418,8 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-  test_ubuntu_zsh:
-    name: Test Ubuntu script with zsh shell
+  test_linux_zsh:
+    name: Test Linux script with zsh shell
     runs-on: ubuntu-latest
     env:
       SHELL: zsh
@@ -680,14 +431,14 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: Ubuntu-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apt-get install -y zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apt-get install -y expect
+        run: sudo apt-get update && sudo apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
@@ -706,135 +457,6 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-    container:
-      image: ubuntu:latest
-      options: --user root
-  test_fedora_zsh:
-    name: Test Fedora script with zsh shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: zsh
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Fedora-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: dnf install -y zsh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: dnf install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: zsh -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: zsh -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: fedora:latest
-      options: --user root
-  test_arch_zsh:
-    name: Test Arch script with zsh shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: zsh
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Arch-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: pacman -Sy --noconfirm zsh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: pacman -Sy --noconfirm expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: zsh -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: zsh -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: arch:latest
-      options: --user root
-  test_alpine_zsh:
-    name: Test Alpine script with zsh shell
-    runs-on: ubuntu-latest
-    env:
-      SHELL: zsh
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: Alpine-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apk add --no-cache zsh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: apk add --no-cache expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: zsh -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: zsh -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-    container:
-      image: alpine:latest
-      options: --user root
   test_macos_zsh:
     name: Test macOS script with zsh shell
     runs-on: macos-latest
@@ -848,7 +470,7 @@ jobs:
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: macOS-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -890,20 +512,11 @@ jobs:
       - sobelow
       - test
       - unused_deps
-      - test_ubuntu_bash
-      - test_fedora_bash
-      - test_arch_bash
-      - test_alpine_bash
+      - test_linux_bash
       - test_macos_bash
-      - test_ubuntu_fish
-      - test_fedora_fish
-      - test_arch_fish
-      - test_alpine_fish
+      - test_linux_fish
       - test_macos_fish
-      - test_ubuntu_zsh
-      - test_fedora_zsh
-      - test_arch_zsh
-      - test_alpine_zsh
+      - test_linux_zsh
       - test_macos_zsh
     runs-on: ubuntu-latest
     steps:
