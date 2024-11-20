@@ -80,17 +80,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           <p class="text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3 font-martian sm:py-6 md:px-8">
             It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
           </p>
-          <div class="flex-col items-center text-sm sm:flex font-martian sm:pb-8 md:block md:text-center">
-            <a href="https://phx.tools/macos" class="text-[#24B2FF] underline">
-              https://phx.tools/macos
-            </a>
-            <span class="px-2">or</span>
-            <a href="http://phx.tools/linux" class="text-[#24B2FF] underline">
-              http://phx.tools/linux
-            </a>
-          </div>
+          
         </div>
-        <p class="thidden md:block ext-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
+        <p class="hidden md:block ext-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
           <%= phx_tools_description() %>
         </p>
       </div>
