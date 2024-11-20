@@ -30,18 +30,26 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
     test "user visits the page with Linux OS user agent", %{conn: conn} do
       updated_conn = put_req_header(conn, "user-agent", "Linux")
-      {:ok, _landing_live, html} = live(updated_conn, "/")
+      {:ok, landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
-      assert html =~ "Linux.sh"
+
+      assert has_element?(
+               landing_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh']"
+             )
     end
 
     test "user visits the page with Mac OS user agent", %{conn: conn} do
       updated_conn = put_req_header(conn, "user-agent", "Mac OS X 10_5_7")
-      {:ok, _landing_live, html} = live(updated_conn, "/")
+      {:ok, landing_live, html} = live(updated_conn, "/")
 
       assert html =~ "The Complete Development Environment for Elixir and Phoenix"
-      assert html =~ "macOS.sh"
+
+      assert has_element?(
+               landing_live,
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh']"
+             )
     end
 
     test "is accessed with unsupported OS", %{conn: conn} do
@@ -63,7 +71,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       assert has_element?(
                landing_live,
-               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh']"
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh']"
              )
 
       refute has_element?(
@@ -80,7 +88,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       assert has_element?(
                landing_live,
-               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh']"
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh']"
              )
 
       refute has_element?(
@@ -101,7 +109,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       assert has_element?(
                linux_live,
-               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/Linux.sh']"
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh']"
              )
     end
   end
@@ -116,7 +124,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
 
       assert has_element?(
                macos_live,
-               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/static/macOS.sh']"
+               "a[href='https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh']"
              )
     end
   end
