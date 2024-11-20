@@ -226,7 +226,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     ]
   end
 
-  defp installation_instructions(_) do
+  defp installation_instructions(_os) do
     [
       "Click on the copy icon to copy this command to your clipboard",
       "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
