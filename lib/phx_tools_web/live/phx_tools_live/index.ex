@@ -39,7 +39,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp installation_command(live_action) do
-    "$SHELL -c \"$(curl -fsSL #{get_script_url(live_action)})\""
+    "$SHELL -c \"$(curl -fsSL #{get_script_url()})\""
   end
 
   defp source_code_url_from_os_or_live_action(os_or_live_action) do
@@ -47,8 +47,8 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
       get_script_filename(os_or_live_action)
   end
 
-  defp get_script_url(live_action_or_os) do
-    "#{Endpoint.url()}/#{get_script_filename(live_action_or_os)}"
+  defp get_script_url do
+    "#{Endpoint.url()}"
   end
 
   defp get_script_filename(live_action_or_os) do
