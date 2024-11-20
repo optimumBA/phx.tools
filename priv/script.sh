@@ -51,10 +51,30 @@ esac
 # Add OS detection
 OS="$(uname -s)"
 
+get_package_manager() {
+  if command -v apt-get >/dev/null; then
+    echo "apt"
+  elif command -v dnf >/dev/null; then
+    echo "dnf"
+  elif command -v pacman >/dev/null; then
+    echo "pacman"
+  elif command -v apk >/dev/null; then
+    echo "apk"
+  else
+    printf "Unsupported package manager. This script requires apt, dnf, pacman, or apk.\n"
+    exit 1
+  fi
+}
+
 case "${OS}" in
-Linux*) os_type=Linux ;;
-Darwin*) os_type=macOS ;;
-*)
+  Linux*)
+    os_type=Linux
+    package_manager=$(get_package_manager)
+    ;;
+  Darwin*)
+    os_type=macOS
+    ;;
+  *)
     printf "Unsupported OS: %s\n" "${OS}"
     exit 1
     ;;
@@ -97,8 +117,21 @@ install() {
     case "$1" in
     "Elixir")
         if [ "$os_type" = "Linux" ]; then
-            sudo apt-get update
-            sudo apt-get install -y unzip
+            case "$package_manager" in
+            "apt")
+                sudo apt-get update
+                sudo apt-get install -y unzip
+                ;;
+            "dnf")
+                sudo dnf install -y unzip
+                ;;
+            "pacman")
+                sudo pacman -Sy --noconfirm unzip
+                ;;
+            "apk")
+                sudo apk add --no-cache unzip
+                ;;
+            esac
         fi
 
         mise use -g -y elixir@$elixir_version
@@ -113,18 +146,48 @@ install() {
 
             ulimit -n 1024
         else
-            sudo apt-get update
-            sudo apt-get install -y build-essential automake autoconf libssl-dev libncurses5-dev
+            case "$package_manager" in
+            "apt")
+                sudo apt-get update
+                sudo apt-get install -y build-essential automake autoconf libssl-dev libncurses5-dev
+                ;;
+            "dnf")
+                sudo dnf groupinstall -y "Development Tools"
+                sudo dnf install -y openssl-devel ncurses-devel
+                ;;
+            "pacman")
+                sudo pacman -Sy --noconfirm base-devel openssl ncurses
+                ;;
+            "apk")
+                sudo apk add --no-cache build-base autoconf openssl-dev ncurses-dev
+                ;;
+            esac
 
             if [ ! -f ~/.kerlrc ]; then
                 printf "KERL_CONFIGURE_OPTIONS=\"--without-javac\"\n" >~/.kerlrc
             fi
         fi
         mise use -g -y erlang@$erlang_version
+
         ;;
     "git")
-        sudo apt-get update
-        sudo apt-get -y install git
+        if [ "$os_type" = "Linux" ]; then
+            case "$package_manager" in
+            "apt")
+                sudo apt-get update
+                sudo apt-get install -y git
+                ;;
+            "dnf")
+                sudo dnf install -y git
+                ;;
+            "pacman")
+                sudo pacman -Sy --noconfirm git
+                ;;
+            "apk")
+                sudo apk add --no-cache git
+                ;;
+            esac
+        fi
         ;;
     "Homebrew")
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -178,10 +241,23 @@ install() {
         if [ "$os_type" = "macOS" ]; then
             brew install gcc readline zlib curl ossp-uuid
         else
-            sudo apt-get update
-            sudo apt-get -y install linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
+            case "$package_manager" in
+            "apt")
+                sudo apt-get update
+                sudo apt-get install -y linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
+                ;;
+            "dnf")
+                sudo dnf groupinstall -y "Development Tools"
+                sudo dnf install -y kernel-headers openssl-devel readline-devel zlib-devel libcurl-devel libuuid-devel libicu-devel
+                ;;
+            "pacman")
+                sudo pacman -Sy --noconfirm linux-headers base-devel openssl readline zlib curl util-linux icu
+                ;;
+            "apk")
+                sudo apk add --no-cache linux-headers build-base openssl-dev readline-dev zlib-dev curl-dev util-linux-dev icu-dev
+                ;;
+            esac
         fi
-
         mise use -g -y postgres@$postgres_version
         ;;
     "Xcode Command Line Tools")

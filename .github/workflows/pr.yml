@@ -280,7 +280,7 @@ jobs:
         id: result_cache
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/static/Linux.sh
+          path: priv/script.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
@@ -316,7 +316,7 @@ jobs:
         id: result_cache
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/static/macOS.sh
+          path: priv/script.sh
       - name: Disable password prompt for macOS
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
@@ -355,7 +355,7 @@ jobs:
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/static/Linux.sh
+          path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y fish
@@ -394,7 +394,7 @@ jobs:
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/static/macOS.sh
+          path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install fish
@@ -436,7 +436,7 @@ jobs:
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/static/Linux.sh
+          path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y zsh
@@ -475,7 +475,7 @@ jobs:
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/static/macOS.sh
+          path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install zsh

@@ -405,7 +405,7 @@ defmodule GithubWorkflows do
             with: [
               key:
                 "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
-              path: "priv/static/#{os}.sh"
+              path: "priv/script.sh"
             ]
           ]
         ] ++
