@@ -84,7 +84,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
           </p>
         </div>
-        <p class="hidden md:block ext-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
+        <p class="hidden md:block text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
           <%= phx_tools_description() %>
         </p>
       </div>
@@ -193,6 +193,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     </div>
     """
   end
+
+  
 
   defp installation_instructions(:linux) do
     [
