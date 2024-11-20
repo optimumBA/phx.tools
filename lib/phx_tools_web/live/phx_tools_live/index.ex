@@ -15,7 +15,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   defp assign_os_and_source_code_url(socket, %{"operating_system" => operating_system}) do
     socket
     |> assign(:operating_system, operating_system)
-    |> assign(:source_code_url, source_code_url_from_os_or_live_action(operating_system))
+    |> assign(:source_code_url, source_code_url())
   end
 
   @impl Phoenix.LiveView
@@ -35,27 +35,15 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     {:noreply,
      socket
      |> assign(seo_attributes: %{url: Endpoint.url() <> "/#{action}"})
-     |> assign(:source_code_url, source_code_url_from_os_or_live_action(action))}
+     |> assign(:source_code_url, source_code_url())}
   end
 
   defp installation_command(live_action) do
-    "$SHELL -c \"$(curl -fsSL #{get_script_url()})\""
+    "$SHELL -c \"$(curl -fsSL #{Endpoint.url()})\""
   end
 
-  defp source_code_url_from_os_or_live_action(os_or_live_action) do
-    ~S(https://github.com/optimumBA/phx.tools/blob/main/priv/static/) <>
-      get_script_filename(os_or_live_action)
-  end
-
-  defp get_script_url do
-    "#{Endpoint.url()}"
-  end
-
-  defp get_script_filename(live_action_or_os) do
-    case "#{get_operating_system(to_string(live_action_or_os))}" do
-      "Unsupported OS" -> ""
-      other -> other <> ".sh"
-    end
+  defp source_code_url do
+    ~S(https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh)
   end
 
   @spec get_operating_system(String.t()) :: String.t()
