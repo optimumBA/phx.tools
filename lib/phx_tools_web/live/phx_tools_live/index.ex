@@ -38,7 +38,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
      |> assign(:source_code_url, source_code_url())}
   end
 
-  defp installation_command(live_action) do
+  defp installation_command do
     "$SHELL -c \"$(curl -fsSL #{Endpoint.url()})\""
   end
 
