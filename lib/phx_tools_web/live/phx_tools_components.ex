@@ -46,7 +46,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         </div>
       </div>
       <div class="flex flex-col items-center w-full md:w-11/12 lg:w-[1100px]">
-        <div class=" w-[98%] md:hidden">
+        <div class="w-[95%] md:w-[60%] flex">
           <div class="flex justify-end items-center md:order-last md:mx-2 sm:mb-2">
             <Heroicons.information_circle
               class="hidden md:block w-6 h-6 text-white cursor-pointer focus:text-gray-500"
@@ -64,7 +64,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           </div>
         </div>
 
-        <div class="sm:grid md:hidden grid gap-4 sm:py-4">
+        <div class="sm:grid  grid gap-4 sm:py-4">
           <.source_code_button source_code_url={@source_code_url} />
         </div>
         <p class="md:hidden text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
