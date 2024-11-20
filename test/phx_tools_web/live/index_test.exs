@@ -49,7 +49,7 @@ defmodule PhxToolsWeb.PhxToolsLive.IndexTest do
       {:ok, unsupported_os_live, html} = live(updated_conn, "/")
 
       assert html =~ "Unsupported Operating System Detected"
-      assert has_element?(unsupported_os_live, "a[href='https://phx.tools/macos']")
+      assert html =~ "\n$SHELL -c &quot;$(curl -fsSL http://localhost:4002)&quot;"
 
       assert render(unsupported_os_live) =~
                "It looks like you&#39;re using an operating system that Phx.tools doesn&#39;t currently support."
