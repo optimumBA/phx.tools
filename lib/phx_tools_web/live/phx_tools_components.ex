@@ -83,7 +83,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
           <p class="text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3 font-martian sm:py-6 md:px-8">
             It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
           </p>
-          
         </div>
         <p class="hidden md:block ext-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
           <%= phx_tools_description() %>
