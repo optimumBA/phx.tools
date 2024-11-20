@@ -194,8 +194,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  
-
   defp installation_instructions(:linux) do
     [
       "Click on the copy icon to copy this command to your clipboard",
