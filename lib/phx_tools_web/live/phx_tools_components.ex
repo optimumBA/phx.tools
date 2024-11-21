@@ -207,15 +207,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  defp installation_instructions(:linux) do
-    [
-      "Click on the copy icon to copy this command to your clipboard",
-      "Open Terminal by pressing <b class=\"font-extrabold\">Ctrl + Alt + T</b> together",
-      "Paste the shell command by pressing <b>Shift + Ctrl + V</b> together",
-      "Run the command by hitting <b>ENTER</b>"
-    ]
-  end
-
   defp installation_instructions(:macos) do
     [
       "Click on the copy icon to copy this command to your clipboard",
