@@ -376,7 +376,8 @@ defmodule GithubWorkflows do
       jobs ++
         [
           {:"test_linux_#{shell}", test_linux_script_job(shell)},
-          {:"test_macos_#{shell}", test_macos_script_job(shell)}
+          {:"test_macos_#{shell}", test_macos_script_job(shell)},
+          {:"test_wsl_#{shell}", test_wsl_script_job(shell)}
         ]
     end)
   end
@@ -485,6 +486,16 @@ defmodule GithubWorkflows do
       runs_on: "macos-latest",
       shell: shell,
       shell_install_command: "brew install #{shell}"
+    )
+  end
+
+  defp test_wsl_script_job(shell) do
+    test_shell_script_job(
+      expect_install_command: "wsl sudo apt-get update && wsl sudo apt-get install -y expect",
+      os: "WSL",
+      runs_on: "windows-latest",
+      shell: shell,
+      shell_install_command: "wsl sudo apt-get update && wsl sudo apt-get install -y #{shell}"
     )
   end
 
