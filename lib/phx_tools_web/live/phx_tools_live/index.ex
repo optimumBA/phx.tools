@@ -53,5 +53,5 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   def get_operating_system(live_action_or_os) when live_action_or_os in ["macos", "macOS"],
     do: "macOS"
 
-  def get_operating_system(_other), do: "Unsupported OS"
+  def get_operating_system(_other), do: "Linux"
 end
