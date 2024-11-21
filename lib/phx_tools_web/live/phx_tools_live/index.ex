@@ -31,10 +31,10 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     end
   end
 
-  defp apply_action(socket, action) do
+  defp apply_action(socket, _action) do
     {:noreply,
      socket
-     |> assign(seo_attributes: %{url: Endpoint.url() <> "/#{action}"})
+     |> assign(seo_attributes: %{url: Endpoint.url()})
      |> assign(:source_code_url, source_code_url())}
   end
 
@@ -43,7 +43,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp source_code_url do
-  "https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh"
+    "https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh"
   end
 
   @spec get_operating_system(String.t()) :: String.t()
