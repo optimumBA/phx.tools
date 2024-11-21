@@ -352,9 +352,6 @@ jobs:
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
-      - name: Disable password prompt for macOS
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: wsl sudo apt-get update && wsl sudo apt-get install -y expect
@@ -475,9 +472,6 @@ jobs:
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: wsl sudo apt-get update && wsl sudo apt-get install -y fish
-      - name: Disable password prompt for macOS
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: wsl sudo apt-get update && wsl sudo apt-get install -y expect
@@ -598,9 +592,6 @@ jobs:
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: wsl sudo apt-get update && wsl sudo apt-get install -y zsh
-      - name: Disable password prompt for macOS
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: wsl sudo apt-get update && wsl sudo apt-get install -y expect
