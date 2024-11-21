@@ -79,16 +79,16 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               </.os_instructions>
             </div>
 
-            <div class="  flex justify-center items-center gap-4 sm:py-4">
+            <div class="  mt-2 flex justify-center items-center gap-4 sm:py-4">
               <.source_code_button source_code_url={@source_code_url} />
             </div>
-            <div class="-mt-6 md:mt-0">
-              <p class=" md:hidden text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
+            <div class="-mt-6 ">
+              <p class="text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
                 <%= phx_tools_description() %>
               </p>
             </div>
 
-            <div class="bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
+            <div class=" mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
               <div class="bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
                 <Icons.exclamation_icon />
                 <p class="font-martian sm:text-sm md:text-base lg:text-lg md:py-2">
@@ -99,9 +99,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
               </p>
             </div>
-            <p class="hidden md:block text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
-              <%= phx_tools_description() %>
-            </p>
           </div>
           <.web_updates />
           <.footer />
