@@ -55,7 +55,11 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 />
               </div>
               <div class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm overflow-x-auto whitespace-nowrap no-scrollbar">
-                <h1 id="tool-installation" class="text-center text-white font-martian sm:text-sm">
+                <h1
+                  id="tool-installation"
+                  phx-hook="ScrollingHooks"
+                  class="scroll text-center text-white font-martian sm:text-sm"
+                >
                   <%= render_slot(@installation_command) %>
                 </h1>
                 <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
