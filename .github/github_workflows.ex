@@ -448,7 +448,7 @@ defmodule GithubWorkflows do
           [
             [
               name: "Remove mise config files",
-              run: "rm -f .mise.toml .tool-versions"
+              run: "#{if(os == "WSL", do: "wsl ", else: "")}rm -f .mise.toml .tool-versions"
             ],
             [
               name: "Test the script",

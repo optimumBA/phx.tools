@@ -522,7 +522,7 @@ jobs:
           key: ${{ runner.os }}-wsl-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
       - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
+        run: wsl rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
