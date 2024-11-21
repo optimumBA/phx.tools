@@ -358,7 +358,8 @@ jobs:
           path: priv/script.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl sudo apt-get update && wsl sudo apt-get install -y expect
+        run: |
+          wsl --install -d Ubuntu -n &&   wsl --set-default Ubuntu &&   wsl --user root apt-get update &&   wsl --user root apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
@@ -475,10 +476,11 @@ jobs:
           path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl sudo apt-get update && wsl sudo apt-get install -y fish
+        run: wsl --user root apt-get install -y fish
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl sudo apt-get update && wsl sudo apt-get install -y expect
+        run: |
+          wsl --install -d Ubuntu -n &&   wsl --set-default Ubuntu &&   wsl --user root apt-get update &&   wsl --user root apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
@@ -595,10 +597,11 @@ jobs:
           path: priv/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl sudo apt-get update && wsl sudo apt-get install -y zsh
+        run: wsl --user root apt-get install -y zsh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl sudo apt-get update && wsl sudo apt-get install -y expect
+        run: |
+          wsl --install -d Ubuntu -n &&   wsl --set-default Ubuntu &&   wsl --user root apt-get update &&   wsl --user root apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script

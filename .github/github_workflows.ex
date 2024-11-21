@@ -491,11 +491,16 @@ defmodule GithubWorkflows do
 
   defp test_wsl_script_job(shell) do
     test_shell_script_job(
-      expect_install_command: "wsl sudo apt-get update && wsl sudo apt-get install -y expect",
+      expect_install_command: """
+      wsl --install -d Ubuntu -n && \
+        wsl --set-default Ubuntu && \
+        wsl --user root apt-get update && \
+        wsl --user root apt-get install -y expect
+      """,
       os: "WSL",
       runs_on: "windows-latest",
       shell: shell,
-      shell_install_command: "wsl sudo apt-get update && wsl sudo apt-get install -y #{shell}"
+      shell_install_command: "wsl --user root apt-get install -y #{shell}"
     )
   end
 
