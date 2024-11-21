@@ -43,7 +43,7 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp source_code_url do
-    ~S(https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh)
+  "https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh"
   end
 
   @spec get_operating_system(String.t()) :: String.t()
