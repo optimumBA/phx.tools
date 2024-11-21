@@ -376,18 +376,21 @@ defmodule GithubWorkflows do
       jobs ++
         [
           {:"test_linux_#{shell}", test_linux_script_job(shell)},
-          {:"test_macos_#{shell}", test_macos_script_job(shell)},
-          {:"test_wsl_#{shell}", test_wsl_script_job(shell)}
+          {:"test_macos_#{shell}", test_macos_script_job(shell)}
         ]
-    end)
+    end) ++
+      [
+        {:test_wsl, test_wsl_script_job()}
+      ]
   end
 
   defp test_shell_script_job(opts) do
     os = Keyword.fetch!(opts, :os)
     runs_on = Keyword.fetch!(opts, :runs_on)
     shell = Keyword.fetch!(opts, :shell)
-    shell_install_command = Keyword.fetch!(opts, :shell_install_command)
-    expect_install_command = Keyword.fetch!(opts, :expect_install_command)
+    shell_install_command = Keyword.get(opts, :shell_install_command)
+    expect_install_command = Keyword.get(opts, :expect_install_command)
+    setup = Keyword.get(opts, :setup, [])
 
     [
       name: "Test #{os} script with #{shell} shell",
@@ -397,20 +400,21 @@ defmodule GithubWorkflows do
         TZ: "America/New_York"
       ],
       steps:
-        [
-          checkout_step(),
+        [checkout_step()] ++
+          setup ++
           [
-            name: "Restore script result cache",
-            uses: "actions/cache@v3",
-            id: "result_cache",
-            with: [
-              key:
-                "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
-              path: "priv/script.sh"
+            [
+              name: "Restore script result cache",
+              uses: "actions/cache@v3",
+              id: "result_cache",
+              with: [
+                key:
+                  "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
+                path: "priv/script.sh"
+              ]
             ]
-          ]
-        ] ++
-          if(shell == "bash",
+          ] ++
+          if(String.contains?(shell, "bash"),
             do: [],
             else: [
               [
@@ -431,12 +435,17 @@ defmodule GithubWorkflows do
             ],
             else: []
           ) ++
-          [
-            [
-              name: "Install expect tool",
-              if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: expect_install_command
+          if(expect_install_command,
+            do: [
+              [
+                name: "Install expect tool",
+                if: "steps.result_cache.outputs.cache-hit != 'true'",
+                run: expect_install_command
+              ]
             ],
+            else: []
+          ) ++
+          [
             [
               name: "Remove mise config files",
               run: "rm -f .mise.toml .tool-versions"
@@ -489,18 +498,23 @@ defmodule GithubWorkflows do
     )
   end
 
-  defp test_wsl_script_job(shell) do
+  defp test_wsl_script_job do
     test_shell_script_job(
-      expect_install_command: """
-      wsl --install -d Ubuntu -n && \
-        wsl --set-default Ubuntu && \
-        wsl --user root apt-get update && \
-        wsl --user root apt-get install -y expect
-      """,
       os: "WSL",
       runs_on: "windows-latest",
-      shell: shell,
-      shell_install_command: "wsl --user root apt-get install -y #{shell}"
+      shell: "wsl-bash",
+      setup: [
+        [
+          name: "Setup WSL",
+          uses: "Vampire/setup-wsl@v3",
+          with: [
+            distribution: "Ubuntu-22.04",
+            additional_packages: "expect",
+            wsl_shell_user: "root",
+            update: true
+          ]
+        ]
+      ]
     )
   end
 

@@ -341,43 +341,6 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-  test_wsl_bash:
-    name: Test WSL script with bash shell
-    runs-on: windows-latest
-    env:
-      SHELL: bash
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          wsl --install -d Ubuntu -n &&   wsl --set-default Ubuntu &&   wsl --user root apt-get update &&   wsl --user root apt-get install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: bash -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: bash -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
   test_linux_fish:
     name: Test Linux script with fish shell
     runs-on: ubuntu-latest
@@ -441,46 +404,6 @@ jobs:
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: fish -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
-        shell: fish -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-  test_wsl_fish:
-    name: Test WSL script with fish shell
-    runs-on: windows-latest
-    env:
-      SHELL: fish
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache@v3
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl --user root apt-get install -y fish
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          wsl --install -d Ubuntu -n &&   wsl --set-default Ubuntu &&   wsl --user root apt-get update &&   wsl --user root apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
@@ -580,38 +503,38 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
-  test_wsl_zsh:
-    name: Test WSL script with zsh shell
+  test_wsl:
+    name: Test WSL script with wsl-bash shell
     runs-on: windows-latest
     env:
-      SHELL: zsh
+      SHELL: wsl-bash
       TZ: America/New_York
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup WSL
+        uses: Vampire/setup-wsl@v3
+        with:
+          distribution: Ubuntu-22.04
+          additional_packages: expect
+          wsl_shell_user: root
+          update: true
       - name: Restore script result cache
         uses: actions/cache@v3
         id: result_cache
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          key: ${{ runner.os }}-wsl-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
           path: priv/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: wsl --user root apt-get install -y zsh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          wsl --install -d Ubuntu -n &&   wsl --set-default Ubuntu &&   wsl --user root apt-get update &&   wsl --user root apt-get install -y expect
       - name: Remove mise config files
         run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
-        shell: zsh -l {0}
+        shell: wsl-bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: make -f test/scripts/Makefile serve
-        shell: zsh -l {0}
+        shell: wsl-bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
@@ -635,13 +558,11 @@ jobs:
       - unused_deps
       - test_linux_bash
       - test_macos_bash
-      - test_wsl_bash
       - test_linux_fish
       - test_macos_fish
-      - test_wsl_fish
       - test_linux_zsh
       - test_macos_zsh
-      - test_wsl_zsh
+      - test_wsl
     runs-on: ubuntu-latest
     permissions: write-all
     concurrency:
