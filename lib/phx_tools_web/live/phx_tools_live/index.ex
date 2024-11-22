@@ -9,13 +9,11 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
     {:ok,
      socket
      |> assign(:seo_attributes, %{})
-     |> assign_os_and_source_code_url(session)}
+     |> assign_os(session)}
   end
 
-  defp assign_os_and_source_code_url(socket, %{"operating_system" => operating_system}) do
-    socket
-    |> assign(:operating_system, operating_system)
-    |> assign(:source_code_url, source_code_url())
+  defp assign_os(socket, %{"operating_system" => operating_system}) do
+    assign(socket, :operating_system, operating_system)
   end
 
   @impl Phoenix.LiveView
@@ -32,18 +30,11 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
   end
 
   defp apply_action(socket, _action) do
-    {:noreply,
-     socket
-     |> assign(seo_attributes: %{url: Endpoint.url()})
-     |> assign(:source_code_url, source_code_url())}
+    {:noreply, assign(socket, seo_attributes: %{url: Endpoint.url()})}
   end
 
   defp installation_command do
     "$SHELL -c \"$(curl -fsSL #{Endpoint.url()})\""
-  end
-
-  defp source_code_url do
-    "https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh"
   end
 
   @spec get_operating_system(String.t()) :: String.t()
