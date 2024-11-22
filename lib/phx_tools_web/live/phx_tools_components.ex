@@ -4,6 +4,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   use PhxToolsWeb, :html
 
   alias Phoenix.LiveView.Utils
+  alias PhxToolsWeb.Endpoint
   alias PhxToolsWeb.PhxToolsLive.Icons
   alias PhxToolsWeb.PhxToolsLive.Index
 
@@ -27,10 +28,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     """
   end
 
-  attr :live_action, :atom, required: true
-  attr :operating_system, :string, required: true
+  attr :os_type, :atom, required: true
 
-  slot :installation_command, required: true
   @spec os_landing_card(assigns()) :: rendered()
   def os_landing_card(assigns) do
     ~H"""
@@ -58,7 +57,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                   phx-hook="ScrollingHooks"
                   class="scroll text-center text-white font-martian sm:text-sm"
                 >
-                  <%= render_slot(@installation_command) %>
+                  $SHELL -c "$(curl -fsSL <%= Endpoint.url() %>)"
                 </h1>
                 <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
                   <Icons.copied_icon />
@@ -69,9 +68,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             <div class="w-full bg-blue-600 flex justify-center">
               <.os_instructions
                 :let={installation_instruction}
-                installation_instructions={installation_instructions(@live_action)}
-                live_action={@live_action}
-                operating_system={@operating_system}
+                installation_instructions={installation_instructions(@os_type)}
+                os_type={@os_type}
               >
                 <%= raw(installation_instruction) %>
               </.os_instructions>
@@ -90,7 +88,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 </p>
               </div>
               <div
-                :if={assigns.live_action == :index}
+                :if={assigns.os_type == :other}
                 class=" md:w-[61%] mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]"
               >
                 <div class=" bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
@@ -108,9 +106,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </div>
 
             <div
-              :if={assigns.live_action != :index}
+              :if={assigns.os_type != :other}
               class="mx-auto"
-              data-asciicast={asciinema_cast_id(@live_action)}
+              data-asciicast={asciinema_cast_id(@os_type)}
               id={"asciinema-#{Utils.random_id()}"}
               phx-hook="AsciinemaHook"
             >
@@ -140,7 +138,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="h-full shadow-custom shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
             <h1 class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= Index.get_operating_system("#{@live_action}") %> installation process
+              <%= Index.get_operating_system(@os_type) %> installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
               <%= for instruction <- @installation_instructions do %>
