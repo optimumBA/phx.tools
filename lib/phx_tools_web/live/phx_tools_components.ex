@@ -56,9 +56,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                   id="tool-installation"
                   phx-hook="ScrollingHooks"
                   class="scroll text-center text-white font-martian sm:text-sm"
-                >
-                  $SHELL -c "$(curl -fsSL <%= Endpoint.url() %>)"
-                </h1>
+                  phx-no-format
+                >$SHELL -c "$(curl -fsSL <%= Endpoint.url() %>)"</h1>
                 <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
                   <Icons.copied_icon />
                   <Icons.copy_icon />
