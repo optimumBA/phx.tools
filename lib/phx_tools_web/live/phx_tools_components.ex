@@ -32,9 +32,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   attr :source_code_url, :string, required: true
 
   slot :installation_command, required: true
-
   @spec os_landing_card(assigns()) :: rendered()
-  def os_landing_card(%{live_action: :index} = assigns) do
+  def os_landing_card(assigns) do
     ~H"""
     <div class="solved-height">
       <div class="min-h-full">
@@ -46,7 +45,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </p>
           </div>
 
-          <div class="md:flex lg:w-[75%] flex-col relative">
+          <div class="md:flex lg:w-[75%] flex-col relative md:mb-2">
             <div class="md:flex">
               <div class="flex justify-end items-center md:order-last md:mx-2 sm:mb-2">
                 <Heroicons.information_circle
@@ -78,91 +77,39 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 <%= raw(installation_instruction) %>
               </.os_instructions>
             </div>
-
-            <div class="  mt-2 flex justify-center items-center gap-4 sm:py-4">
-              <.source_code_button source_code_url={@source_code_url} />
+            <div class="justify-center gap-4 mt-2 flex">
+              <div class="sm:grid grid gap-4 sm:py-4">
+                <.source_code_button source_code_url="https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh" />
+              </div>
             </div>
-            <div class="-mt-6 ">
-              <p class="text-center text-white font-martian text-xs md:text-sm lg:text-base leading-5 md:leading-6 sm:py-8">
-                <%= phx_tools_description() %>
-              </p>
-            </div>
-
-            <div class=" mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]">
-              <div class=" bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
-                <div class="w-full md:w-auto flex justify-center items-center">
-                  <Icons.exclamation_icon />
-                </div>
-                <p class="font-martian text-center sm:text-sm md:text-base lg:text-lg md:py-2">
-                  Unsupported Operating System Detected
+          </div>
+          <div class=" lg:w-[1100px]">
+            <div class=" w-[100%] flex flex-col gap-8 items-center justify-center">
+              <div class="md:w-[65%]">
+                <p class="text-xs px-2 leading-5 text-center text-white font-martian  md:text-sm md:leading-6 lg:text-base">
+                  <%= phx_tools_description() %>
                 </p>
               </div>
-              <p class="text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3 font-martian sm:py-6 md:px-8">
-                It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
-              </p>
-            </div>
-          </div>
-          <.web_updates />
-          <.footer />
-        </div>
-      </div>
-    </div>
-    """
-  end
-
-  def os_landing_card(assigns) do
-    ~H"""
-    <div class="solved-height">
-      <div class="min-h-full">
-        <div class="mt-[5%] md:flex flex-col items-center max-w-4xl mx-auto">
-          <div class="sm:flex flex-col items-center">
-            <Icons.phx_tools_svg class="h-7 md:h-12" />
-            <p class="sm:py-6 text-center text-white text-sm md:text-base lg:text-lg font-martian font-semibold ">
-              The Complete Development Environment for Elixir and Phoenix
-            </p>
-          </div>
-
-          <div class="md:flex lg:w-[75%] flex-col relative">
-            <div class="md:flex">
-              <div class="flex justify-end items-center md:order-last md:mx-2 sm:mb-2">
-                <Heroicons.information_circle
-                  class="hidden md:block w-6 h-6 text-white cursor-pointer focus:text-gray-500"
-                  phx-click={JS.show(to: "#installation-instructions")}
-                />
-              </div>
-              <div class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm overflow-x-auto whitespace-nowrap no-scrollbar">
-                <h1 id="tool-installation" class="text-center text-white font-martian sm:text-sm">
-                  <%= render_slot(@installation_command) %>
-                </h1>
-                <div id="copy" phx-hook="CopyHook" class="sm:py-3 md:my-0 cursor-pointer">
-                  <Icons.copied_icon />
-                  <Icons.copy_icon />
-                </div>
-              </div>
-            </div>
-            <div class="w-full bg-blue-600 flex justify-center">
-              <.os_instructions
-                :let={installation_instruction}
-                installation_instructions={installation_instructions(@live_action)}
-                live_action={@live_action}
-                operating_system={@operating_system}
+              <div
+                :if={assigns.live_action == :index}
+                class=" md:w-[61%] mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]"
               >
-                <%= raw(installation_instruction) %>
-              </.os_instructions>
-            </div>
-            <div class="justify-center gap-4 flex">
-              <div class="sm:grid grid gap-4 sm:py-4">
-                <.source_code_button source_code_url={@source_code_url} />
+                <div class=" bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
+                  <div class="w-full md:w-auto flex justify-center items-center">
+                    <Icons.exclamation_icon />
+                  </div>
+                  <p class="font-martian text-center sm:text-sm md:text-base lg:text-lg md:py-2">
+                    Unsupported Operating System Detected
+                  </p>
+                </div>
+                <p class="text-xs leading-5 md:leading-6 md:text-sm lg:text-base text-center sm:px-3 font-martian sm:py-6 md:px-8">
+                  It looks like you're using an operating system that Phx.tools doesn't currently support. This script is designed to work on Linux and macOS only. Please switch to a compatible operating system to continue.
+                </p>
               </div>
             </div>
-          </div>
-          <div class="lg:w-[1100px]">
-            <div>
-              <p class="text-xs px-2 leading-5 text-center text-white font-martian md:mb-5 md:text-sm md:leading-6 lg:text-base">
-                <%= phx_tools_description() %>
-              </p>
-            </div>
+
             <div
+              :if={assigns.live_action != :index}
               class="mx-auto"
               data-asciicast={asciinema_cast_id(@live_action)}
               id={"asciinema-#{Utils.random_id()}"}
@@ -231,9 +178,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   defp source_code_button(assigns) do
     ~H"""
-    <div class="border-2 border-[#755FFF] py-4 rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian w-44 ">
+    <div class="border-2 border-[#755FFF] py-4 rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian w-44">
       <.link
-        href={@source_code_url}
+        href="https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh"
         target="_blank"
         class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
       >
