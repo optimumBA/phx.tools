@@ -38,7 +38,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
     <div class="solved-height">
       <div class="min-h-full">
         <div class="mt-[5%] md:flex flex-col items-center max-w-4xl mx-auto">
-          <div class="sm:flex flex-col items-center">
+          <div class="sm:flex flex-col justify-center items-center">
             <Icons.phx_tools_svg class="h-7 md:h-12" />
             <p class="sm:py-6 text-center text-white text-sm md:text-base lg:text-lg font-martian font-semibold ">
               The Complete Development Environment for Elixir and Phoenix
@@ -79,7 +79,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             </div>
             <div class="justify-center gap-4 mt-2 flex">
               <div class="sm:grid grid gap-4 sm:py-4">
-                <.source_code_button source_code_url="https://github.com/optimumBA/phx.tools/blob/main/priv/script.sh" />
+                <.source_code_button />
               </div>
             </div>
           </div>
