@@ -6,31 +6,20 @@ defmodule PhxToolsWeb.PhxToolsLive.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, session, socket) do
-    {:ok,
-     socket
-     |> assign(:seo_attributes, %{})
-     |> assign_os(session)}
+    socket =
+      socket
+      |> assign(:seo_attributes, %{url: Endpoint.url()})
+      |> assign_os(session)
+
+    case socket.assigns.operating_system do
+      "Linux" -> {:ok, assign(socket, :live_action, :linux)}
+      "macOS" -> {:ok, assign(socket, :live_action, :macos)}
+      _other -> {:ok, socket}
+    end
   end
 
   defp assign_os(socket, %{"operating_system" => operating_system}) do
     assign(socket, :operating_system, operating_system)
-  end
-
-  @impl Phoenix.LiveView
-  def handle_params(_params, _uri, socket) do
-    apply_action(socket, socket.assigns.live_action)
-  end
-
-  defp apply_action(socket, :index) do
-    case socket.assigns.operating_system do
-      "Linux" -> {:noreply, assign(socket, :live_action, :linux)}
-      "macOS" -> {:noreply, assign(socket, :live_action, :macos)}
-      _other -> {:noreply, socket}
-    end
-  end
-
-  defp apply_action(socket, _action) do
-    {:noreply, assign(socket, seo_attributes: %{url: Endpoint.url()})}
   end
 
   defp installation_command do
