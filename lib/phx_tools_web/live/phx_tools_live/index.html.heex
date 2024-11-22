@@ -1,9 +1,1 @@
-<PhxToolsComponents.os_landing_card
-  operating_system={@operating_system}
-  live_action={@live_action}
-  source_code_url={@source_code_url}
->
-  <:installation_command>
-    <%= installation_command(@live_action) %>
-  </:installation_command>
-</PhxToolsComponents.os_landing_card>
+<PhxToolsComponents.os_landing_card os_type={@os_type} />
