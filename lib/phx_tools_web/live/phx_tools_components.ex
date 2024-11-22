@@ -29,7 +29,6 @@ defmodule PhxToolsWeb.PhxToolsComponents do
 
   attr :live_action, :atom, required: true
   attr :operating_system, :string, required: true
-  attr :source_code_url, :string, required: true
 
   slot :installation_command, required: true
   @spec os_landing_card(assigns()) :: rendered()
