@@ -79,8 +79,8 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               </div>
             </div>
           </div>
-          <div class=" lg:w-[1100px]">
-            <div class=" w-[100%] flex flex-col gap-8 items-center justify-center">
+          <div class="lg:w-[1100px]">
+            <div class="w-[100%] flex flex-col gap-8 items-center justify-center">
               <div class="md:w-[65%]">
                 <p class="text-xs px-2 leading-5 text-center text-white font-martian  md:text-sm md:leading-6 lg:text-base">
                   <%= phx_tools_description() %>
@@ -88,9 +88,9 @@ defmodule PhxToolsWeb.PhxToolsComponents do
               </div>
               <div
                 :if={assigns.os_type == :other}
-                class=" md:w-[61%] mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]"
+                class="md:w-[61%] mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] blur-shadow max-w-[809px]"
               >
-                <div class=" bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
+                <div class="bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center">
                   <div class="w-full md:w-auto flex justify-center items-center">
                     <Icons.exclamation_icon />
                   </div>
