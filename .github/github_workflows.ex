@@ -193,7 +193,10 @@ defmodule GithubWorkflows do
       steps: [
         checkout_step(),
         [
-          uses: "superfly/flyctl-actions/setup-flyctl@master"
+          uses: "superfly/flyctl-actions/setup-flyctl@1.5",
+          with: [
+            version: "0.3.40"
+          ]
         ],
         [
           run: "flyctl deploy --remote-only",
@@ -227,7 +230,7 @@ defmodule GithubWorkflows do
       steps: [
         [
           name: "Restore PLT cache",
-          uses: "actions/cache@v3",
+          uses: "actions/cache@v4.1.2",
           with:
             [
               path: "priv/plts"
@@ -263,14 +266,14 @@ defmodule GithubWorkflows do
           [
             id: "setup-beam",
             name: "Set up Elixir",
-            uses: "erlef/setup-beam@v1",
+            uses: "erlef/setup-beam@v1.18.2",
             with: [
               "version-file": ".tool-versions",
               "version-type": "strict"
             ]
           ],
           [
-            uses: "actions/cache@v3",
+            uses: "actions/cache@v4.1.2",
             with:
               [
                 path: ~S"""
@@ -323,7 +326,7 @@ defmodule GithubWorkflows do
         checkout_step(),
         [
           name: "Restore npm cache",
-          uses: "actions/cache@v3",
+          uses: "actions/cache@v4.1.2",
           id: "npm-cache",
           with: [
             path: "node_modules",
@@ -400,7 +403,7 @@ defmodule GithubWorkflows do
           checkout_step(),
           [
             name: "Restore script result cache",
-            uses: "actions/cache@v3",
+            uses: "actions/cache@v4.1.2",
             id: "result_cache",
             with: [
               key:
@@ -455,7 +458,7 @@ defmodule GithubWorkflows do
             [
               name: "Check HTTP status code",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              uses: "nick-fields/retry@v2",
+              uses: "nick-fields/retry@v3.0.0",
               with: [
                 command:
                   "INPUT_SITES='[\"http://localhost:4000\"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh",
@@ -504,7 +507,7 @@ defmodule GithubWorkflows do
   defp checkout_step do
     [
       name: "Checkout",
-      uses: "actions/checkout@v4"
+      uses: "actions/checkout@v4.2.2"
     ]
   end
 
