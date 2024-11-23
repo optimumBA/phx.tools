@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -52,15 +52,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -78,15 +78,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -104,15 +104,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -121,7 +121,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Restore PLT cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
           path: priv/plts
@@ -146,15 +146,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -172,15 +172,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -197,9 +197,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore npm cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: npm-cache
         with:
           path: node_modules
@@ -220,15 +220,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -246,15 +246,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -272,15 +272,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - id: setup-beam
         name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.18.2
         with:
           version-file: .tool-versions
           version-type: strict
       - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         with:
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
@@ -300,9 +300,9 @@ jobs:
       TZ: America/New_York
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore script result cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: result_cache
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -322,7 +322,7 @@ jobs:
         shell: bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3.0.0
         with:
           command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
           max_attempts: 7
@@ -342,9 +342,9 @@ jobs:
       TZ: America/New_York
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore script result cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: result_cache
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -367,7 +367,7 @@ jobs:
         shell: bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3.0.0
         with:
           command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
           max_attempts: 7
@@ -387,9 +387,9 @@ jobs:
       TZ: America/New_York
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore script result cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -412,7 +412,7 @@ jobs:
         shell: fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3.0.0
         with:
           command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
           max_attempts: 7
@@ -432,9 +432,9 @@ jobs:
       TZ: America/New_York
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore script result cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -460,7 +460,7 @@ jobs:
         shell: fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3.0.0
         with:
           command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
           max_attempts: 7
@@ -480,9 +480,9 @@ jobs:
       TZ: America/New_York
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore script result cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -505,7 +505,7 @@ jobs:
         shell: zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3.0.0
         with:
           command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
           max_attempts: 7
@@ -525,9 +525,9 @@ jobs:
       TZ: America/New_York
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Restore script result cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.1.2
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -553,7 +553,7 @@ jobs:
         shell: zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3.0.0
         with:
           command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
           max_attempts: 7
@@ -593,7 +593,7 @@ jobs:
       url: https://phx-tools-pr-${{ github.event.number }}.fly.dev
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Delete previous deployments
         uses: strumwolf/delete-deployment-environment@v2.2.3
         with:

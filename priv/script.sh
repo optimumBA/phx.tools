@@ -2,9 +2,9 @@
 
 set -eu
 
-elixir_version=1.17.3-otp-27
-erlang_version=27.1.2
-phoenix_version=1.7.14
+elixir_version=1.18.1-otp-27
+erlang_version=27.2
+phoenix_version=1.7.18
 postgres_version=15.1
 
 OS="$(uname -s)"
@@ -53,10 +53,6 @@ if [ -z "$HOME" ]; then
   set -e
 fi
 
-elixir_version=1.18.1-otp-27
-erlang_version=27.2
-phoenix_version=1.7.18
-postgres_version=15.1
 # Disable colour output if NO_COLOR is set to any value at all.
 # https://no-color.org
 if [ -n "${NO_COLOR:-}" ] || [ -z "${TERM:-}" ] || [ "$TERM" = dumb ]; then
