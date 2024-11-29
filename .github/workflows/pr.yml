@@ -22,12 +22,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Install Elixir dependencies
@@ -38,6 +39,13 @@ jobs:
         env:
           MIX_ENV: test
         run: mix compile
+      - name: Save dependencies cache
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
+          path: |
+            _build
+            deps
   credo:
     needs: compile
     name: Credo
@@ -51,12 +59,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Check code style
@@ -76,12 +85,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Check for vulnerable Mix dependencies
@@ -101,19 +111,20 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Restore PLT cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         with:
-          path: priv/plts
           key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
+          path: priv/plts
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-
       - name: Create PLTs
@@ -124,6 +135,11 @@ jobs:
         env:
           MIX_ENV: test
         run: mix dialyzer
+      - name: Save PLT cache
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
+          path: priv/plts
   format:
     needs: compile
     name: Format
@@ -137,12 +153,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Check Elixir formatting
@@ -162,12 +179,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Check for retired Hex packages
@@ -181,7 +199,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore npm cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: npm-cache
         with:
           path: node_modules
@@ -191,6 +209,11 @@ jobs:
         run: npm i -D prettier prettier-plugin-toml
       - name: Run Prettier
         run: npx prettier -c .
+      - name: Save npm cache
+        uses: actions/cache/save@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-prettier
   sobelow:
     needs: compile
     name: Security check
@@ -204,12 +227,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Check for security issues using sobelow
@@ -229,12 +253,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Run tests
@@ -254,12 +279,13 @@ jobs:
         with:
           version-file: .tool-versions
           version-type: strict
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           path: |
             _build
             deps
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
       - name: Check for unused Mix dependencies

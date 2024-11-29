@@ -4,12 +4,25 @@ defmodule GithubWorkflows do
   See https://hexdocs.pm/github_workflows_generator.
   """
 
+  # App and environment configuration
   @app_name_prefix "phx-tools"
   @environment_name "pr-${{ github.event.number }}"
   @preview_app_name "#{@app_name_prefix}-#{@environment_name}"
   @preview_app_host "#{@preview_app_name}.fly.dev"
   @repo_name "phx_tools"
+
+  # Test configuration
   @shells ["bash", "fish", "zsh"]
+
+  # Cache configuration
+  @cache_key_prefix_prefix "${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}"
+  @mix_cache_key_prefix "#{@cache_key_prefix_prefix}-mix"
+  @mix_cache_path ~S"""
+  _build
+  deps
+  """
+  @plt_cache_key_prefix "#{@cache_key_prefix_prefix}-plt"
+  @plt_cache_path "priv/plts"
 
   def get do
     %{
@@ -100,6 +113,11 @@ defmodule GithubWorkflows do
           name: "Compile",
           env: [MIX_ENV: "test"],
           run: "mix compile"
+        ],
+        [
+          name: "Save dependencies cache",
+          uses: "actions/cache/save@v4",
+          with: save_cache_opts(@mix_cache_key_prefix, @mix_cache_path)
         ]
       ]
     )
@@ -219,19 +237,13 @@ defmodule GithubWorkflows do
   end
 
   defp dialyzer_job do
-    cache_key_prefix =
-      "${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt"
-
     elixir_job("Dialyzer",
       needs: :compile,
       steps: [
         [
           name: "Restore PLT cache",
-          uses: "actions/cache@v3",
-          with:
-            [
-              path: "priv/plts"
-            ] ++ cache_opts(cache_key_prefix)
+          uses: "actions/cache/restore@v4",
+          with: cache_opts(@plt_cache_key_prefix, @plt_cache_path)
         ],
         [
           name: "Create PLTs",
@@ -242,6 +254,11 @@ defmodule GithubWorkflows do
           name: "Run dialyzer",
           env: [MIX_ENV: "test"],
           run: "mix dialyzer"
+        ],
+        [
+          name: "Save PLT cache",
+          uses: "actions/cache/save@v4",
+          with: save_cache_opts(@plt_cache_key_prefix, @plt_cache_path)
         ]
       ]
     )
@@ -250,9 +267,6 @@ defmodule GithubWorkflows do
   defp elixir_job(name, opts) do
     needs = Keyword.get(opts, :needs)
     steps = Keyword.get(opts, :steps, [])
-
-    cache_key_prefix =
-      "${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix"
 
     job = [
       name: name,
@@ -270,14 +284,9 @@ defmodule GithubWorkflows do
             ]
           ],
           [
-            uses: "actions/cache@v3",
-            with:
-              [
-                path: ~S"""
-                _build
-                deps
-                """
-              ] ++ cache_opts(cache_key_prefix)
+            name: "Restore dependencies cache",
+            uses: "actions/cache/restore@v4",
+            with: cache_opts(@mix_cache_key_prefix, @mix_cache_path)
           ]
         ] ++ steps
     ]
@@ -323,7 +332,7 @@ defmodule GithubWorkflows do
         checkout_step(),
         [
           name: "Restore npm cache",
-          uses: "actions/cache@v3",
+          uses: "actions/cache/restore@v4",
           id: "npm-cache",
           with: [
             path: "node_modules",
@@ -338,6 +347,14 @@ defmodule GithubWorkflows do
         [
           name: "Run Prettier",
           run: "npx prettier -c ."
+        ],
+        [
+          name: "Save npm cache",
+          uses: "actions/cache/save@v4",
+          with: [
+            path: "node_modules",
+            key: "${{ runner.os }}-prettier"
+          ]
         ]
       ]
     ]
@@ -521,12 +538,20 @@ defmodule GithubWorkflows do
     ]
   end
 
-  defp cache_opts(prefix) do
+  defp cache_opts(prefix, path) do
     [
       key: "#{prefix}-${{ github.sha }}",
+      path: path,
       "restore-keys": ~s"""
       #{prefix}-
       """
+    ]
+  end
+
+  defp save_cache_opts(prefix, path) do
+    [
+      key: "#{prefix}-${{ github.sha }}",
+      path: path
     ]
   end
 
