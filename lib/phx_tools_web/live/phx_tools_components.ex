@@ -23,7 +23,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
       </.link>
     </div>
     <p class="font-semibold text-center text-white text-xs md:text-sm lg:text-base  font-montserrat">
-      Copyright <span>&copy; <%= Date.utc_today().year %></span> Optimum
+      Copyright <span>&copy; {Date.utc_today().year}</span> Optimum
     </p>
     """
   end
@@ -70,7 +70,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
                 installation_instructions={installation_instructions(@os_type)}
                 os_type={@os_type}
               >
-                <%= raw(installation_instruction) %>
+                {raw(installation_instruction)}
               </.os_instructions>
             </div>
             <div class="justify-center gap-4 mt-2 flex">
@@ -83,7 +83,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
             <div class="w-[100%] flex flex-col gap-8 items-center justify-center">
               <div class="md:w-[65%]">
                 <p class="text-xs px-2 leading-5 text-center text-white font-martian  md:text-sm md:leading-6 lg:text-base">
-                  <%= phx_tools_description() %>
+                  {phx_tools_description()}
                 </p>
               </div>
               <div
@@ -137,12 +137,12 @@ defmodule PhxToolsWeb.PhxToolsComponents do
         <div class="h-full shadow-custom shadow-md rounded-md pb-2">
           <div class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md">
             <h1 class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5">
-              <%= Index.get_operating_system(@os_type) %> installation process
+              {Index.get_operating_system(@os_type)} installation process
             </h1>
             <ol class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6">
               <%= for instruction <- @installation_instructions do %>
                 <li class="mb-2">
-                  <%= render_slot(@inner_block, instruction) %>
+                  {render_slot(@inner_block, instruction)}
                 </li>
               <% end %>
             </ol>
