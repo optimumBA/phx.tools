@@ -417,7 +417,7 @@ defmodule GithubWorkflows do
           checkout_step(),
           [
             name: "Restore script result cache",
-            uses: "actions/cache@v3",
+            uses: "actions/cache/restore@v4",
             id: "result_cache",
             with: [
               key:
@@ -479,6 +479,16 @@ defmodule GithubWorkflows do
                 max_attempts: 7,
                 retry_wait_seconds: 5,
                 timeout_seconds: 1
+              ]
+            ],
+            [
+              name: "Save script result cache",
+              if: "steps.result_cache.outputs.cache-hit != 'true'",
+              uses: "actions/cache/save@v4",
+              with: [
+                key:
+                  "${{ runner.os }}-#{shell}-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}",
+                path: "priv/script.sh"
               ]
             ]
           ]

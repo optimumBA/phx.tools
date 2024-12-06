@@ -302,7 +302,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore script result cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: result_cache
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -328,6 +328,12 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+      - name: Save script result cache
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          path: priv/script.sh
   test_macos_bash:
     name: Test macOS script with bash shell
     runs-on: macos-latest
@@ -338,7 +344,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore script result cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: result_cache
         with:
           key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -367,6 +373,12 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+      - name: Save script result cache
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          path: priv/script.sh
   test_linux_fish:
     name: Test Linux script with fish shell
     runs-on: ubuntu-latest
@@ -377,7 +389,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore script result cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -406,6 +418,12 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+      - name: Save script result cache
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          path: priv/script.sh
   test_macos_fish:
     name: Test macOS script with fish shell
     runs-on: macos-latest
@@ -416,7 +434,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore script result cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: result_cache
         with:
           key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -448,6 +466,12 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+      - name: Save script result cache
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          path: priv/script.sh
   test_linux_zsh:
     name: Test Linux script with zsh shell
     runs-on: ubuntu-latest
@@ -458,7 +482,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore script result cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -487,6 +511,12 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+      - name: Save script result cache
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          path: priv/script.sh
   test_macos_zsh:
     name: Test macOS script with zsh shell
     runs-on: macos-latest
@@ -497,7 +527,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore script result cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         id: result_cache
         with:
           key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
@@ -529,6 +559,12 @@ jobs:
           max_attempts: 7
           retry_wait_seconds: 5
           timeout_seconds: 1
+      - name: Save script result cache
+        if: steps.result_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
+          path: priv/script.sh
   deploy_preview_app:
     name: Deploy preview app
     needs:
