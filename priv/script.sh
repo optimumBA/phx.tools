@@ -23,9 +23,9 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
-elixir_version=1.17.3-otp-27
-erlang_version=27.1.3
-phoenix_version=1.7.17
+elixir_version=1.18.1-otp-27
+erlang_version=27.2
+phoenix_version=1.7.18
 postgres_version=15.1
 
 case "${SHELL:-}" in
