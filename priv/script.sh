@@ -23,10 +23,10 @@ white='\033[0;37m'
 green='\033[0;32m'
 cyan='\033[0;36m'
 
-elixir_version=1.18.1-otp-27
-erlang_version=27.2
-phoenix_version=1.7.18
-postgres_version=15.1
+elixir_version=1.19.5-otp-28
+erlang_version=28.3.3
+phoenix_version=1.8.4
+postgres_version=15.17
 
 case "${SHELL:-}" in
 *bash)

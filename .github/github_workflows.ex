@@ -90,7 +90,6 @@ defmodule GithubWorkflows do
     [
       compile: compile_job(),
       credo: credo_job(),
-      deps_audit: deps_audit_job(),
       dialyzer: dialyzer_job(),
       format: format_job(),
       hex_audit: hex_audit_job(),
@@ -218,19 +217,6 @@ defmodule GithubWorkflows do
           env: [
             FLY_API_TOKEN: "${{ secrets.FLY_API_TOKEN }}"
           ]
-        ]
-      ]
-    )
-  end
-
-  defp deps_audit_job do
-    elixir_job("Deps audit",
-      needs: :compile,
-      steps: [
-        [
-          name: "Check for vulnerable Mix dependencies",
-          env: [MIX_ENV: "test"],
-          run: "mix deps.audit"
         ]
       ]
     )

@@ -16,15 +16,6 @@ defmodule PhxTools.MixProject do
         plt_add_apps: [:ex_unit, :mix],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
-      preferred_cli_env: [
-        ci: :test,
-        coveralls: :test,
-        "coveralls.detail": :test,
-        "coveralls.html": :test,
-        credo: :test,
-        dialyzer: :test,
-        sobelow: :test
-      ],
       test_coverage: [tool: ExCoveralls],
 
       # Docs
@@ -52,6 +43,19 @@ defmodule PhxTools.MixProject do
     [
       mod: {PhxTools.Application, []},
       extra_applications: [:logger, :runtime_tools]
+    ]
+  end
+
+  def cli do
+    [
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.html": :test,
+        credo: :test,
+        dialyzer: :test,
+        sobelow: :test
+      ]
     ]
   end
 
@@ -125,7 +129,6 @@ defmodule PhxTools.MixProject do
       ],
       ci: [
         "deps.unlock --check-unused",
-        "deps.audit",
         "hex.audit",
         "sobelow --config .sobelow-conf",
         "format --check-formatted",

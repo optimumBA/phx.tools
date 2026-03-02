@@ -1,2 +1,2 @@
 ci:
-	mix ci
+	MIX_ENV=test mix ci

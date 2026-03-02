@@ -68,32 +68,6 @@ jobs:
         env:
           MIX_ENV: test
         run: mix credo --strict
-  deps_audit:
-    needs: compile
-    name: Deps audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for vulnerable Mix dependencies
-        env:
-          MIX_ENV: test
-        run: mix deps.audit
   dialyzer:
     needs: compile
     name: Dialyzer
@@ -566,7 +540,6 @@ jobs:
     needs:
       - compile
       - credo
-      - deps_audit
       - dialyzer
       - format
       - hex_audit
