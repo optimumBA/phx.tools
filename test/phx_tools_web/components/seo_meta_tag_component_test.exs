@@ -11,7 +11,7 @@ defmodule PhxToolsWeb.SeoMetaTagComponentTest do
                "<meta name=\"twitter:card\" content=\"summary_large_image\">"
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: nil) =~
-               "<meta name=\"twitter:description\" content=\"Phx.tools is a shell script for Linux and macOS that configures\nthe development environment for you in a few easy steps.\nOnce you finish running the script, you&#39;ll be able to start the database server,\ncreate a new Phoenix application, and launch the server...\">"
+               "<meta name=\"twitter:description\" content=\"Phx.tools is a shell script for Linux and macOS that configures\nthe development environment for you in a few easy steps.\nOnce you finish running the script, you&#39;ll be able to create a new Phoenix application and\nlaunch the server.\">"
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: nil) =~
                "<meta name=\"twitter:image\" content=\"http://localhost:4002/images/phx_tools.png\">"
@@ -29,10 +29,10 @@ defmodule PhxToolsWeb.SeoMetaTagComponentTest do
                "<meta name=\"twitter:url\" content=\"http://localhost:4002/\">"
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: nil) =~
-               "<meta property=\"description\" content=\"Phx.tools is a shell script for Linux and macOS that configures\nthe development environment for you in a few easy steps.\nOnce you finish running the script, you&#39;ll be able to start the database server,\ncreate a new Phoenix application, and launch the server...\">"
+               "<meta property=\"description\" content=\"Phx.tools is a shell script for Linux and macOS that configures\nthe development environment for you in a few easy steps.\nOnce you finish running the script, you&#39;ll be able to create a new Phoenix application and\nlaunch the server.\">"
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: nil) =~
-               "<meta property=\"og:description\" content=\"Phx.tools is a shell script for Linux and macOS that configures\nthe development environment for you in a few easy steps.\nOnce you finish running the script, you&#39;ll be able to start the database server,\ncreate a new Phoenix application, and launch the server...\">"
+               "<meta property=\"og:description\" content=\"Phx.tools is a shell script for Linux and macOS that configures\nthe development environment for you in a few easy steps.\nOnce you finish running the script, you&#39;ll be able to create a new Phoenix application and\nlaunch the server.\">"
 
       assert render_component(&SeoMetaTagComponent.seo_meta_tags/1, attributes: nil) =~
                "<meta property=\"og:image\" content=\"http://localhost:4002/images/phx_tools.png\">"

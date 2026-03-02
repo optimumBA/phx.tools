@@ -26,7 +26,6 @@ cyan='\033[0;36m'
 elixir_version=1.19.5-otp-28
 erlang_version=28.3.3
 phoenix_version=1.8.4
-postgres_version=15.17
 
 case "${SHELL:-}" in
 *bash)
@@ -99,9 +98,6 @@ already_installed() {
         ;;
     "Phoenix")
         mix phx.new --version >/dev/null 2>&1
-        ;;
-    "PostgreSQL")
-        mise which initdb >/dev/null 2>&1
         ;;
     "Xcode Command Line Tools")
         which xcode-select >/dev/null 2>&1
@@ -237,29 +233,6 @@ install() {
         mise exec -- mix local.rebar --force
         mise exec -- mix archive.install --force hex phx_new $phoenix_version
         ;;
-    "PostgreSQL")
-        if [ "$os_type" = "macOS" ]; then
-            brew install gcc readline zlib curl ossp-uuid
-        else
-            case "$package_manager" in
-            "apt")
-                sudo apt-get update
-                sudo apt-get install -y linux-headers-generic build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev icu-devtools
-                ;;
-            "dnf")
-                sudo dnf groupinstall -y "Development Tools"
-                sudo dnf install -y kernel-headers openssl-devel readline-devel zlib-devel libcurl-devel libuuid-devel libicu-devel
-                ;;
-            "pacman")
-                sudo pacman -Sy --noconfirm linux-headers base-devel openssl readline zlib curl util-linux icu
-                ;;
-            "apk")
-                sudo apk add --no-cache linux-headers build-base openssl-dev readline-dev zlib-dev curl-dev util-linux-dev icu-dev
-                ;;
-            esac
-        fi
-        mise use -g -y postgres@$postgres_version
-        ;;
     "Xcode Command Line Tools")
         xcode-select --install
         ;;
@@ -329,10 +302,6 @@ add_env() {
     maybe_install "Phoenix"
 
     printf "${white}\n"
-    sleep 1.5
-    maybe_install "PostgreSQL"
-
-    printf "${white}\n"
     printf "${cyan}${bold}phx.tools setup is complete!\n"
     printf "${cyan}${bold}Please restart the terminal and type in the following command:\n"
     printf "${cyan}${bold}mix phx.new\n"
@@ -389,14 +358,12 @@ if [ "$os_type" = "macOS" ]; then
     printf "4) Erlang\n"
     printf "5) Elixir\n"
     printf "6) Phoenix\n"
-    printf "7) PostgreSQL\n"
 else
     printf "1) Build dependencies\n"
     printf "2) mise\n"
     printf "3) Erlang\n"
     printf "4) Elixir\n"
     printf "5) Phoenix\n"
-    printf "6) PostgreSQL\n"
 fi
 
 printf "\n"

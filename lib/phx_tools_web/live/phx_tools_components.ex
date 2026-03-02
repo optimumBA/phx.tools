@@ -188,7 +188,7 @@ defmodule PhxToolsWeb.PhxToolsComponents do
   end
 
   defp phx_tools_description do
-    "Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server."
+    "Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to create a new Phoenix application and launch the server."
   end
 
   defp web_updates(assigns) do

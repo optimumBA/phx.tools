@@ -2,7 +2,7 @@
 
 [phx.tools](https://phx.tools/) is a shell script for platforms **Linux** and **macOS** (sorry, Windows users) that configures the development environment for you in a few easy steps.
 
-Once you finish running the script, you'll be able to start the database server, create a new Phoenix application, and launch the server.
+Once you finish running the script, you'll be able to create a new Phoenix application and launch the server.
 
 Here are the tools that `phx.tools` will install for you, if not already installed:
 
@@ -14,7 +14,6 @@ _Required_
 - Erlang
 - Elixir
 - Phoenix
-- PostgreSQL
 
 ## Setup
 

@@ -11,11 +11,11 @@ defmodule PhxToolsWeb.SeoMetaTagComponent do
   @default_description """
   Phx.tools is a shell script for Linux and macOS that configures
   the development environment for you in a few easy steps.
-  Once you finish running the script, you'll be able to start the database server,
-  create a new Phoenix application, and launch the server...
+  Once you finish running the script, you'll be able to create a new Phoenix application and
+  launch the server.
   """
 
-  @keywords "elixir, erlang, homebrew, mise, phoenix, postgres, postgresql"
+  @keywords "elixir, erlang, homebrew, mise, phoenix"
 
   attr :attributes, :map
 
