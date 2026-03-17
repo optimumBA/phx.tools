@@ -10,262 +10,6 @@ on:
       - synchronize
 
 jobs:
-  compile:
-    name: Install deps and compile
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Install Elixir dependencies
-        env:
-          MIX_ENV: test
-        run: mix deps.get
-      - name: Compile
-        env:
-          MIX_ENV: test
-        run: mix compile
-      - name: Save dependencies cache
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-  credo:
-    needs: compile
-    name: Credo
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check code style
-        env:
-          MIX_ENV: test
-        run: mix credo --strict
-  dialyzer:
-    needs: compile
-    name: Dialyzer
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Restore PLT cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
-          path: priv/plts
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-
-      - name: Create PLTs
-        env:
-          MIX_ENV: test
-        run: mix dialyzer --plt
-      - name: Run dialyzer
-        env:
-          MIX_ENV: test
-        run: mix dialyzer
-      - name: Save PLT cache
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-plt-${{ github.sha }}
-          path: priv/plts
-  format:
-    needs: compile
-    name: Format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check Elixir formatting
-        env:
-          MIX_ENV: test
-        run: mix format --check-formatted
-  hex_audit:
-    needs: compile
-    name: Hex audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for retired Hex packages
-        env:
-          MIX_ENV: test
-        run: mix hex.audit
-  prettier:
-    name: Check formatting using Prettier
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore npm cache
-        uses: actions/cache/restore@v4
-        id: npm-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-prettier
-      - name: Install Prettier
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm i -D prettier prettier-plugin-toml
-      - name: Run Prettier
-        run: npx prettier -c .
-      - name: Save npm cache
-        uses: actions/cache/save@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-prettier
-  sobelow:
-    needs: compile
-    name: Security check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for security issues using sobelow
-        env:
-          MIX_ENV: test
-        run: mix sobelow --config .sobelow-conf
-  test:
-    needs: compile
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Run tests
-        env:
-          MIX_ENV: test
-        run: mix test --cover --warnings-as-errors
-  unused_deps:
-    needs: compile
-    name: Check unused deps
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            ${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-mix-
-      - name: Check for unused Mix dependencies
-        env:
-          MIX_ENV: test
-        run: mix deps.unlock --check-unused
   test_linux_bash:
     name: Test Linux script with bash shell
     runs-on: ubuntu-latest
@@ -279,13 +23,11 @@ jobs:
         uses: actions/cache/restore@v4
         id: result_cache
         with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
@@ -306,8 +48,8 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
   test_macos_bash:
     name: Test macOS script with bash shell
     runs-on: macos-latest
@@ -321,16 +63,14 @@ jobs:
         uses: actions/cache/restore@v4
         id: result_cache
         with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
       - name: Disable password prompt for macOS
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
+        run: 'sudo sed -i "" "s/%admin\t\tALL = (ALL) ALL/%admin\t\tALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
@@ -351,8 +91,8 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
   test_linux_fish:
     name: Test Linux script with fish shell
     runs-on: ubuntu-latest
@@ -366,16 +106,14 @@ jobs:
         uses: actions/cache/restore@v4
         id: result_cache
         with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y fish
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
@@ -396,8 +134,8 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
   test_macos_fish:
     name: Test macOS script with fish shell
     runs-on: macos-latest
@@ -411,19 +149,17 @@ jobs:
         uses: actions/cache/restore@v4
         id: result_cache
         with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install fish
       - name: Disable password prompt for macOS
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
+        run: 'sudo sed -i "" "s/%admin\t\tALL = (ALL) ALL/%admin\t\tALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
@@ -444,8 +180,8 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
   test_linux_zsh:
     name: Test Linux script with zsh shell
     runs-on: ubuntu-latest
@@ -459,16 +195,14 @@ jobs:
         uses: actions/cache/restore@v4
         id: result_cache
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y zsh
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
@@ -489,8 +223,8 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
   test_macos_zsh:
     name: Test macOS script with zsh shell
     runs-on: macos-latest
@@ -504,19 +238,17 @@ jobs:
         uses: actions/cache/restore@v4
         id: result_cache
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh
       - name: Install shell
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install zsh
       - name: Disable password prompt for macOS
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin		ALL = (ALL) ALL/%admin		ALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
+        run: 'sudo sed -i "" "s/%admin\t\tALL = (ALL) ALL/%admin\t\tALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
       - name: Install expect tool
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: brew install expect
-      - name: Remove mise config files
-        run: rm -f .mise.toml .tool-versions
       - name: Test the script
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: cd test/scripts && expect script.exp
@@ -537,51 +269,5 @@ jobs:
         if: steps.result_cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('priv/script.sh') }}
-          path: priv/script.sh
-  deploy_preview_app:
-    name: Deploy preview app
-    needs:
-      - compile
-      - credo
-      - dialyzer
-      - format
-      - hex_audit
-      - prettier
-      - sobelow
-      - test
-      - unused_deps
-      - test_linux_bash
-      - test_macos_bash
-      - test_linux_fish
-      - test_macos_fish
-      - test_linux_zsh
-      - test_macos_zsh
-    runs-on: ubuntu-latest
-    permissions: write-all
-    concurrency:
-      group: pr-${{ github.event.number }}
-    environment:
-      name: pr-${{ github.event.number }}
-      url: https://phx-tools-pr-${{ github.event.number }}.fly.dev
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Delete previous deployments
-        uses: strumwolf/delete-deployment-environment@v2.2.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          environment: pr-${{ github.event.number }}
-          ref: ${{ github.head_ref }}
-          onlyRemoveDeployments: true
-      - name: Deploy preview app
-        uses: optimumBA/fly-preview-apps@main
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          FLY_ORG: optimum-bh
-          FLY_REGION: fra
-          PHX_HOST: phx-tools-pr-${{ github.event.number }}.fly.dev
-          REPO_NAME: phx_tools
-        with:
-          name: phx-tools-pr-${{ github.event.number }}
-          secrets: APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} PHX_HOST=${{ env.PHX_HOST }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
+          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('public/script.sh') }}
+          path: public/script.sh

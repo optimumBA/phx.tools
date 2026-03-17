@@ -1,43 +1,21 @@
-# PhxTools
+# phx.tools
 
-[phx.tools](https://phx.tools/) is a shell script for platforms **Linux** and **macOS** (sorry, Windows users) that configures the development environment for you in a few easy steps.
+[phx.tools](https://phx.tools/) is a shell script for **Linux** and **macOS** that configures the Elixir/Phoenix development environment in a few easy steps.
 
-Once you finish running the script, you'll be able to create a new Phoenix application and launch the server.
+## Development
 
-Here are the tools that `phx.tools` will install for you, if not already installed:
+Open `public/index.html` in a browser, or serve it with any HTTP server:
 
-_Required_
+```bash
+python3 -m http.server --directory public
+```
 
-- Build dependencies
-- Homebrew (only on macOS)
-- mise
-- Erlang
-- Elixir
-- Phoenix
+## Updating GitHub workflows
 
-## Setup
+Edit `.github/github_workflows.ex`, then regenerate:
 
-To start your Phoenix server:
+```bash
+github_workflows_generator
+```
 
-- install Elixir, Erlang and Node using [mise](https://mise.jdx.dev)
-  - install mise using either `curl https://mise.run | sh` or `brew install mise`
-  - make sure to activate it
-  - run `mise install`
-- run `mix setup`
-- start Phoenix server with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-## Docs
-
-- execute `mix docs --formatter html --open`
-
-It will open documentation in your browser.
-
-## Running tests
-
-- run `mix coveralls` or `mix coveralls.html`
-
-## Contributing
-
-Make sure to execute `make ci` in order to run all the checks before committing the code.
+Install once via `mix escript.install hex github_workflows_generator`.
