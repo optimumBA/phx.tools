@@ -145,6 +145,7 @@ defmodule GithubWorkflows do
     ]
   end
 
+
   defp test_linux_script_job(shell) do
     test_shell_script_job(
       expect_install_command: "sudo apt-get update && sudo apt-get install -y expect",
