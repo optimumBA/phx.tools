@@ -116,7 +116,7 @@ defmodule GithubWorkflows do
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: "make -f test/scripts/Makefile serve",
+              run: generate_app_run(os),
               shell: "#{shell} -l {0}"
             ],
             [
@@ -164,6 +164,18 @@ defmodule GithubWorkflows do
       shell: shell,
       shell_install_command: "brew install #{shell}"
     )
+  end
+
+  defp generate_app_run("Linux"), do: "make -f test/scripts/Makefile serve"
+
+  defp generate_app_run(_macos) do
+    """
+    mise exec -- mix phx.new --no-ecto --no-install --no-assets phx_tools_test
+    cd phx_tools_test
+    mise exec -- mix deps.get
+    mise exec -- mix compile
+    nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
+    """
   end
 
   defp checkout_step do
