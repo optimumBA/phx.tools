@@ -19,7 +19,7 @@ defmodule GithubWorkflows do
         name: "Main",
         on: [
           push: [
-            branches: ["main"]
+            branches: ["main", "fix/macos-ci-test-failure"]
           ]
         ],
         jobs: test_scripts_jobs()
