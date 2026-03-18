@@ -86,7 +86,9 @@ jobs:
         shell: bash -l {0}
       - name: Debug - start server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd phx_tools_test && mise exec -- elixir --erl '-detached' -S mix phx.server
+        run: |
+          cd phx_tools_test
+          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'

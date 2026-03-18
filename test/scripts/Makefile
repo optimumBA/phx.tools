@@ -1,6 +1,3 @@
-SHELL := $(SHELL)
-current_shell := $(shell basename $(SHELL))
-
 .ONESHELL:
 .SHELLFLAGS := -eu -c
 
@@ -9,4 +6,4 @@ serve:
 	cd phx_tools_test
 	mise exec -- mix deps.get
 	mise exec -- mix compile
-	mise exec -- elixir --erl '-detached' -S mix phx.server
+	nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
