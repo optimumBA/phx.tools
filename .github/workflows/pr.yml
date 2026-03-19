@@ -34,7 +34,11 @@ jobs:
         shell: bash -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
+        run: |
+          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
+          cd phx_tools_test
+          mise exec -- mix setup
+          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: bash -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -78,10 +82,9 @@ jobs:
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
-          mise exec -- mix phx.new --no-ecto --no-install --no-assets phx_tools_test
+          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
           cd phx_tools_test
-          mise exec -- mix deps.get
-          mise exec -- mix compile
+          mise exec -- mix setup
           nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: bash -l {0}
       - name: Check HTTP status code
@@ -125,7 +128,11 @@ jobs:
         shell: fish -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
+        run: |
+          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
+          cd phx_tools_test
+          mise exec -- mix setup
+          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: fish -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -172,10 +179,9 @@ jobs:
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
-          mise exec -- mix phx.new --no-ecto --no-install --no-assets phx_tools_test
+          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
           cd phx_tools_test
-          mise exec -- mix deps.get
-          mise exec -- mix compile
+          mise exec -- mix setup
           nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: fish -l {0}
       - name: Check HTTP status code
@@ -219,7 +225,11 @@ jobs:
         shell: zsh -l {0}
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
-        run: make -f test/scripts/Makefile serve
+        run: |
+          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
+          cd phx_tools_test
+          mise exec -- mix setup
+          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: zsh -l {0}
       - name: Check HTTP status code
         if: steps.result_cache.outputs.cache-hit != 'true'
@@ -266,10 +276,9 @@ jobs:
       - name: Generate an app and start the server
         if: steps.result_cache.outputs.cache-hit != 'true'
         run: |
-          mise exec -- mix phx.new --no-ecto --no-install --no-assets phx_tools_test
+          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
           cd phx_tools_test
-          mise exec -- mix deps.get
-          mise exec -- mix compile
+          mise exec -- mix setup
           nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
         shell: zsh -l {0}
       - name: Check HTTP status code

@@ -19,7 +19,7 @@ defmodule GithubWorkflows do
         name: "Main",
         on: [
           push: [
-            branches: ["main"]
+            branches: ["main", "fix/macos-ci-test-failure"]
           ]
         ],
         jobs: test_scripts_jobs()
@@ -116,7 +116,7 @@ defmodule GithubWorkflows do
             [
               name: "Generate an app and start the server",
               if: "steps.result_cache.outputs.cache-hit != 'true'",
-              run: generate_app_run(os),
+              run: generate_app_run(),
               shell: "#{shell} -l {0}"
             ],
             [
@@ -166,14 +166,11 @@ defmodule GithubWorkflows do
     )
   end
 
-  defp generate_app_run("Linux"), do: "make -f test/scripts/Makefile serve"
-
-  defp generate_app_run(_macos) do
+  defp generate_app_run do
     """
-    mise exec -- mix phx.new --no-ecto --no-install --no-assets phx_tools_test
+    mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
     cd phx_tools_test
-    mise exec -- mix deps.get
-    mise exec -- mix compile
+    mise exec -- mix setup
     nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
     """
   end
