@@ -12,5 +12,6 @@ endif
 serve:
 	mise exec -- mix phx.new --no-ecto --no-install --no-assets phx_tools_test
 	cd phx_tools_test
-	mise exec -- mix setup
+	mise exec -- mix deps.get
+	mise exec -- mix compile
 	nohup mise exec -- mix phx.server &
