@@ -1,36 +1,47 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@100..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-/* This file is for your main application CSS */
-.solved-height {
-  padding: 0;
-  margin: 0;
-  height: 100vh;
-  height: var(--doc-height);
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1240px;
+
+  --font-martian: "Martian Mono", monospace;
+  --font-montserrat: "Montserrat", sans-serif;
+
+  --shadow-custom: 0 4px 10px rgba(194, 184, 255, 0.5);
+
+  --color-indigo-850: #322199;
 }
 
-@layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-}
-.scroll {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  white-space: nowrap; /* Prevent wrapping to ensure horizontal scrolling works */
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+body {
+  background-color: #110a33;
 }
 
-.scroll::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+/* Hide scrollbar for the command box */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Asciinema player sizing */
+asciinema-player {
+  width: 100%;
+}
+
+/* Repeated text size pattern: xs/sm/base across breakpoints */
+.text-responsive {
+  @apply text-xs md:text-sm lg:text-base;
+}
+
+/* Martian Mono white text — most common combo on the page */
+.text-mono {
+  @apply font-martian text-white;
+}
+
+/* Footer copyright / powered-by lines */
+.footer-text {
+  @apply font-semibold text-center text-white font-montserrat;
 }

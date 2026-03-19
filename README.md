@@ -1,43 +1,35 @@
-# PhxTools
+# phx.tools
 
-[phx.tools](https://phx.tools/) is a shell script for platforms **Linux** and **macOS** (sorry, Windows users) that configures the development environment for you in a few easy steps.
+[phx.tools](https://phx.tools/) is a shell script for **Linux** and **macOS** that configures the Elixir/Phoenix development environment in a few easy steps.
 
-Once you finish running the script, you'll be able to create a new Phoenix application and launch the server.
+When someone runs `curl https://phx.tools | bash`, Caddy serves `script.sh` instead of the landing page.
 
-Here are the tools that `phx.tools` will install for you, if not already installed:
+## Development
 
-_Required_
+Install dependencies:
 
-- Build dependencies
-- Homebrew (only on macOS)
-- mise
-- Erlang
-- Elixir
-- Phoenix
+```bash
+npm install
+```
 
-## Setup
+Build the site:
 
-To start your Phoenix server:
+```bash
+npm run build
+```
 
-- install Elixir, Erlang and Node using [mise](https://mise.jdx.dev)
-  - install mise using either `curl https://mise.run | sh` or `brew install mise`
-  - make sure to activate it
-  - run `mise install`
-- run `mix setup`
-- start Phoenix server with `mix phx.server`
+Watch for changes and serve locally:
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+```bash
+npm run serve
+```
 
-## Docs
+## Updating GitHub workflows
 
-- execute `mix docs --formatter html --open`
+Edit `.github/github_workflows.ex`, then regenerate:
 
-It will open documentation in your browser.
+```bash
+github_workflows_generator
+```
 
-## Running tests
-
-- run `mix coveralls` or `mix coveralls.html`
-
-## Contributing
-
-Make sure to execute `make ci` in order to run all the checks before committing the code.
+Install once via `mix escript.install hex github_workflows_generator`.

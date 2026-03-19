@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phx.tools</title>
+
+    <!-- SEO / Open Graph -->
+    <meta
+      name="description"
+      content="Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to create a new Phoenix application and launch the server."
+    />
+    <meta name="keywords" content="elixir, erlang, homebrew, mise, phoenix" />
+    <meta
+      property="og:title"
+      content="The Complete Development Environment for Elixir and Phoenix"
+    />
+    <meta
+      property="og:description"
+      content="Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to create a new Phoenix application and launch the server."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://phx.tools" />
+    <meta
+      property="og:image"
+      content="https://phx.tools/images/phx_tools.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="The Complete Development Environment for Elixir and Phoenix"
+    />
+    <meta
+      name="twitter:description"
+      content="Phx.tools is a shell script for Linux and macOS that configures the development environment for you in a few easy steps. Once you finish running the script, you'll be able to create a new Phoenix application and launch the server."
+    />
+    <meta
+      name="twitter:image"
+      content="https://phx.tools/images/phx_tools.png"
+    />
+    <meta name="twitter:site" content="@optimumBA" />
+    <meta name="twitter:url" content="https://phx.tools" />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16x16.png"
+    />
+    <link rel="apple-touch-icon" href="/images/favicon-180x180.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;600;700&family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/app.css" />
+
+    <!-- Plausible analytics -->
+    <script
+      defer
+      data-domain="phx.tools"
+      src="https://plausible.io/js/script.js"
+    ></script>
+
+    <!-- Asciinema preconnect -->
+    <link rel="preconnect" href="https://asciinema.org/" />
+  </head>
+
+  <body class="bg-[#110A33] mx-auto sm:px-2 md:px-7 lg:w-9/12 sm:py-8">
+    <div class="min-h-screen">
+      <div class="mt-[5%] md:flex flex-col items-center max-w-4xl mx-auto">
+        <!-- Logo + Tagline -->
+        <div class="sm:flex flex-col justify-center items-center">
+          <svg
+            class="h-7 md:h-12"
+            viewBox="0 0 290 39"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0.722222 39V0.888888H6.16667H22.5V6.33333H27.9444V17.2222H22.5V22.6667H6.16667V39H0.722222ZM22.5 17.2222V6.33333H6.16667V17.2222H22.5ZM44.2937 11.7778H55.1826V17.2222H60.6271V39H55.1826V17.2222H44.2937V11.7778ZM33.4048 0.888888H38.8493V17.2222H44.2937V22.6667H38.8493V39H33.4048V0.888888ZM82.4208 22.6667V28.1111H87.8652V33.5556H93.3097V39H87.8652H82.4208V33.5556V28.1111H76.9763V22.6667H82.4208ZM82.4208 22.6667V17.2222V11.7778H87.8652H93.3097V17.2222H87.8652V22.6667H82.4208ZM76.9763 22.6667H71.5319V17.2222H66.0875V11.7778H71.5319H76.9763V17.2222V22.6667ZM76.9763 28.1111V33.5556V39H71.5319H66.0875V33.5556H71.5319V28.1111H76.9763ZM109.659 39V33.5556H115.103V39H109.659ZM158.675 33.5556V39H142.342V33.5556H136.897V17.2222H131.453V11.7778H136.897V0.888888H142.342V11.7778H153.23V17.2222H142.342V33.5556H158.675ZM169.58 17.2222V33.5556H164.135V17.2222H169.58ZM169.58 17.2222V11.7778H185.913V17.2222H169.58ZM185.913 17.2222H191.358V33.5556H185.913V17.2222ZM169.58 33.5556H185.913V39H169.58V33.5556ZM202.262 17.2222V33.5556H196.818V17.2222H202.262ZM202.262 17.2222V11.7778H218.596V17.2222H202.262ZM218.596 17.2222H224.04V33.5556H218.596V17.2222ZM202.262 33.5556H218.596V39H202.262V33.5556ZM245.834 33.5556H256.723V39H245.834V33.5556ZM245.834 33.5556H240.389V6.33333H234.945V0.888888H240.389H245.834V33.5556ZM267.628 11.7778H289.405V17.2222H267.628V11.7778ZM283.961 33.5556V28.1111H267.628V22.6667H262.183V17.2222H267.628V22.6667H283.961V28.1111H289.405V33.5556H283.961ZM283.961 33.5556V39H262.183V33.5556H283.961Z"
+              fill="white"
+            />
+          </svg>
+          <p
+            class="sm:py-6 text-center text-white text-sm md:text-base lg:text-lg font-martian font-semibold"
+          >
+            The Complete Development Environment for Elixir and Phoenix
+          </p>
+        </div>
+
+        <!-- Install command box + instructions -->
+        <div
+          class="md:flex lg:w-[75%] flex-col relative md:mb-2 w-full"
+          style="overflow: visible"
+        >
+          <div class="md:flex">
+            <!-- Info icon (shown on md+) -->
+            <div
+              class="flex justify-end items-center md:order-last md:mx-2 sm:mb-2"
+            >
+              <button
+                id="info-btn"
+                class="hidden md:block w-6 h-6 text-white cursor-pointer focus:text-gray-400"
+                aria-label="Show installation instructions"
+                onclick="toggleInstructions()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Command box -->
+            <div
+              class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm overflow-x-auto whitespace-nowrap no-scrollbar"
+            >
+              <h1
+                id="tool-installation"
+                class="text-center text-white font-martian sm:text-sm"
+              >
+                $SHELL -c "$(curl -fsSL https://phx.tools)"
+              </h1>
+              <div
+                id="copy-btn"
+                class="sm:py-3 md:my-0 cursor-pointer ml-3 flex-shrink-0"
+                onclick="copyCommand()"
+              >
+                <!-- Copied icon (hidden by default) -->
+                <svg
+                  id="copied-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-circle-check hidden"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  stroke-width="1.5"
+                  stroke="white"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                  <path d="M9 12l2 2l4 -4" />
+                </svg>
+                <!-- Copy icon (shown by default) -->
+                <svg
+                  id="copy-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 18 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 3H3C1.89543 3 1 3.89543 1 5V17C1 18.1046 1.89543 19 3 19H13C14.1046 19 15 18.1046 15 17V16M5 3C5 4.10457 5.89543 5 7 5H9C10.1046 5 11 4.10457 11 3M5 3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3M11 3H13C14.1046 3 15 3.89543 15 5V8M17 12H7M7 12L10 9M7 12L10 15"
+                    stroke="white"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructions wrapper: zero-height flow anchor for the absolute panel -->
+          <div class="w-full h-0 overflow-visible flex justify-center">
+            <div
+              id="installation-instructions"
+              class="hidden font-normal font-martian bg-[#110A33] absolute w-full md:w-[95%] z-10"
+            >
+              <div class="block">
+                <div
+                  class="h-full rounded-md pb-2"
+                  style="box-shadow: 0 4px 10px rgba(194, 184, 255, 0.5)"
+                >
+                  <div
+                    class="text-start px-[3%] lg:text-xl md:text-lg sm:text-md"
+                  >
+                    <h1
+                      id="instructions-title"
+                      class="text-white text-center text-sm md:text-base lg:text-lg lg:my-[5%] md:my-[2%] sm:my-[2%] lg:pt-5"
+                    >
+                      <!-- Filled by JS -->
+                    </h1>
+                    <ol
+                      id="instructions-list"
+                      class="list-decimal ml-3 pl-5 text-xs md:text-sm lg:text-base text-white lg:mt-4 sm:mt-2 leading-6"
+                    >
+                      <!-- Filled by JS -->
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Source code button -->
+          <div class="justify-center gap-4 mt-2 flex">
+            <div class="sm:grid grid gap-4 sm:py-4">
+              <div
+                class="border-2 border-[#755FFF] py-4 rounded-xl cursor-pointer hover:bg-indigo-850 flex font-martian w-44"
+              >
+                <a
+                  href="https://github.com/optimumBA/phx.tools/blob/main/static/script.sh"
+                  target="_blank"
+                  class="flex items-center justify-center w-full space-x-2 text-sm rounded-xl"
+                >
+                  <!-- Code bracket icon -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-5 h-5 text-white"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"
+                    />
+                  </svg>
+                  <span class="text-white text-sm md:text-base"
+                    >Source code</span
+                  >
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower content section -->
+        <div class="lg:w-[1100px] w-full">
+          <div class="w-[100%] flex flex-col gap-8 items-center justify-center">
+            <!-- Description -->
+            <div class="md:w-[65%]">
+              <p
+                class="text-responsive text-mono px-2 leading-5 text-center md:leading-6"
+              >
+                Phx.tools is a shell script for Linux and macOS that configures
+                the development environment for you in a few easy steps. Once
+                you finish running the script, you'll be able to create a new
+                Phoenix application and launch the server.
+              </p>
+            </div>
+
+            <!-- Unsupported OS warning (shown by JS for non-Linux/macOS) -->
+            <div
+              id="unsupported-os"
+              class="hidden md:w-[61%] mb-6 bg-[#110A33] rounded-[4px] shadow-lg text-white shadow-[#2C2650] max-w-[809px]"
+            >
+              <div
+                class="bg-[#2C2650] p-3 rounded-t-[4px] flex sm:flex-col md:flex-row sm:items-start md:items-center sm:space-y-2 md:space-y-0 md:space-x-4 sm:justify-start md:justify-center"
+              >
+                <div class="w-full md:w-auto flex justify-center items-center">
+                  <svg
+                    width="22"
+                    height="22"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <p
+                  class="font-martian text-center sm:text-sm md:text-base lg:text-lg md:py-2"
+                >
+                  Unsupported Operating System Detected
+                </p>
+              </div>
+              <p
+                class="text-responsive text-mono leading-5 md:leading-6 text-center sm:px-3 sm:py-6 md:px-8"
+              >
+                It looks like you're using an operating system that Phx.tools
+                doesn't currently support. This script is designed to work on
+                Linux and macOS only. Please switch to a compatible operating
+                system to continue.
+              </p>
+            </div>
+          </div>
+
+          <!-- Asciinema embed container (filled by JS) -->
+          <div id="asciinema-container" class="mx-auto"></div>
+
+          <!-- Web updates link -->
+          <p
+            class="text-responsive text-mono text-center md:px-12 leading-6 sm:pb-4"
+          >
+            Read about website updates here -
+            <a
+              href="https://optimum.ba/blog/exciting-updates-to-phx-tools"
+              target="_blank"
+              class="text-[#24B2FF] underline"
+            >
+              https://optimum.ba/blog/exciting-updates-to-phx-tools
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="relative flex items-center justify-center lg:mb-5 md:mb-8 sm:mb-9 mt-[5%] px-[30%]"
+    >
+      <a
+        href="https://optimum.ba"
+        target="_blank"
+        class="flex items-center gap-3"
+      >
+        <svg
+          width="37"
+          height="37"
+          viewBox="0 0 37 37"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M18.2272 36.4544C28.2937 36.4544 36.4544 28.2937 36.4544 18.2272C36.4544 8.1606 28.2937 0 18.2272 0C8.1606 0 0 8.1606 0 18.2272C0 28.2937 8.1606 36.4544 18.2272 36.4544ZM18.2272 27.3408C23.2605 27.3408 27.3408 23.2605 27.3408 18.2272C27.3408 13.1939 23.2605 9.11361 18.2272 9.11361C13.1939 9.11361 9.11361 13.1939 9.11361 18.2272C9.11361 23.2605 13.1939 27.3408 18.2272 27.3408Z"
+            fill="url(#paint0_linear_56_374)"
+          />
+          <defs>
+            <linearGradient
+              id="paint0_linear_56_374"
+              x1="0"
+              y1="18.2272"
+              x2="46.245"
+              y2="18.2272"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stop-color="#5433FF" />
+              <stop offset="0.5" stop-color="#20BDFF" />
+              <stop offset="1" stop-color="#A5FECB" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span
+          class="font-bold font-montserrat text-white sm:text-sm md:text-lg lg:text-xl"
+          >OPTIMUM</span
+        >
+      </a>
+    </div>
+    <p class="footer-text text-responsive">
+      Copyright &copy; <span id="copyright-year"></span> Optimum
+    </p>
+    <p class="footer-text text-responsive pb-8">
+      Powered by
+      <a
+        href="https://combobulate.dev"
+        target="_blank"
+        class="underline hover:text-gray-300"
+        >Combobulate</a
+      >
+    </p>
+
+    <script>
+      // Copyright year
+      document.getElementById("copyright-year").textContent =
+        new Date().getFullYear();
+
+      // OS detection
+      var ua = navigator.userAgent;
+      var isMac = /Mac|iPhone|iPad/.test(ua);
+      var isLinux = /Linux/.test(ua) && !/Android/.test(ua);
+      var osType = isMac ? "macos" : isLinux ? "linux" : "other";
+
+      // Installation instructions data
+      var macInstructions = [
+        "Click on the copy icon to copy this command to your clipboard",
+        'Open Terminal by pressing <b class="font-extrabold">\u2318 + SPACE</b> together',
+        'Type "Terminal" and hit <b>RETURN</b>',
+        "Paste the shell command by hitting <b>\u2318 + V</b> together",
+        "Run the command by hitting <b>RETURN</b>",
+      ];
+      var linuxInstructions = [
+        "Click on the copy icon to copy this command to your clipboard",
+        'Open Terminal by pressing <b class="font-extrabold">Ctrl + Alt + T</b> together',
+        "Paste the shell command by pressing <b>Shift + Ctrl + V</b> together",
+        "Run the command by hitting <b>ENTER</b>",
+      ];
+
+      // Set instructions title text
+      var instructionsTitle = document.getElementById("instructions-title");
+      instructionsTitle.textContent =
+        (osType === "macos" ? "macOS" : "Linux") + " installation process";
+
+      // Populate instructions list
+      var instructionsList = document.getElementById("instructions-list");
+      var instructions =
+        osType === "macos" ? macInstructions : linuxInstructions;
+      instructions.forEach(function (item) {
+        var li = document.createElement("li");
+        li.className = "mb-2";
+        li.innerHTML = item;
+        instructionsList.appendChild(li);
+      });
+
+      // Show/hide unsupported OS warning
+      if (osType === "other") {
+        document.getElementById("unsupported-os").classList.remove("hidden");
+      }
+
+      // Load Asciinema only for supported OS
+      if (osType !== "other") {
+        var castId = osType === "macos" ? "689829" : "689816";
+        var container = document.getElementById("asciinema-container");
+
+        var script = document.createElement("script");
+        script.src = "https://asciinema.org/a/" + castId + ".js";
+        script.id = "asciicast-" + castId;
+        container.appendChild(script);
+      }
+
+      // Auto-scroll command box to the right on load (matches original ScrollingHooks)
+      var toolInstallationElement =
+        document.getElementById("tool-installation");
+      if (toolInstallationElement) {
+        toolInstallationElement.scrollLeft =
+          toolInstallationElement.scrollWidth;
+      }
+
+      // Copy command to clipboard
+      function copyCommand() {
+        var command = document.getElementById("tool-installation").innerText;
+        var copyIcon = document.getElementById("copy-icon");
+        var copiedIcon = document.getElementById("copied-icon");
+
+        function showCopied() {
+          copyIcon.classList.add("hidden");
+          copiedIcon.classList.remove("hidden");
+          setTimeout(function () {
+            copiedIcon.classList.add("hidden");
+            copyIcon.classList.remove("hidden");
+          }, 600);
+        }
+
+        navigator.clipboard
+          .writeText(command)
+          .then(showCopied)
+          .catch(function () {
+            var textarea = document.createElement("textarea");
+            textarea.value = command;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            showCopied();
+          });
+      }
+
+      // Toggle installation instructions panel
+      function toggleInstructions() {
+        var panel = document.getElementById("installation-instructions");
+        panel.classList.toggle("hidden");
+      }
+
+      // Close instructions when clicking outside
+      document.addEventListener("click", function (event) {
+        var panel = document.getElementById("installation-instructions");
+        var btn = document.getElementById("info-btn");
+        if (
+          !panel.classList.contains("hidden") &&
+          !panel.contains(event.target) &&
+          event.target !== btn &&
+          !btn.contains(event.target)
+        ) {
+          panel.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "phx-tools",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npx tailwindcss -i ./assets/css/app.css -o ./public/css/app.css --minify && cp -r static/. public/",
+    "watch:css": "npx tailwindcss -i ./assets/css/app.css -o ./public/css/app.css --watch",
+    "watch:static": "npx nodemon --watch static --ext html,js,svg,png,jpg,sh --exec 'cp -r static/. public/'",
+    "serve": "npm run build && echo '\nServer running at http://localhost:8000\n' && concurrently \"npm run watch:css\" \"npm run watch:static\" \"python3 -m http.server --directory public\""
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "concurrently": "^9.0.0",
+    "nodemon": "^3.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}
