@@ -4,3 +4,7 @@
 .DS_Store
 AGENTS.md
 CLAUDE.md
+/dist/
+/.astro/
+/static/css/
+/.wrangler/
