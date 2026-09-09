@@ -16,6 +16,9 @@ export async function onRequest({ request, env }) {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://asciinema.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://asciinema.org; font-src 'self' https://fonts.gstatic.com https://asciinema.org; img-src 'self' data: https://asciinema.org https://*.asciinema.org; connect-src 'self' https://plausible.io https://asciinema.org https://*.asciinema.org; frame-src https://asciinema.org; media-src 'self' https://asciinema.org https://*.asciinema.org; form-action 'self'");
+  if (url.hostname !== 'phx.tools') {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
   if (installer || url.pathname === '/script.sh') {
     response.headers.set('Content-Type', 'application/x-shellscript');
   }
