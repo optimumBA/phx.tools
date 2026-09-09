@@ -1,9 +1,21 @@
 #!/usr/bin/expect
 
+# Optional executable/timeout arguments let the harness test itself without installing anything.
 set script [lindex $argv 0]
-set timeout -1
-spawn ./../../static/script.sh
+if {$script eq ""} {
+  set script [file normalize [file join [file dirname [info script]] ../../static/script.sh]]
+}
+set timeout 1200
+if {[llength $argv] > 1} { set timeout [lindex $argv 1] }
+spawn $script
 match_max 100000
-expect "Do you want to continue? (y/n) "
-send -- "y\r"
-expect eof
+expect {
+  -exact "Do you want to continue? (y/n) " { send -- "y\r"; exp_continue -continue_timer }
+  -exact "Do you want to proceed with the installation? \[y/n\]" { send -- "y\r"; exp_continue -continue_timer }
+  timeout { puts stderr "Installer exceeded the test time limit"; catch {exec kill -TERM [exp_pid]}; exit 124 }
+  eof {
+    set result [wait]
+    if {[lindex $result 2] != 0 || [llength $result] > 4} { exit 1 }
+    exit [lindex $result 3]
+  }
+}

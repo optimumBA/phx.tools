@@ -1,297 +1,246 @@
-name: PR
-
-on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - reopened
-      - synchronize
-
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
+  build_site:
+    name: Build and test site
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        cache: npm
+        node-version-file: .node-version
+    - run: npm ci
+    - run: npm run build
+    - run: node --test test/site/*.test.js
+    - run: sudo apt-get update && sudo apt-get install -y expect
+    - run: python3 test/scripts/test_harness.py
+    timeout-minutes: 10
   test_linux_bash:
+    env:
+      SHELL: bash
+      TZ: America/New_York
     name: Test Linux script with bash shell
     runs-on: ubuntu-latest
-    env:
-      SHELL: bash
-      TZ: America/New_York
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache/restore@v4
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: bash -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
-          cd phx_tools_test
-          mise exec -- mix setup
-          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
-        shell: bash -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-      - name: Save script result cache
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-  test_macos_bash:
-    name: Test macOS script with bash shell
-    runs-on: macos-latest
-    env:
-      SHELL: bash
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache/restore@v4
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-      - name: Disable password prompt for macOS
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin\t\tALL = (ALL) ALL/%admin\t\tALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: bash -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
-          cd phx_tools_test
-          mise exec -- mix setup
-          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
-        shell: bash -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-      - name: Save script result cache
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-bash-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
+    - uses: actions/checkout@v4
+    - name: Install test tools
+      run: sudo apt-get update && sudo apt-get install -y expect bash
+    - name: Test the script
+      run: expect test/scripts/script.exp
+      shell: bash -l {0}
+      timeout-minutes: 25
+    - name: Generate an app and start the server
+      run: |
+        cd "$RUNNER_TEMP" || exit 1
+        mise exec -- mix phx.new --no-ecto --no-install phx_tools_test || exit 1
+        cd phx_tools_test || exit 1
+        mise exec -- mix setup || exit 1
+        nohup mise exec -- mix phx.server > "$RUNNER_TEMP/phx_server.log" 2>&1 &
+      shell: bash -l {0}
+    - name: Check HTTP status code
+      run: |
+        for attempt in {1..30}; do
+          if curl --fail --silent --max-time 5 http://localhost:4000 > /dev/null; then exit 0; fi
+          sleep 2
+        done
+        cat "$RUNNER_TEMP/phx_server.log"
+        exit 1
+      shell: bash
+    - if: failure()
+      name: Show server log on failure
+      run: cat "$RUNNER_TEMP/phx_server.log" 2>/dev/null || true
+      shell: bash
+    timeout-minutes: 35
   test_linux_fish:
+    env:
+      SHELL: fish
+      TZ: America/New_York
     name: Test Linux script with fish shell
     runs-on: ubuntu-latest
-    env:
-      SHELL: fish
-      TZ: America/New_York
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache/restore@v4
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y fish
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: fish -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
-          cd phx_tools_test
-          mise exec -- mix setup
-          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
-        shell: fish -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-      - name: Save script result cache
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-  test_macos_fish:
-    name: Test macOS script with fish shell
-    runs-on: macos-latest
-    env:
-      SHELL: fish
-      TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache/restore@v4
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install fish
-      - name: Disable password prompt for macOS
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin\t\tALL = (ALL) ALL/%admin\t\tALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: fish -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
-          cd phx_tools_test
-          mise exec -- mix setup
-          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
-        shell: fish -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-      - name: Save script result cache
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-fish-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
+    - uses: actions/checkout@v4
+    - name: Install test tools
+      run: sudo apt-get update && sudo apt-get install -y expect fish
+    - name: Test the script
+      run: expect test/scripts/script.exp
+      shell: fish -l {0}
+      timeout-minutes: 25
+    - name: Generate an app and start the server
+      run: |
+        cd "$RUNNER_TEMP" || exit 1
+        mise exec -- mix phx.new --no-ecto --no-install phx_tools_test || exit 1
+        cd phx_tools_test || exit 1
+        mise exec -- mix setup || exit 1
+        nohup mise exec -- mix phx.server > "$RUNNER_TEMP/phx_server.log" 2>&1 &
+      shell: fish -l {0}
+    - name: Check HTTP status code
+      run: |
+        for attempt in {1..30}; do
+          if curl --fail --silent --max-time 5 http://localhost:4000 > /dev/null; then exit 0; fi
+          sleep 2
+        done
+        cat "$RUNNER_TEMP/phx_server.log"
+        exit 1
+      shell: bash
+    - if: failure()
+      name: Show server log on failure
+      run: cat "$RUNNER_TEMP/phx_server.log" 2>/dev/null || true
+      shell: bash
+    timeout-minutes: 35
   test_linux_zsh:
+    env:
+      SHELL: zsh
+      TZ: America/New_York
     name: Test Linux script with zsh shell
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install test tools
+      run: sudo apt-get update && sudo apt-get install -y expect zsh
+    - name: Test the script
+      run: expect test/scripts/script.exp
+      shell: zsh -l {0}
+      timeout-minutes: 25
+    - name: Generate an app and start the server
+      run: |
+        cd "$RUNNER_TEMP" || exit 1
+        mise exec -- mix phx.new --no-ecto --no-install phx_tools_test || exit 1
+        cd phx_tools_test || exit 1
+        mise exec -- mix setup || exit 1
+        nohup mise exec -- mix phx.server > "$RUNNER_TEMP/phx_server.log" 2>&1 &
+      shell: zsh -l {0}
+    - name: Check HTTP status code
+      run: |
+        for attempt in {1..30}; do
+          if curl --fail --silent --max-time 5 http://localhost:4000 > /dev/null; then exit 0; fi
+          sleep 2
+        done
+        cat "$RUNNER_TEMP/phx_server.log"
+        exit 1
+      shell: bash
+    - if: failure()
+      name: Show server log on failure
+      run: cat "$RUNNER_TEMP/phx_server.log" 2>/dev/null || true
+      shell: bash
+    timeout-minutes: 35
+  test_macos_bash:
+    env:
+      SHELL: bash
+      TZ: America/New_York
+    name: Test macOS script with bash shell
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install test tools
+      run: 'brew install expect '
+    - name: Test the script
+      run: expect test/scripts/script.exp
+      shell: bash -l {0}
+      timeout-minutes: 25
+    - name: Generate an app and start the server
+      run: |
+        cd "$RUNNER_TEMP" || exit 1
+        mise exec -- mix phx.new --no-ecto --no-install phx_tools_test || exit 1
+        cd phx_tools_test || exit 1
+        mise exec -- mix setup || exit 1
+        nohup mise exec -- mix phx.server > "$RUNNER_TEMP/phx_server.log" 2>&1 &
+      shell: bash -l {0}
+    - name: Check HTTP status code
+      run: |
+        for attempt in {1..30}; do
+          if curl --fail --silent --max-time 5 http://localhost:4000 > /dev/null; then exit 0; fi
+          sleep 2
+        done
+        cat "$RUNNER_TEMP/phx_server.log"
+        exit 1
+      shell: bash
+    - if: failure()
+      name: Show server log on failure
+      run: cat "$RUNNER_TEMP/phx_server.log" 2>/dev/null || true
+      shell: bash
+    timeout-minutes: 35
+  test_macos_fish:
+    env:
+      SHELL: fish
+      TZ: America/New_York
+    name: Test macOS script with fish shell
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install test tools
+      run: brew install expect fish
+    - name: Test the script
+      run: expect test/scripts/script.exp
+      shell: fish -l {0}
+      timeout-minutes: 25
+    - name: Generate an app and start the server
+      run: |
+        cd "$RUNNER_TEMP" || exit 1
+        mise exec -- mix phx.new --no-ecto --no-install phx_tools_test || exit 1
+        cd phx_tools_test || exit 1
+        mise exec -- mix setup || exit 1
+        nohup mise exec -- mix phx.server > "$RUNNER_TEMP/phx_server.log" 2>&1 &
+      shell: fish -l {0}
+    - name: Check HTTP status code
+      run: |
+        for attempt in {1..30}; do
+          if curl --fail --silent --max-time 5 http://localhost:4000 > /dev/null; then exit 0; fi
+          sleep 2
+        done
+        cat "$RUNNER_TEMP/phx_server.log"
+        exit 1
+      shell: bash
+    - if: failure()
+      name: Show server log on failure
+      run: cat "$RUNNER_TEMP/phx_server.log" 2>/dev/null || true
+      shell: bash
+    timeout-minutes: 35
+  test_macos_zsh:
     env:
       SHELL: zsh
       TZ: America/New_York
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache/restore@v4
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y zsh
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: sudo apt-get update && sudo apt-get install -y expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: zsh -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
-          cd phx_tools_test
-          mise exec -- mix setup
-          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
-        shell: zsh -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-      - name: Save script result cache
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-  test_macos_zsh:
     name: Test macOS script with zsh shell
     runs-on: macos-latest
-    env:
-      SHELL: zsh
-      TZ: America/New_York
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore script result cache
-        uses: actions/cache/restore@v4
-        id: result_cache
-        with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
-      - name: Install shell
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install zsh
-      - name: Disable password prompt for macOS
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: 'sudo sed -i "" "s/%admin\t\tALL = (ALL) ALL/%admin\t\tALL = (ALL) NOPASSWD: ALL/g" /etc/sudoers'
-      - name: Install expect tool
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: brew install expect
-      - name: Test the script
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: cd test/scripts && expect script.exp
-        shell: zsh -l {0}
-      - name: Generate an app and start the server
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        run: |
-          mise exec -- mix phx.new --no-ecto --no-install phx_tools_test
-          cd phx_tools_test
-          mise exec -- mix setup
-          nohup mise exec -- mix phx.server > /tmp/phx_server.log 2>&1 &
-        shell: zsh -l {0}
-      - name: Check HTTP status code
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: nick-fields/retry@v2
-        with:
-          command: INPUT_SITES='["http://localhost:4000"]' INPUT_EXPECTED='[200]' ./test/scripts/check_status_code.sh
-          max_attempts: 7
-          retry_wait_seconds: 5
-          timeout_seconds: 1
-      - name: Save script result cache
-        if: steps.result_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ runner.os }}-zsh-script-${{ hashFiles('test/scripts/script.exp') }}-${{ hashFiles('static/script.sh') }}
-          path: static/script.sh
+    - uses: actions/checkout@v4
+    - name: Install test tools
+      run: brew install expect zsh
+    - name: Test the script
+      run: expect test/scripts/script.exp
+      shell: zsh -l {0}
+      timeout-minutes: 25
+    - name: Generate an app and start the server
+      run: |
+        cd "$RUNNER_TEMP" || exit 1
+        mise exec -- mix phx.new --no-ecto --no-install phx_tools_test || exit 1
+        cd phx_tools_test || exit 1
+        mise exec -- mix setup || exit 1
+        nohup mise exec -- mix phx.server > "$RUNNER_TEMP/phx_server.log" 2>&1 &
+      shell: zsh -l {0}
+    - name: Check HTTP status code
+      run: |
+        for attempt in {1..30}; do
+          if curl --fail --silent --max-time 5 http://localhost:4000 > /dev/null; then exit 0; fi
+          sleep 2
+        done
+        cat "$RUNNER_TEMP/phx_server.log"
+        exit 1
+      shell: bash
+    - if: failure()
+      name: Show server log on failure
+      run: cat "$RUNNER_TEMP/phx_server.log" 2>/dev/null || true
+      shell: bash
+    timeout-minutes: 35
+name: PR
+'on':
+  pull_request:
+    branches:
+    - main
+    types:
+    - opened
+    - reopened
+    - synchronize
+permissions:
+  contents: read
