@@ -16,3 +16,10 @@ for (const ua of ['curl/', 'curl/8.7.1', 'curl/8 extra', 'curl', 'CURL/8', 'Curl
 for (const method of ['POST', 'OPTIONS', 'PUT']) test(`${method} stays unsupported`, async () => {
   assert.equal((await onRequest({ request: new Request('https://phx.tools/', { method }) })).status, 405);
 });
+
+test('only successful browser font responses receive immutable caching', async () => {
+  for (const [status, ua, expected] of [[200, 'Mozilla/5.0', 'private, max-age=31536000, immutable'], [404, 'Mozilla/5.0', 'no-store'], [200, 'curl/8', 'no-store']]) {
+    const response = await onRequest({ request: new Request('https://phx.tools/fonts/test.woff2', { headers: { 'User-Agent': ua } }), env: { ASSETS: { fetch: async () => new Response('asset', { status }) } } });
+    assert.equal(response.headers.get('Cache-Control'), expected);
+  }
+});

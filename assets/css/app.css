@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 @theme {
   --breakpoint-sm: 375px;
@@ -44,4 +45,9 @@ asciinema-player {
 /* Footer copyright / powered-by lines */
 .footer-text {
   @apply font-semibold text-center text-white font-montserrat;
+}
+
+/* Reserve the embed's existing outer spacing before its loader arrives. */
+#asciinema-container .asciicast {
+  margin: 0 !important;
 }

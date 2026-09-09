@@ -58,14 +58,6 @@
     />
     <link rel="apple-touch-icon" href="/images/favicon-180x180.png" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;600;700&family=Montserrat:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-
     <!-- Styles -->
     <link rel="stylesheet" href="/css/app.css" />
 
@@ -91,7 +83,7 @@
   </head>
 
   <body class="bg-[#110A33] mx-auto sm:px-2 md:px-7 lg:w-9/12 sm:py-8">
-    <div class="min-h-screen">
+    <div class="min-h-screen" role="main">
       <div class="mt-[5%] md:flex flex-col items-center max-w-4xl mx-auto">
         <!-- Logo + Tagline -->
         <div class="sm:flex flex-col justify-center items-center">
@@ -449,6 +441,28 @@
       if (osType !== "other") {
         var castId = osType === "macos" ? "689829" : "689816";
         var container = document.getElementById("asciinema-container");
+        // Match the embedded 80×24 terminal's native font metrics before it loads.
+        // The player uses 0.75em borders, a 32px control bar and a 24px credit.
+        var metrics = document.createElement('span');
+        metrics.style.cssText = 'position:absolute;visibility:hidden;font:15px "Cascadia Code","Source Code Pro",Menlo,Consolas,"DejaVu Sans Mono",monospace;width:80ch;height:33.5em;box-sizing:content-box;padding:0 0.75em';
+        document.body.appendChild(metrics);
+        var terminalRatio = metrics.getBoundingClientRect().height / metrics.getBoundingClientRect().width;
+        metrics.remove();
+        container.style.marginBlock = '1.5em';
+        var playerWidth;
+        function reservePlayerSpace() {
+          if (playerWidth === container.clientWidth) return;
+          playerWidth = container.clientWidth;
+          container.style.minHeight = Math.round(playerWidth * terminalRatio + 56) + 'px';
+        }
+        reservePlayerSpace();
+        new ResizeObserver(reservePlayerSpace).observe(container);
+        window.addEventListener('message', function (event) {
+          var iframe = container.querySelector('iframe');
+          if (event.origin === 'https://asciinema.org' && iframe && event.source === iframe.contentWindow && event.data?.type === 'bodySize' && Number.isFinite(event.data.payload?.height) && event.data.payload.height > 0) {
+            container.style.minHeight = event.data.payload.height + 'px';
+          }
+        });
 
         var script = document.createElement("script");
         script.src = "https://asciinema.org/a/" + castId + ".js";

@@ -12,7 +12,7 @@ export async function onRequest({ request, env }) {
   const asset = await env.ASSETS.fetch(new Request(url, request));
   const response = new Response(asset.body, asset);
   response.headers.set('Vary', 'User-Agent, Accept-Encoding');
-  response.headers.set('Cache-Control', 'no-store');
+  response.headers.set('Cache-Control', asset.status === 200 && !installer && url.pathname.startsWith('/fonts/') ? 'private, max-age=31536000, immutable' : 'no-store');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://asciinema.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://asciinema.org; font-src 'self' https://fonts.gstatic.com https://asciinema.org; img-src 'self' data: https://asciinema.org https://*.asciinema.org; connect-src 'self' https://plausible.io https://asciinema.org https://*.asciinema.org; frame-src https://asciinema.org; media-src 'self' https://asciinema.org https://*.asciinema.org; form-action 'self'");
