@@ -69,11 +69,21 @@
     <link rel="stylesheet" href="/css/app.css" />
 
     <!-- Plausible analytics -->
-    <script
-      defer
-      data-domain="phx.tools"
-      src="https://plausible.io/js/script.js"
-    ></script>
+    <script is:inline>
+      if (window.location.hostname === 'phx.tools') {
+        window.plausible = window.plausible || function () {
+          (window.plausible.q = window.plausible.q || []).push(arguments);
+        };
+        window.plausible.init = window.plausible.init || function (options) {
+          window.plausible.o = options || {};
+        };
+        window.plausible.init();
+        const analytics = document.createElement('script');
+        analytics.async = true;
+        analytics.src = 'https://plausible.io/js/pa-XKrUX2y1aDt7zs1JUFagg.js';
+        document.head.appendChild(analytics);
+      }
+    </script>
 
     <!-- Asciinema preconnect -->
     <link rel="preconnect" href="https://asciinema.org/" />
