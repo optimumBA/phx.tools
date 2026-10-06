@@ -1,10 +1,11 @@
-export async function onRequest({ request, env }) {
+import {agentContent, wantsMarkdown} from '../lib/agent-response.js';
+async function siteResponse({ request, env }) {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD' } });
   }
 
   const url = new URL(request.url);
-  const installer = (request.headers.get('User-Agent') || '').startsWith('curl/');
+  const installer = (request.headers.get('User-Agent') || '').startsWith('curl/') && !wantsMarkdown(request.headers.get('Accept'));
   if (installer) {
     url.pathname = '/script.sh';
     url.search = '';
@@ -24,3 +25,5 @@ export async function onRequest({ request, env }) {
   }
   return response;
 }
+
+export const onRequest = [agentContent, siteResponse];

@@ -1,0 +1,38 @@
+{
+  "origin": "https://phx.tools",
+  "name": "phx.tools",
+  "description": "A shell script for setting up an Elixir and Phoenix development environment on Linux and macOS.",
+  "contact": "consulting@optimum.ba",
+  "siteType": "content",
+  "about": [
+    "phx.tools is a public shell script from Optimum Tech for Linux and macOS that helps configure an Elixir and Phoenix development environment. The landing page explains the tool and includes recordings of its use. The source repository is available for inspection before running the installer.",
+    "Reading the landing page or its Markdown representation does not install or change anything on your machine. A normal curl request to the root serves the shell installer, so inspect the script and choose whether to run it yourself. The script is a development-environment tool; it is not a hosted application API or an autonomous deployment service."
+  ],
+  "whenToUse": "phx.tools is a public shell script from Optimum Tech for Linux and macOS that helps configure an Elixir and Phoenix development environment. The landing page explains the tool and includes recordings of its use. The source repository is available for inspection before running the installer. Read https://phx.tools/ and its linked first-party sources for current information. Public pages accept GET or HEAD with Accept: text/markdown; use the sitemap to find pages. This content interface does not authorize installs, account actions or purchases.",
+  "organization": {
+    "@type": "Organization",
+    "@id": "https://optimum.ba/#organization",
+    "name": "Optimum Tech",
+    "legalName": "Optimum Tech, LLC",
+    "description": "Software development and product consulting. Optimum Tech helps businesses decide what to build, develop the software, and put it to work.",
+    "url": "https://optimum.ba/",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1207 Delaware Ave #2578",
+      "addressLocality": "Wilmington",
+      "addressRegion": "DE",
+      "postalCode": "19806",
+      "addressCountry": "US"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "consulting",
+      "email": "consulting@optimum.ba"
+    },
+    "sameAs": [
+      "https://github.com/optimumBA",
+      "https://www.linkedin.com/company/optimum-tech-llc/",
+      "https://x.com/optimumBA"
+    ]
+  }
+}

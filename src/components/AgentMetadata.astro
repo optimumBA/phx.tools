@@ -1,0 +1,12 @@
+---
+import site from '../../agent-site.json';
+const canonical = new URL(Astro.url.pathname, site.origin).href;
+const isHome = Astro.url.pathname === '/';
+const markdownPath = isHome ? '/index.md' : Astro.url.pathname.replace(/\/+$/, '').replace(/\.html$/, '') + '.md';
+const page = { '@type': 'WebPage', name: site.name, description: site.description, url: canonical, publisher: { '@id': site.origin === 'https://almirsarajcic.com' ? 'https://almirsarajcic.com/#person' : site.organization['@id'] }, author: { '@type': 'Person', name: 'Almir Sarajčić', url: 'https://almirsarajcic.com/' } };
+const identity = { '@context':'https://schema.org', '@graph': [page, site.organization] };
+---
+<meta name="is-agentic-site-type" content={site.siteType} />
+<link rel="alternate" type="text/markdown" href={new URL(markdownPath, site.origin).href} title="Markdown representation" />
+<link rel="help" href={`${site.origin}/llms.txt`} type="text/plain" />
+{isHome && <script is:inline type="application/ld+json" set:html={JSON.stringify(identity).replace(/</g, '\\u003c')} />}

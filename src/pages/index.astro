@@ -1,3 +1,7 @@
+---
+import SiteInformationLinks from "../components/SiteInformationLinks.astro";
+import AgentMetadata from '../components/AgentMetadata.astro';
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -80,7 +84,7 @@
 
     <!-- Asciinema preconnect -->
     <link rel="preconnect" href="https://asciinema.org/" />
-  </head>
+  <AgentMetadata /></head>
 
   <body class="bg-[#110A33] mx-auto sm:px-2 md:px-7 lg:w-9/12 sm:py-8">
     <div class="min-h-screen" role="main">
@@ -98,11 +102,11 @@
               fill="white"
             />
           </svg>
-          <p
+          <h1
             class="sm:py-6 text-center text-white text-sm md:text-base lg:text-lg font-martian font-semibold"
           >
             The Complete Development Environment for Elixir and Phoenix
-          </p>
+          </h1>
         </div>
 
         <!-- Install command box + instructions -->
@@ -142,12 +146,12 @@
             <div
               class="border sm:px-3 bg-[#26168780] w-full flex items-center justify-center py-2 sm:space-x-3 rounded-sm overflow-x-auto whitespace-nowrap no-scrollbar"
             >
-              <h1
+              <h2
                 id="tool-installation"
                 class="text-center text-white font-martian sm:text-sm"
               >
                 $SHELL -c "$(curl -fsSL https://phx.tools)"
-              </h1>
+              </h2>
               <div
                 id="copy-btn"
                 class="sm:py-3 md:my-0 cursor-pointer ml-3 flex-shrink-0"
@@ -521,5 +525,5 @@
         }
       });
     </script>
-  </body>
+  <SiteInformationLinks /></body>
 </html>

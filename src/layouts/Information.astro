@@ -1,0 +1,8 @@
+---
+import site from '../../agent-site.json';
+import AgentMetadata from '../components/AgentMetadata.astro';
+const {title, description} = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.origin).href;
+---
+<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>{title} — {site.name}</title><meta name="description" content={description} /><link rel="canonical" href={canonical} /><meta property="og:type" content="website" /><meta property="og:title" content={`${title} — ${site.name}`} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><AgentMetadata /></head><body><nav><a href="/">{site.name}</a> · <a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a></nav><main><h1>{title}</h1><slot /></main><footer><a href="/llms.txt">Agent guide</a> · <a href="/sitemap.xml">Sitemap</a></footer></body></html>
+<style>body{max-width:760px;margin:0 auto;padding:40px 24px;color:#172b3a;background:#fff;font:18px/1.65 system-ui,sans-serif}h1{font-size:2.4rem;line-height:1.2}a{color:#254fbc}nav,footer{font-size:15px}main{margin:48px 0}footer{border-top:1px solid #ddd;padding-top:20px}</style>
