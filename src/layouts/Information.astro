@@ -1,8 +1,42 @@
 ---
 import site from '../../agent-site.json';
 import AgentMetadata from '../components/AgentMetadata.astro';
+import Logo from '../components/Logo.astro';
+import Footer from '../components/Footer.astro';
 const {title, description} = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.origin).href;
 ---
-<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>{title} — {site.name}</title><meta name="description" content={description} /><link rel="canonical" href={canonical} /><meta property="og:type" content="website" /><meta property="og:title" content={`${title} — ${site.name}`} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><AgentMetadata /></head><body><nav><a href="/">{site.name}</a> · <a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a></nav><main><h1>{title}</h1><slot /></main><footer><a href="/llms.txt">Agent guide</a> · <a href="/sitemap.xml">Sitemap</a></footer></body></html>
-<style>body{max-width:760px;margin:0 auto;padding:40px 24px;color:#172b3a;background:#fff;font:18px/1.65 system-ui,sans-serif}h1{font-size:2.4rem;line-height:1.2}a{color:#254fbc}nav,footer{font-size:15px}main{margin:48px 0}footer{border-top:1px solid #ddd;padding-top:20px}</style>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title} — {site.name}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} — ${site.name}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <AgentMetadata />
+  </head>
+  <body class="information-page">
+    <header><a href="/" aria-label="phx.tools home"><Logo /></a></header>
+    <main><a class="back-link" href="/">← Back to phx.tools</a><h1>{title}</h1><slot /></main>
+    <Footer />
+  </body>
+</html>
+<style>
+.information-page{color:#fff;min-height:100vh;padding:3rem 1.5rem 1rem}
+header{display:flex;justify-content:center;margin:1rem auto 3.5rem}
+main{max-width:48rem;margin:0 auto 4rem;font-family:"Martian Mono",monospace;font-size:14px;line-height:1.9;overflow-wrap:anywhere}
+h1{font-size:clamp(1.75rem,5vw,2.5rem);font-weight:600;line-height:1.3;margin:1.5rem 0 2rem}
+main :global(h2){font-size:1.1rem;line-height:1.5;font-weight:600;margin:2rem 0 1rem}
+main :global(p){margin:1rem 0}
+main :global(a){color:#24b2ff;text-decoration:underline;text-underline-offset:.25em}
+a:focus-visible,main :global(a:focus-visible){outline:2px solid #24b2ff;outline-offset:5px}
+.back-link{font-size:12px}
+@media(min-width:768px){main{font-size:16px}.information-page{padding-top:4rem}}
+</style>
